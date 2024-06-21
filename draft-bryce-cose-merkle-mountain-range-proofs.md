@@ -8,8 +8,8 @@ number:
 date:
 consensus: true
 v: 3
-area: Security
-workgroup: cose
+area: "Security"
+workgroup: "CBOR Object Signing and Encryption"
 keyword:
  - Internet-Draft
 # venue:
