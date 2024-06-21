@@ -1474,27 +1474,33 @@ in addition to the data structure itself being append only.
 Consistency proofs <em>are</em> the inclusion proofs for the old-accumulator peaks against the accumulator for the future tree state consistency is being shown for.
 An accumulator is at most tree height long, which is also the maximum length of any single proof of inclusion + 1.<a href="#section-3-9" class="pilcrow">¶</a></p>
 <p id="section-3-10">For illustration, consider <code>MMR(8)</code> which is a complete MMR with two peaks at node indices 6 and 7.<a href="#section-3-10" class="pilcrow">¶</a></p>
-<p id="section-3-11"><code>
+<div class="alignLeft art-text artwork" id="section-3-11">
+<pre>
    6
  2   5
 0 1 3 4 7
-</code><a href="#section-3-11" class="pilcrow">¶</a></p>
+</pre><a href="#section-3-11" class="pilcrow">¶</a>
+</div>
 <p id="section-3-12">The node indices match their location in storage.
 When constructing the tree, addition of nodes is strictly append only.<a href="#section-3-12" class="pilcrow">¶</a></p>
 <p id="section-3-13">MMR's are identified uniquely by their size. Above we have <code>MMR(8)</code>, because there are 8 nodes.<a href="#section-3-13" class="pilcrow">¶</a></p>
 <p id="section-3-14">An incomplete MMR may still be identified. Here we have <code>MMR(9)</code>.<a href="#section-3-14" class="pilcrow">¶</a></p>
-<p id="section-3-15"><code>
+<div class="alignLeft art-text artwork" id="section-3-15">
+<pre>
    6
  2   5
 0 1 3 4 7 8
-</code><a href="#section-3-15" class="pilcrow">¶</a></p>
+</pre><a href="#section-3-15" class="pilcrow">¶</a>
+</div>
 <p id="section-3-16">An MMR is said to be "complete" when all possible ancestors have been "filled in".
 The value for node 9 is <code>H(7 || 8)</code>, and adding that node completes the previous MMR.<a href="#section-3-16" class="pilcrow">¶</a></p>
-<p id="section-3-17"><code>
+<div class="alignLeft art-text artwork" id="section-3-17">
+<pre>
    6
  2   5   9
 0 1 3 4 7 8
-</code><a href="#section-3-17" class="pilcrow">¶</a></p>
+</pre><a href="#section-3-17" class="pilcrow">¶</a>
+</div>
 <p id="section-3-18">The accumulator, described by <a href="https://eprint.iacr.org/2015/718.pdf">ReyzinYakoubov</a> is the set of peaks, with "gaps" reserved for the missing peaks.
 MMR(8), where a gap is indicated by _ would be:<a href="#section-3-18" class="pilcrow">¶</a></p>
 <div class="alignLeft art-text artwork" id="section-3-19">
@@ -1536,17 +1542,21 @@ the verification path for <code>i</code> will not change until the count of tree
 the produced value is also the count of leaves present in that MMR. This algorithm is independent of whether the accumulator is maintained in packed or padded form.<a href="#section-3-41" class="pilcrow">¶</a></p>
 <p id="section-3-42">Lastly, many primitives for working with MMR's rely on a property of the <em>position</em> tree form of an MMR.<a href="#section-3-42" class="pilcrow">¶</a></p>
 <p id="section-3-43">The position tree for the complete MMR with size 8 MMR(8) is<a href="#section-3-43" class="pilcrow">¶</a></p>
-<p id="section-3-44"><code>
+<div class="alignLeft art-text artwork" id="section-3-44">
+<pre>
    7
  3   6
 1 2 4 5 8
-</code><a href="#section-3-44" class="pilcrow">¶</a></p>
+</pre><a href="#section-3-44" class="pilcrow">¶</a>
+</div>
 <p id="section-3-45">Expressing this in binary notation reveals the property that MMR's make extensive use of:<a href="#section-3-45" class="pilcrow">¶</a></p>
-<p id="section-3-46"><code>
+<div class="alignLeft art-text artwork" id="section-3-46">
+<pre>
     111
  11     110
 1 10 100  101 1000
-</code><a href="#section-3-46" class="pilcrow">¶</a></p>
+</pre><a href="#section-3-46" class="pilcrow">¶</a>
+</div>
 <p id="section-3-47">The left most node at any height is always "all ones".<a href="#section-3-47" class="pilcrow">¶</a></p>
 </section>
 </div>
@@ -1655,57 +1665,59 @@ the same advantages that make MMR's convenient to work with also accrue to combi
 <p id="section-10.1-6">The caller <span class="bcp14">SHOULD</span> take into account the defined <span><a href="#node-values" class="internal xref">Node values</a> (<a href="#node-values" class="auto internal xref">Section 9</a>)</span> scheme when satisfying this requirement.<a href="#section-10.1-6" class="pilcrow">¶</a></p>
 <p id="section-10.1-7">Because the interior nodes commit the position of their children, including the case where the child is a leaf,
 no special steps are required of the application or implementation to account for duplicate values of <code>x</code>.<a href="#section-10.1-7" class="pilcrow">¶</a></p>
-<ol start="1" type="1" class="normal type-1" id="section-10.1-8">
-<li id="section-10.1-8.1">
-            <p id="section-10.1-8.1.1">Set <code>i</code> to the result of invoking <code>Append(f)</code><a href="#section-10.1-8.1.1" class="pilcrow">¶</a></p>
+<p id="section-10.1-8">The process in words is<a href="#section-10.1-8" class="pilcrow">¶</a></p>
+<ol start="1" type="1" class="normal type-1" id="section-10.1-9">
+<li id="section-10.1-9.1">
+            <p id="section-10.1-9.1.1">Set <code>i</code> to the result of invoking <code>Append(f)</code><a href="#section-10.1-9.1.1" class="pilcrow">¶</a></p>
 </li>
-          <li id="section-10.1-8.2">
-            <p id="section-10.1-8.2.1">Set <code>g</code> to 0, the height of the leaf item f<a href="#section-10.1-8.2.1" class="pilcrow">¶</a></p>
+          <li id="section-10.1-9.2">
+            <p id="section-10.1-9.2.1">Set <code>g</code> to 0, the height of the leaf item f<a href="#section-10.1-9.2.1" class="pilcrow">¶</a></p>
 </li>
-          <li id="section-10.1-8.3">
-            <p id="section-10.1-8.3.1">If <code>IndexHeight(i)</code> is greater than <code>g</code> (#looptarget)<a href="#section-10.1-8.3.1" class="pilcrow">¶</a></p>
-<ol start="1" type="1" class="normal type-1" id="section-10.1-8.3.2">
-<li id="section-10.1-8.3.2.1">
-                <p id="section-10.1-8.3.2.1.1">Set <code>iLeft</code> to <code>i - (2 &lt;&lt; g)</code><a href="#section-10.1-8.3.2.1.1" class="pilcrow">¶</a></p>
+          <li id="section-10.1-9.3">
+            <p id="section-10.1-9.3.1">If <code>IndexHeight(i)</code> is greater than <code>g</code> (#looptarget)<a href="#section-10.1-9.3.1" class="pilcrow">¶</a></p>
+<ol start="1" type="1" class="normal type-1" id="section-10.1-9.3.2">
+<li id="section-10.1-9.3.2.1">
+                <p id="section-10.1-9.3.2.1.1">Set <code>iLeft</code> to <code>i - (2 &lt;&lt; g)</code><a href="#section-10.1-9.3.2.1.1" class="pilcrow">¶</a></p>
 </li>
-              <li id="section-10.1-8.3.2.2">
-                <p id="section-10.1-8.3.2.2.1">Set <code>iRight</code> to <code>i - 1</code><a href="#section-10.1-8.3.2.2.1" class="pilcrow">¶</a></p>
+              <li id="section-10.1-9.3.2.2">
+                <p id="section-10.1-9.3.2.2.1">Set <code>iRight</code> to <code>i - 1</code><a href="#section-10.1-9.3.2.2.1" class="pilcrow">¶</a></p>
 </li>
-              <li id="section-10.1-8.3.2.3">
-                <p id="section-10.1-8.3.2.3.1">Set <code>v</code> to <code>H(i + 1 || Get(iLeft) || Get(iRight))</code><a href="#section-10.1-8.3.2.3.1" class="pilcrow">¶</a></p>
+              <li id="section-10.1-9.3.2.3">
+                <p id="section-10.1-9.3.2.3.1">Set <code>v</code> to <code>H(i + 1 || Get(iLeft) || Get(iRight))</code><a href="#section-10.1-9.3.2.3.1" class="pilcrow">¶</a></p>
 </li>
-              <li id="section-10.1-8.3.2.4">
-                <p id="section-10.1-8.3.2.4.1">Set <code>i</code> to the result of invoking <code>Append(v)</code><a href="#section-10.1-8.3.2.4.1" class="pilcrow">¶</a></p>
+              <li id="section-10.1-9.3.2.4">
+                <p id="section-10.1-9.3.2.4.1">Set <code>i</code> to the result of invoking <code>Append(v)</code><a href="#section-10.1-9.3.2.4.1" class="pilcrow">¶</a></p>
 </li>
-              <li id="section-10.1-8.3.2.5">
-                <p id="section-10.1-8.3.2.5.1">Set <code>g</code> to <code>g + 1</code><a href="#section-10.1-8.3.2.5.1" class="pilcrow">¶</a></p>
+              <li id="section-10.1-9.3.2.5">
+                <p id="section-10.1-9.3.2.5.1">Set <code>g</code> to <code>g + 1</code><a href="#section-10.1-9.3.2.5.1" class="pilcrow">¶</a></p>
 </li>
-              <li id="section-10.1-8.3.2.6">
-                <p id="section-10.1-8.3.2.6.1">Goto #looptarget<a href="#section-10.1-8.3.2.6.1" class="pilcrow">¶</a></p>
+              <li id="section-10.1-9.3.2.6">
+                <p id="section-10.1-9.3.2.6.1">Goto #looptarget<a href="#section-10.1-9.3.2.6.1" class="pilcrow">¶</a></p>
 </li>
             </ol>
 </li>
-          <li id="section-10.1-8.4">
-            <p id="section-10.1-8.4.1">Return <code>i</code> to the caller<a href="#section-10.1-8.4.1" class="pilcrow">¶</a></p>
+          <li id="section-10.1-9.4">
+            <p id="section-10.1-9.4.1">Return <code>i</code> to the caller<a href="#section-10.1-9.4.1" class="pilcrow">¶</a></p>
 </li>
         </ol>
-<p id="section-10.1-9">```python
-def addleafhash(db, f: bytes) -&gt; int:<a href="#section-10.1-9" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="section-10.1-10">
+<p id="section-10.1-10">The process expressed in python is<a href="#section-10.1-10" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-10.1-11">
 <pre>
-g = 0
-i = db.append(f)
+def addleafhash(db, f: bytes) -&gt; int:
 
-while index_height(i) &gt; g:
+    g = 0
+    i = db.append(f)
 
-    ileft = i - (2 &lt;&lt; g)
-    iright = i - 1
+    while index_height(i) &gt; g:
 
-    i = db.append(hash_pospair64(i+1, db.get(ileft), db.get(iright)))
-    g += 1
+        ileft = i - (2 &lt;&lt; g)
+        iright = i - 1
 
-return i ```
-</pre><a href="#section-10.1-10" class="pilcrow">¶</a>
+        i = db.append(hash_pospair64(i+1, db.get(ileft), db.get(iright)))
+        g += 1
+
+    return i
+</pre><a href="#section-10.1-11" class="pilcrow">¶</a>
 </div>
 </section>
 </div>
@@ -1788,31 +1800,31 @@ Return the current path to the caller, terminating the algorithm.<a href="#secti
         </ul>
 <p id="section-10.2-9">Note that at the #termination_condition it <span class="bcp14">MAY</span> be convenient for implementations to return the index of the local peak <code>iLocalPeak</code> and its height <code>g</code> to the caller.<a href="#section-10.2-9" class="pilcrow">¶</a></p>
 <p id="section-10.2-10">For reference in the supplementary worked examples, the decision points are annotated (1), (2)<a href="#section-10.2-10" class="pilcrow">¶</a></p>
-<p id="section-10.2-11">```python
-def index_proof_path(s, i) -&gt; List[int]:
-    """Returns the list of node indices proving inclusion of i"""<a href="#section-10.2-11" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="section-10.2-12">
+<div class="alignLeft art-text artwork" id="section-10.2-11">
 <pre>
-path = []
-g = index_height(i)
+def inclusion_proof_path(s, i) -&gt; List[int]:
+    """Returns the list of node indices proving inclusion of i"""
 
-while True:
+    path = []
+    g = index_height(i)
 
-    isibling = None # lexical scopes
+    while True:
 
-    ilocalpeak = i
-    if index_height(i+1) &gt; g: # (1)
-        isibling = ilocalpeak - ((2 &lt;&lt; g) -1)
-        i = i + 1
-    else:
-        isibling = ilocalpeak + ((2 &lt;&lt; g) -1)
-        i = i + (2 &lt;&lt; g)
+        isibling = None # lexical scopes
 
-    if isibling &gt;= s: # (2)
-        return path
-    path.append(isibling)
-    g = g + 1 ```
-</pre><a href="#section-10.2-12" class="pilcrow">¶</a>
+        ilocalpeak = i
+        if index_height(i+1) &gt; g: # (1)
+            isibling = ilocalpeak - ((2 &lt;&lt; g) -1)
+            i = i + 1
+        else:
+            isibling = ilocalpeak + ((2 &lt;&lt; g) -1)
+            i = i + (2 &lt;&lt; g)
+
+        if isibling &gt;= s: # (2)
+            return path
+        path.append(isibling)
+        g = g + 1
+</pre><a href="#section-10.2-11" class="pilcrow">¶</a>
 </div>
 </section>
 </div>
@@ -1907,30 +1919,31 @@ the caller <span class="bcp14">MUST</span> ensure the entire concatenated series
 In the case of concatenated inclusion proof verification,
 the sub range of the aggregate proof must be advanced by the returned consumed length on each call.<a href="#section-11.1-6" class="pilcrow">¶</a></p>
 <p id="section-11.1-7">Consistency proofs concatenate inclusion proofs for each accumulator peak in the origin mmr state.<a href="#section-11.1-7" class="pilcrow">¶</a></p>
-<p id="section-11.1-8">```python
-def verify_inclusion_path(s: int, i: int, nodehash: bytes, proof: List[bytes], root: bytes) -&gt; Tuple[bool, int]:<a href="#section-11.1-8" class="pilcrow">¶</a></p>
+<p id="section-11.1-8">The process expressed in python is<a href="#section-11.1-8" class="pilcrow">¶</a></p>
 <div class="alignLeft art-text artwork" id="section-11.1-9">
 <pre>
-if len(proof) == 0 and nodehash == root:
-    return (True, 0)
+def verify_inclusion_path(s: int, i: int, nodehash: bytes, proof: List[bytes], root: bytes) -&gt; Tuple[bool, int]:
 
-g = index_height(i)
+    if len(proof) == 0 and nodehash == root:
+        return (True, 0)
 
-elementhash = nodehash
+    g = index_height(i)
 
-for iproof, pathitem in enumerate(proof):
-    if index_height(i + 1) &gt; g:
-        i = i + 1
-        elementhash = hash_pospair64(i+1, pathitem, elementhash)
-    else:
-        i = i + (2 &lt;&lt; g)
-        elementhash = hash_pospair64(i+1, elementhash, pathitem)
+    elementhash = nodehash
 
-    if elementhash == root:
-        return (True, iproof + 1)
-    g = g + 1
+    for iproof, pathitem in enumerate(proof):
+        if index_height(i + 1) &gt; g:
+            i = i + 1
+            elementhash = hash_pospair64(i+1, pathitem, elementhash)
+        else:
+            i = i + (2 &lt;&lt; g)
+            elementhash = hash_pospair64(i+1, elementhash, pathitem)
 
-return (False, len(proof)) ```
+        if elementhash == root:
+            return (True, iproof + 1)
+        g = g + 1
+
+    return (False, len(proof))
 </pre><a href="#section-11.1-9" class="pilcrow">¶</a>
 </div>
 </section>
@@ -1941,22 +1954,23 @@ return (False, len(proof)) ```
 <a href="#section-11.2" class="section-number selfRef">11.2. </a><a href="#name-consistencyproof" class="section-name selfRef">ConsistencyProof</a>
         </h3>
 <p id="section-11.2-1">Words tbd<a href="#section-11.2-1" class="pilcrow">¶</a></p>
-<p id="section-11.2-2">```python
-def consistency_proof(asize: int, bsize: int) -&gt; List[int]:
-    """Returns a proof of consistency between the MMR's identified by asize and bsize.<a href="#section-11.2-2" class="pilcrow">¶</a></p>
+<p id="section-11.2-2">The process expressed in python is<a href="#section-11.2-2" class="pilcrow">¶</a></p>
 <div class="alignLeft art-text artwork" id="section-11.2-3">
 <pre>
-The returned path is the concatenation of the inclusion proofs
-authenticating the peaks of MMR(a) in MMR(b)
-"""
-apeaks = peaks(asize)
+def consistency_proof(asize: int, bsize: int) -&gt; List[int]:
+    """Returns a proof of consistency between the MMR's identified by asize and bsize.
 
-proof = []
+    The returned path is the concatenation of the inclusion proofs
+    authenticating the peaks of MMR(a) in MMR(b)
+    """
+    apeaks = peaks(asize)
 
-for apos in apeaks:
-    proof.extend(index_proof_path(bsize, apos-1))
+    proof = []
 
-return proof ```
+    for apos in apeaks:
+        proof.extend(index_proof_path(bsize, apos-1))
+
+    return proof
 </pre><a href="#section-11.2-3" class="pilcrow">¶</a>
 </div>
 </section>
@@ -1966,8 +1980,9 @@ return proof ```
         <h3 id="name-verifyconsistencyproof">
 <a href="#section-11.3" class="section-number selfRef">11.3. </a><a href="#name-verifyconsistencyproof" class="section-name selfRef">VerifyConsistencyProof</a>
         </h3>
-<p id="section-11.3-1">Words tbd<a href="#section-11.3-1" class="pilcrow">¶</a></p>
-<p id="section-11.3-2">```python
+<p id="section-11.3-1">The process expressed in python is<a href="#section-11.3-1" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-11.3-2">
+<pre>
 def verify_consistency(
         asize: int, bsize: int,
         aaccumulator: List[bytes], baccumulator: List[bytes],
@@ -1975,37 +1990,36 @@ def verify_consistency(
     """
     """
     apeakpositions = peaks(asize)
-    bpeakpositions = peaks(bsize)<a href="#section-11.3-2" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="section-11.3-3">
-<pre>
-if len(aaccumulator) != len(apeakpositions):
-    return False
+    bpeakpositions = peaks(bsize)
 
-if len(baccumulator) != len(bpeakpositions):
-    return False
+    if len(aaccumulator) != len(apeakpositions):
+        return False
 
-ipeaka = ipeakb = 0
+    if len(baccumulator) != len(bpeakpositions):
+        return False
 
-apos = apeakpositions[ipeaka]
+    ipeaka = ipeakb = 0
 
-ok = False
-while ipeaka &lt; len(aaccumulator):
-    bpeak = bpeakpositions[ipeakb]
-    while apos  &lt;= bpeak:
-        (ok, used) = verify_inclusion_path(
-            bsize, aaccumulator[ipeaka], apos-1,
-            path, baccumulator[ipeakb])
-        if not (ok or used &gt; len(path)):
-            return False
-        path = path[used:]
-        ipeaka += 1
-        if ipeaka == len(aaccumulator):
-            break
-        apos = apeakpositions[ipeaka]
-    ipeakb += 1
+    apos = apeakpositions[ipeaka]
 
-return ok and len(path) == 0 ```
-</pre><a href="#section-11.3-3" class="pilcrow">¶</a>
+    ok = False
+    while ipeaka &lt; len(aaccumulator):
+        bpeak = bpeakpositions[ipeakb]
+        while apos  &lt;= bpeak:
+            (ok, used) = verify_inclusion_path(
+                bsize, aaccumulator[ipeaka], apos-1,
+                path, baccumulator[ipeakb])
+            if not (ok or used &gt; len(path)):
+                return False
+            path = path[used:]
+            ipeaka += 1
+            if ipeaka == len(aaccumulator):
+                break
+            apos = apeakpositions[ipeaka]
+        ipeakb += 1
+
+    return ok and len(path) == 0
+</pre><a href="#section-11.3-2" class="pilcrow">¶</a>
 </div>
 </section>
 </div>
@@ -2022,17 +2036,17 @@ return ok and len(path) == 0 ```
 <a href="#section-12.1" class="section-number selfRef">12.1. </a><a href="#name-indexheight" class="section-name selfRef">IndexHeight</a>
         </h3>
 <p id="section-12.1-1"><code>IndexHeight(i)</code> returns the zero based height <code>g</code> of the node index <code>i</code><a href="#section-12.1-1" class="pilcrow">¶</a></p>
-<p id="section-12.1-2">```python
+<div class="alignLeft art-text artwork" id="section-12.1-2">
+<pre>
 def index_height(i) -&gt; int:
     """Returns the 0 based height of the mmr entry indexed by i"""
     # convert the index to a position to take advantage of the bit patterns afforded
     pos = i + 1
     while not all_ones(pos):
-      pos = pos - most_sig_bit(pos) + 1<a href="#section-12.1-2" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="section-12.1-3">
-<pre>
-return pos.bit_length() - 1 ```
-</pre><a href="#section-12.1-3" class="pilcrow">¶</a>
+      pos = pos - most_sig_bit(pos) + 1
+
+    return pos.bit_length() - 1
+</pre><a href="#section-12.1-2" class="pilcrow">¶</a>
 </div>
 </section>
 </div>
@@ -2042,26 +2056,26 @@ return pos.bit_length() - 1 ```
 <a href="#section-12.2" class="section-number selfRef">12.2. </a><a href="#name-peaks" class="section-name selfRef">Peaks</a>
         </h3>
 <p id="section-12.2-1"><code>Peaks(S)</code> returns the peak positions for <code>MMR(S)</code> (Note: these are just the corresponding storage indices + 1)<a href="#section-12.2-1" class="pilcrow">¶</a></p>
-<p id="section-12.2-2">```python
-def peaks(s) -&gt; List[int]:
-    """Returns the peak indices for MMR(s)<a href="#section-12.2-2" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="section-12.2-3">
+<div class="alignLeft art-text artwork" id="section-12.2-2">
 <pre>
-Assumes MMR(s) is complete, implementations can check for this condition by
-testing the height of s+1
-"""
+def peaks(s) -&gt; List[int]:
+    """Returns the peak indices for MMR(s)
 
-peak = 0
-peaks = []
-while s != 0:
-    # find the highest peak size in the current MMR(s)
-    highest_size = (1 &lt;&lt;((s +1).bit_length()-1)) - 1
-    peak = peak + highest_size
-    peaks.append(peak)
-    s -= highest_size
+    Assumes MMR(s) is complete, implementations can check for this condition by
+    testing the height of s+1
+    """
 
-return peaks ```
-</pre><a href="#section-12.2-3" class="pilcrow">¶</a>
+    peak = 0
+    peaks = []
+    while s != 0:
+        # find the highest peak size in the current MMR(s)
+        highest_size = (1 &lt;&lt;((s +1).bit_length()-1)) - 1
+        peak = peak + highest_size
+        peaks.append(peak)
+        s -= highest_size
+
+    return peaks
+</pre><a href="#section-12.2-2" class="pilcrow">¶</a>
 </div>
 </section>
 </div>
@@ -2101,10 +2115,13 @@ the accumulator index is given by <code>length(R) - g - 1</code><a href="#sectio
             <p id="section-12.4-5.5.1">Return the count of bits set in <code>mask</code><a href="#section-12.4-5.5.1" class="pilcrow">¶</a></p>
 </li>
         </ol>
-<p id="section-12.4-6"><code>python
+<p id="section-12.4-6">Expressed as python<a href="#section-12.4-6" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-12.4-7">
+<pre>
 def peak_index(e:int, g:int) -&gt; int:
     return (e &amp; ~((1 &lt;&lt; g)-1)).bit_count() - 1
-</code><a href="#section-12.4-6" class="pilcrow">¶</a></p>
+</pre><a href="#section-12.4-7" class="pilcrow">¶</a>
+</div>
 </section>
 </div>
 <div id="peaksbitmap">
@@ -2114,27 +2131,28 @@ def peak_index(e:int, g:int) -&gt; int:
         </h3>
 <p id="section-12.5-1"><code>PeaksBitmap(s)</code> returns the count of leaves in <code>MMR(s)</code>,
 this algorithm is named for the fact that the set bit positions correspond to the heights of the  peaks present in the MMR.<a href="#section-12.5-1" class="pilcrow">¶</a></p>
-<p id="section-12.5-2">```python
-def peaks_bitmap(s: int) -&gt; int:
-    """Returns a mask with a bit set for each peak,<a href="#section-12.5-2" class="pilcrow">¶</a></p>
+<p id="section-12.5-2">Expressed in python<a href="#section-12.5-2" class="pilcrow">¶</a></p>
 <div class="alignLeft art-text artwork" id="section-12.5-3">
 <pre>
-The resulting binary value is also the count of leaves contained in the
-largest complete MMR included in, or equal to, s
-"""
-if s == 0:
-    return 0
+def peaks_bitmap(s: int) -&gt; int:
+    """Returns a mask with a bit set for each peak,
 
-peaksize = (1 &lt;&lt; s.bit_length()) - 1
-peakmap = 0
-while peaksize &gt; 0:
-    peakmap &lt;&lt;= 1
-    if s &gt;= peaksize:
-        s -= peaksize
-        peakmap |= 1
-    peaksize &gt;&gt;= 1
+    The resulting binary value is also the count of leaves contained in the
+    largest complete MMR included in, or equal to, s
+    """
+    if s == 0:
+        return 0
 
-return peakmap ```
+    peaksize = (1 &lt;&lt; s.bit_length()) - 1
+    peakmap = 0
+    while peaksize &gt; 0:
+        peakmap &lt;&lt;= 1
+        if s &gt;= peaksize:
+            s -= peaksize
+            peakmap |= 1
+        peaksize &gt;&gt;= 1
+
+    return peakmap
 </pre><a href="#section-12.5-3" class="pilcrow">¶</a>
 </div>
 </section>
@@ -2179,16 +2197,20 @@ this works with the compact accumulator directly.<a href="#section-13.2-1" class
 <p id="section-13.3-1">Smallest, left most (all ones) peak, containing or <strong>equal to</strong> pos<a href="#section-13.3-1" class="pilcrow">¶</a></p>
 <p id="section-13.3-2">This is essentially a ^2 <em>floor</em> function for the accumulation of bits<a href="#section-13.3-2" class="pilcrow">¶</a></p>
 <p id="section-13.3-3"><code>1&lt;&lt;(BitLength(pos+1)-1) - 1</code><a href="#section-13.3-3" class="pilcrow">¶</a></p>
-<p id="section-13.3-4">```<a href="#section-13.3-4" class="pilcrow">¶</a></p>
-<p id="section-13.3-5">TopPeak(1) = TopPeak(2) = 1
+<p id="section-13.3-4">An illustrative example of some outputs<a href="#section-13.3-4" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-13.3-5">
+<pre>
+TopPeak(1) = TopPeak(2) = 1
 TopPeak(2) = TopPeak(3) = TopPeak(4) = TopPeak(5) = TopPeak(6) = 3
-TopPeak(7) = 7<a href="#section-13.3-5" class="pilcrow">¶</a></p>
-<p id="section-13.3-6">2       7
+TopPeak(7) = 7
+
+2       7
       /   \
 1    3     6    10
     / \  /  \   / \
-0  1   2 4   5 8   9 11<a href="#section-13.3-6" class="pilcrow">¶</a></p>
-<p id="section-13.3-7">```<a href="#section-13.3-7" class="pilcrow">¶</a></p>
+0  1   2 4   5 8   9 11
+</pre><a href="#section-13.3-5" class="pilcrow">¶</a>
+</div>
 </section>
 </div>
 <div id="topheight">
@@ -2198,17 +2220,21 @@ TopPeak(7) = 7<a href="#section-13.3-5" class="pilcrow">¶</a></p>
         </h3>
 <p id="section-13.4-1">The height index <code>g</code> of the largest perfect peak contained in, or exactly, pos
 This is essentially a ^2 <em>floor</em> function for the accumulation of bits:<a href="#section-13.4-1" class="pilcrow">¶</a></p>
-<p id="section-13.4-2">```
+<p id="section-13.4-2">An illustrative example of some outputs<a href="#section-13.4-2" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-13.4-3">
+<pre>
 TopHeight(1) = TopHeight(2) = 0
 TopHeight(2) = TopHeight(3) = TopHeight(4) = TopHeigth(5) = TopHeight(6) = 1
-TopHeight(7) = 2<a href="#section-13.4-2" class="pilcrow">¶</a></p>
-<p id="section-13.4-3">2       7
+TopHeight(7) = 2
+
+2       7
       /   \
 1    3     6    10
     / \  /  \   / \
-0  1   2 4   5 8   9 11<a href="#section-13.4-3" class="pilcrow">¶</a></p>
-<p id="section-13.4-4">```<a href="#section-13.4-4" class="pilcrow">¶</a></p>
-<p id="section-13.4-5"><code>BitLength(pos+1)-1</code><a href="#section-13.4-5" class="pilcrow">¶</a></p>
+0  1   2 4   5 8   9 11
+</pre><a href="#section-13.4-3" class="pilcrow">¶</a>
+</div>
+<p id="section-13.4-4"><code>BitLength(pos+1)-1</code><a href="#section-13.4-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="siblingoffset">
@@ -2225,12 +2251,15 @@ TopHeight(7) = 2<a href="#section-13.4-2" class="pilcrow">¶</a></p>
 <a href="#section-13.6" class="section-number selfRef">13.6. </a><a href="#name-mostsigbit" class="section-name selfRef">MostSigBit</a>
         </h3>
 <p id="section-13.6-1"><code>1 &lt;&lt; (BitLength(pos) - 1)</code><a href="#section-13.6-1" class="pilcrow">¶</a></p>
-<p id="section-13.6-2"><code>python
+<p id="section-13.6-2">Expressed in python<a href="#section-13.6-2" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-13.6-3">
+<pre>
 def most_sig_bit(pos) -&gt; int:
     """Returns the mask for the the most significant bit in pos"""
     return 1 &lt;&lt; (pos.bit_length() - 1)
-</code><a href="#section-13.6-2" class="pilcrow">¶</a></p>
-<p id="section-13.6-3">We assume the following primitives for working with bits as they have obvious implementations.<a href="#section-13.6-3" class="pilcrow">¶</a></p>
+</pre><a href="#section-13.6-3" class="pilcrow">¶</a>
+</div>
+<p id="section-13.6-4">We assume the following primitives for working with bits as they have obvious implementations.<a href="#section-13.6-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="bitlength">
@@ -2239,10 +2268,13 @@ def most_sig_bit(pos) -&gt; int:
 <a href="#section-13.7" class="section-number selfRef">13.7. </a><a href="#name-bitlength" class="section-name selfRef">BitLength</a>
         </h3>
 <p id="section-13.7-1">The minimum number of bits to represent pos. b011 would be 2, b010 would be 2, and b001 would be 1.<a href="#section-13.7-1" class="pilcrow">¶</a></p>
-<p id="section-13.7-2"><code>python
+<p id="section-13.7-2">In python,<a href="#section-13.7-2" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-13.7-3">
+<pre>
 def bit_length(pos):
     return pos.bit_length()
-</code><a href="#section-13.7-2" class="pilcrow">¶</a></p>
+</pre><a href="#section-13.7-3" class="pilcrow">¶</a>
+</div>
 </section>
 </div>
 <div id="allones">
@@ -2251,14 +2283,15 @@ def bit_length(pos):
 <a href="#section-13.8" class="section-number selfRef">13.8. </a><a href="#name-allones" class="section-name selfRef">AllOnes</a>
         </h3>
 <p id="section-13.8-1">Tests if all bits, from the most significant that is set, are 1, b0111 would be true, b0101 would be false.<a href="#section-13.8-1" class="pilcrow">¶</a></p>
-<p id="section-13.8-2">```python
-def all_ones(pos) -&gt; bool:
-    """Returns true if all bits, starting with the most significant, are 1"""<a href="#section-13.8-2" class="pilcrow">¶</a></p>
+<p id="section-13.8-2">In python,<a href="#section-13.8-2" class="pilcrow">¶</a></p>
 <div class="alignLeft art-text artwork" id="section-13.8-3">
 <pre>
-msb = most_sig_bit(pos)
-mask = (1 &lt;&lt; (msb + 1)) - 1
-return pos == mask ```
+def all_ones(pos) -&gt; bool:
+    """Returns true if all bits, starting with the most significant, are 1"""
+
+    msb = most_sig_bit(pos)
+    mask = (1 &lt;&lt; (msb + 1)) - 1
+    return pos == mask
 </pre><a href="#section-13.8-3" class="pilcrow">¶</a>
 </div>
 </section>
@@ -2277,9 +2310,12 @@ return pos == mask ```
 <a href="#section-13.10" class="section-number selfRef">13.10. </a><a href="#name-trailingzeros" class="section-name selfRef">TrailingZeros</a>
         </h3>
 <p id="section-13.10-1">The count of nodes above and to the left of <code>pos</code><a href="#section-13.10-1" class="pilcrow">¶</a></p>
-<p id="section-13.10-2"><code>python
+<p id="section-13.10-2">In python,<a href="#section-13.10-2" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-13.10-3">
+<pre>
 (v &amp; -v).bit_length() - 1
-</code><a href="#section-13.10-2" class="pilcrow">¶</a></p>
+</pre><a href="#section-13.10-3" class="pilcrow">¶</a>
+</div>
 </section>
 </div>
 </section>
