@@ -140,11 +140,9 @@ An accumulator is at most tree height long, which is also the maximum length of 
 
 For illustration, consider `MMR(8)` which is a complete MMR with two peaks at node indices 6 and 7.
 
-```
-   6
- 2   5
-0 1 3 4 7
-```
+       6
+     2   5
+    0 1 3 4 7
 
 The node indices match their location in storage.
 When constructing the tree, addition of nodes is strictly append only.
@@ -153,20 +151,16 @@ MMR's are identified uniquely by their size. Above we have `MMR(8)`, because the
 
 An incomplete MMR may still be identified. Here we have `MMR(9)`.
 
-```
-   6
- 2   5
-0 1 3 4 7 8
-```
+       6
+     2   5
+    0 1 3 4 7 8
 
 An MMR is said to be "complete" when all possible ancestors have been "filled in".
 The value for node 9 is `H(7 || 8)`, and adding that node completes the previous MMR.
 
-```
-   6
- 2   5   9
-0 1 3 4 7 8
-```
+       6
+     2   5   9
+    0 1 3 4 7 8
 
 The accumulator, described by [ReyzinYakoubov] is the set of peaks, with "gaps" reserved for the missing peaks.
 MMR(8), where a gap is indicated by _ would be:
@@ -227,19 +221,15 @@ Lastly, many primitives for working with MMR's rely on a property of the *positi
 
 The position tree for the complete MMR with size 8 MMR(8) is
 
-```
-   7
- 3   6
-1 2 4 5 8
-```
+       7
+     3   6
+    1 2 4 5 8
 
 Expressing this in binary notation reveals the property that MMR's make extensive use of:
 
-```
-    111
- 11     110
-1 10 100  101 1000
-```
+        111
+     11     110
+    1 10 100  101 1000
 
 The left most node at any height is always "all ones".
 
@@ -336,6 +326,8 @@ The caller SHOULD take into account the defined [Node values](#node-values) sche
 Because the interior nodes commit the position of their children, including the case where the child is a leaf,
 no special steps are required of the application or implementation to account for duplicate values of `x`.
 
+The process in words is
+
 1. Set `i` to the result of invoking `Append(f)`
 1. Set `g` to 0, the height of the leaf item f
 1. If `IndexHeight(i)` is greater than `g` (#looptarget)
@@ -347,22 +339,22 @@ no special steps are required of the application or implementation to account fo
     1. Goto #looptarget
 1. Return `i` to the caller
 
-```python
-def addleafhash(db, f: bytes) -> int:
+The process expressed in python is
 
-    g = 0
-    i = db.append(f)
+    def addleafhash(db, f: bytes) -> int:
 
-    while index_height(i) > g:
+        g = 0
+        i = db.append(f)
 
-        ileft = i - (2 << g)
-        iright = i - 1
+        while index_height(i) > g:
 
-        i = db.append(hash_pospair64(i+1, db.get(ileft), db.get(iright)))
-        g += 1
+            ileft = i - (2 << g)
+            iright = i - 1
 
-    return i
-```
+            i = db.append(hash_pospair64(i+1, db.get(ileft), db.get(iright)))
+            g += 1
+
+        return i
 
 ## InclusionProofPath
 
@@ -404,30 +396,28 @@ Note that at the #termination_condition it MAY be convenient for implementations
 
 For reference in the supplementary worked examples, the decision points are annotated (1), (2)
 
-```python
-def index_proof_path(s, i) -> List[int]:
-    """Returns the list of node indices proving inclusion of i"""
+    def inclusion_proof_path(s, i) -> List[int]:
+        """Returns the list of node indices proving inclusion of i"""
 
-    path = []
-    g = index_height(i)
+        path = []
+        g = index_height(i)
 
-    while True:
+        while True:
 
-        isibling = None # lexical scopes
+            isibling = None # lexical scopes
 
-        ilocalpeak = i
-        if index_height(i+1) > g: # (1)
-            isibling = ilocalpeak - ((2 << g) -1)
-            i = i + 1
-        else:
-            isibling = ilocalpeak + ((2 << g) -1)
-            i = i + (2 << g)
+            ilocalpeak = i
+            if index_height(i+1) > g: # (1)
+                isibling = ilocalpeak - ((2 << g) -1)
+                i = i + 1
+            else:
+                isibling = ilocalpeak + ((2 << g) -1)
+                i = i + (2 << g)
 
-        if isibling >= s: # (2)
-            return path
-        path.append(isibling)
-        g = g + 1
-```
+            if isibling >= s: # (2)
+                return path
+            path.append(isibling)
+            g = g + 1
 
 # Inclusion and Consistency Verification Algorithms
 
@@ -473,94 +463,92 @@ the sub range of the aggregate proof must be advanced by the returned consumed l
 
 Consistency proofs concatenate inclusion proofs for each accumulator peak in the origin mmr state.
 
-```python
-def verify_inclusion_path(s: int, i: int, nodehash: bytes, proof: List[bytes], root: bytes) -> Tuple[bool, int]:
+The process expressed in python is
 
-    if len(proof) == 0 and nodehash == root:
-        return (True, 0)
+    def verify_inclusion_path(s: int, i: int, nodehash: bytes, proof: List[bytes], root: bytes) -> Tuple[bool, int]:
 
-    g = index_height(i)
+        if len(proof) == 0 and nodehash == root:
+            return (True, 0)
 
-    elementhash = nodehash
+        g = index_height(i)
 
-    for iproof, pathitem in enumerate(proof):
-        if index_height(i + 1) > g:
-            i = i + 1
-            elementhash = hash_pospair64(i+1, pathitem, elementhash)
-        else:
-            i = i + (2 << g)
-            elementhash = hash_pospair64(i+1, elementhash, pathitem)
+        elementhash = nodehash
 
-        if elementhash == root:
-            return (True, iproof + 1)
-        g = g + 1
+        for iproof, pathitem in enumerate(proof):
+            if index_height(i + 1) > g:
+                i = i + 1
+                elementhash = hash_pospair64(i+1, pathitem, elementhash)
+            else:
+                i = i + (2 << g)
+                elementhash = hash_pospair64(i+1, elementhash, pathitem)
 
-    return (False, len(proof))
-```
+            if elementhash == root:
+                return (True, iproof + 1)
+            g = g + 1
+
+        return (False, len(proof))
 
 ## ConsistencyProof
 
 Words tbd
 
-```python
-def consistency_proof(asize: int, bsize: int) -> List[int]:
-    """Returns a proof of consistency between the MMR's identified by asize and bsize.
+The process expressed in python is
 
-    The returned path is the concatenation of the inclusion proofs
-    authenticating the peaks of MMR(a) in MMR(b)
-    """
-    apeaks = peaks(asize)
+    def consistency_proof(asize: int, bsize: int) -> List[int]:
+        """Returns a proof of consistency between the MMR's identified by asize and bsize.
 
-    proof = []
+        The returned path is the concatenation of the inclusion proofs
+        authenticating the peaks of MMR(a) in MMR(b)
+        """
+        apeaks = peaks(asize)
 
-    for apos in apeaks:
-        proof.extend(index_proof_path(bsize, apos-1))
+        proof = []
 
-    return proof
-```
+        for apos in apeaks:
+            proof.extend(index_proof_path(bsize, apos-1))
+
+        return proof
 
 ## VerifyConsistencyProof
 
-Words tbd
+The process expressed in python is
 
-```python
-def verify_consistency(
-        asize: int, bsize: int,
-        aaccumulator: List[bytes], baccumulator: List[bytes],
-        path: List[bytes]) -> bool:
-    """
-    """
-    apeakpositions = peaks(asize)
-    bpeakpositions = peaks(bsize)
+    def verify_consistency(
+            asize: int, bsize: int,
+            aaccumulator: List[bytes], baccumulator: List[bytes],
+            path: List[bytes]) -> bool:
+        """
+        """
+        apeakpositions = peaks(asize)
+        bpeakpositions = peaks(bsize)
 
-    if len(aaccumulator) != len(apeakpositions):
-        return False
+        if len(aaccumulator) != len(apeakpositions):
+            return False
 
-    if len(baccumulator) != len(bpeakpositions):
-        return False
+        if len(baccumulator) != len(bpeakpositions):
+            return False
 
-    ipeaka = ipeakb = 0
+        ipeaka = ipeakb = 0
 
-    apos = apeakpositions[ipeaka]
+        apos = apeakpositions[ipeaka]
 
-    ok = False
-    while ipeaka < len(aaccumulator):
-        bpeak = bpeakpositions[ipeakb]
-        while apos  <= bpeak:
-            (ok, used) = verify_inclusion_path(
-                bsize, aaccumulator[ipeaka], apos-1,
-                path, baccumulator[ipeakb])
-            if not (ok or used > len(path)):
-                return False
-            path = path[used:]
-            ipeaka += 1
-            if ipeaka == len(aaccumulator):
-                break
-            apos = apeakpositions[ipeaka]
-        ipeakb += 1
+        ok = False
+        while ipeaka < len(aaccumulator):
+            bpeak = bpeakpositions[ipeakb]
+            while apos  <= bpeak:
+                (ok, used) = verify_inclusion_path(
+                    bsize, aaccumulator[ipeaka], apos-1,
+                    path, baccumulator[ipeakb])
+                if not (ok or used > len(path)):
+                    return False
+                path = path[used:]
+                ipeaka += 1
+                if ipeaka == len(aaccumulator):
+                    break
+                apos = apeakpositions[ipeaka]
+            ipeakb += 1
 
-    return ok and len(path) == 0
-```
+        return ok and len(path) == 0
 
 # Algorithms for working with the accumulator
 
@@ -568,41 +556,37 @@ def verify_consistency(
 
 `IndexHeight(i)` returns the zero based height `g` of the node index `i`
 
-```python
-def index_height(i) -> int:
-    """Returns the 0 based height of the mmr entry indexed by i"""
-    # convert the index to a position to take advantage of the bit patterns afforded
-    pos = i + 1
-    while not all_ones(pos):
-      pos = pos - most_sig_bit(pos) + 1
+    def index_height(i) -> int:
+        """Returns the 0 based height of the mmr entry indexed by i"""
+        # convert the index to a position to take advantage of the bit patterns afforded
+        pos = i + 1
+        while not all_ones(pos):
+          pos = pos - most_sig_bit(pos) + 1
 
-    return pos.bit_length() - 1
-```
+        return pos.bit_length() - 1
 
 
 ## Peaks
 
 `Peaks(S)` returns the peak positions for `MMR(S)` (Note: these are just the corresponding storage indices + 1)
 
-```python
-def peaks(s) -> List[int]:
-    """Returns the peak indices for MMR(s)
+    def peaks(s) -> List[int]:
+        """Returns the peak indices for MMR(s)
 
-    Assumes MMR(s) is complete, implementations can check for this condition by
-    testing the height of s+1
-    """
+        Assumes MMR(s) is complete, implementations can check for this condition by
+        testing the height of s+1
+        """
 
-    peak = 0
-    peaks = []
-    while s != 0:
-        # find the highest peak size in the current MMR(s)
-        highest_size = (1 <<((s +1).bit_length()-1)) - 1
-        peak = peak + highest_size
-        peaks.append(peak)
-        s -= highest_size
+        peak = 0
+        peaks = []
+        while s != 0:
+            # find the highest peak size in the current MMR(s)
+            highest_size = (1 <<((s +1).bit_length()-1)) - 1
+            peak = peak + highest_size
+            peaks.append(peak)
+            s -= highest_size
 
-    return peaks
-```
+        return peaks
 
 ## SparsePeakIndex
 
@@ -627,38 +611,37 @@ Otherwise it is the count of zero bits in `e` after the least significant bit se
 4. Set `mask` to the logical and of `e` and `mask`
 5. Return the count of bits set in `mask`
 
-```python
-def peak_index(e:int, g:int) -> int:
-    return (e & ~((1 << g)-1)).bit_count() - 1
-```
+Expressed as python
+
+    def peak_index(e:int, g:int) -> int:
+        return (e & ~((1 << g)-1)).bit_count() - 1
 
 ## PeaksBitmap
 
 `PeaksBitmap(s)` returns the count of leaves in `MMR(s)`,
 this algorithm is named for the fact that the set bit positions correspond to the heights of the  peaks present in the MMR.
 
-```python
-def peaks_bitmap(s: int) -> int:
-    """Returns a mask with a bit set for each peak,
+Expressed in python
 
-    The resulting binary value is also the count of leaves contained in the
-    largest complete MMR included in, or equal to, s
-    """
-    if s == 0:
-        return 0
+    def peaks_bitmap(s: int) -> int:
+        """Returns a mask with a bit set for each peak,
 
-    peaksize = (1 << s.bit_length()) - 1
-    peakmap = 0
-    while peaksize > 0:
-        peakmap <<= 1
-        if s >= peaksize:
-            s -= peaksize
-            peakmap |= 1
-        peaksize >>= 1
+        The resulting binary value is also the count of leaves contained in the
+        largest complete MMR included in, or equal to, s
+        """
+        if s == 0:
+            return 0
 
-    return peakmap
-```
+        peaksize = (1 << s.bit_length()) - 1
+        peakmap = 0
+        while peaksize > 0:
+            peakmap <<= 1
+            if s >= peaksize:
+                s -= peaksize
+                peakmap |= 1
+            peaksize >>= 1
 
+        return peakmap
 
 # General Algorithms & Primitives
 
@@ -692,37 +675,34 @@ This is essentially a ^2 *floor* function for the accumulation of bits
 
 `1<<(BitLength(pos+1)-1) - 1`
 
-```
+An illustrative example of some outputs
 
-TopPeak(1) = TopPeak(2) = 1
-TopPeak(2) = TopPeak(3) = TopPeak(4) = TopPeak(5) = TopPeak(6) = 3
-TopPeak(7) = 7
+    TopPeak(1) = TopPeak(2) = 1
+    TopPeak(2) = TopPeak(3) = TopPeak(4) = TopPeak(5) = TopPeak(6) = 3
+    TopPeak(7) = 7
 
-2       7
-      /   \
-1    3     6    10
-    / \  /  \   / \
-0  1   2 4   5 8   9 11
-
-```
+    2       7
+          /   \
+    1    3     6    10
+        / \  /  \   / \
+    0  1   2 4   5 8   9 11
 
 ## TopHeight
 
 The height index `g` of the largest perfect peak contained in, or exactly, pos
 This is essentially a ^2 *floor* function for the accumulation of bits:
 
-```
-TopHeight(1) = TopHeight(2) = 0
-TopHeight(2) = TopHeight(3) = TopHeight(4) = TopHeigth(5) = TopHeight(6) = 1
-TopHeight(7) = 2
+An illustrative example of some outputs
 
-2       7
-      /   \
-1    3     6    10
-    / \  /  \   / \
-0  1   2 4   5 8   9 11
+    TopHeight(1) = TopHeight(2) = 0
+    TopHeight(2) = TopHeight(3) = TopHeight(4) = TopHeigth(5) = TopHeight(6) = 1
+    TopHeight(7) = 2
 
-```
+    2       7
+          /   \
+    1    3     6    10
+        / \  /  \   / \
+    0  1   2 4   5 8   9 11
 
  `BitLength(pos+1)-1`
 
@@ -734,11 +714,11 @@ TopHeight(7) = 2
 
 `1 << (BitLength(pos) - 1)`
 
-```python
-def most_sig_bit(pos) -> int:
-    """Returns the mask for the the most significant bit in pos"""
-    return 1 << (pos.bit_length() - 1)
-```
+Expressed in python
+
+    def most_sig_bit(pos) -> int:
+        """Returns the mask for the the most significant bit in pos"""
+        return 1 << (pos.bit_length() - 1)
 
 We assume the following primitives for working with bits as they have obvious implementations.
 
@@ -746,23 +726,23 @@ We assume the following primitives for working with bits as they have obvious im
 
 The minimum number of bits to represent pos. b011 would be 2, b010 would be 2, and b001 would be 1.
 
-```python
-def bit_length(pos):
-    return pos.bit_length()
-```
+In python,
+
+    def bit_length(pos):
+        return pos.bit_length()
 
 ## AllOnes
 
 Tests if all bits, from the most significant that is set, are 1, b0111 would be true, b0101 would be false.
 
-```python
-def all_ones(pos) -> bool:
-    """Returns true if all bits, starting with the most significant, are 1"""
+In python,
 
-    msb = most_sig_bit(pos)
-    mask = (1 << (msb + 1)) - 1
-    return pos == mask
-```
+    def all_ones(pos) -> bool:
+        """Returns true if all bits, starting with the most significant, are 1"""
+
+        msb = most_sig_bit(pos)
+        mask = (1 << (msb + 1)) - 1
+        return pos == mask
 
 ## OnesCount
 
@@ -772,9 +752,9 @@ Count of set bits. For example `OnesCount(b101)` is 2
 
 The count of nodes above and to the left of `pos`
 
-```python
-(v & -v).bit_length() - 1
-```
+In python,
+
+    (v & -v).bit_length() - 1
 
 # Security Considerations
 
