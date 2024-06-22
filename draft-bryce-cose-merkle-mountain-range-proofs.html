@@ -8,10 +8,11 @@
 <meta content="Robin Bryce" name="author">
 <meta content="
        This specification describes a protocol for the COSE encoding of verifiable commitments to data,
-providing immediate verifiability and efficient, safe replicability of these commitments.
+providing immediate verifiability and immediate, safe, replicability of these commitments.
 Using this scheme, any replicated copies are permanently verifiable and are permanently consistent with the complete data set.
 Additionally, the specification allows for historic commitments and the original data, if desired,
-to be pruned without impacting the verifiability of subsequent data or any replicated copies. 
+to be pruned without impacting the verifiability of subsequent data or any replicated copies.
+Verifiers and auditors may be off line indefinitely, and yet be guaranteed they can prove integrity and consistency, or otherwise, against any future state. 
     " name="description">
 <meta content="xml2rfc 3.21.0" name="generator">
 <meta content="Internet-Draft" name="keyword">
@@ -1065,10 +1066,11 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <section id="section-abstract">
       <h2 id="abstract"><a href="#abstract" class="selfRef">Abstract</a></h2>
 <p id="section-abstract-1">This specification describes a protocol for the COSE encoding of verifiable commitments to data,
-providing immediate verifiability and efficient, safe replicability of these commitments.
+providing immediate verifiability and immediate, safe, replicability of these commitments.
 Using this scheme, any replicated copies are permanently verifiable and are permanently consistent with the complete data set.
 Additionally, the specification allows for historic commitments and the original data, if desired,
-to be pruned without impacting the verifiability of subsequent data or any replicated copies.<a href="#section-abstract-1" class="pilcrow">¶</a></p>
+to be pruned without impacting the verifiability of subsequent data or any replicated copies.
+Verifiers and auditors may be off line indefinitely, and yet be guaranteed they can prove integrity and consistency, or otherwise, against any future state.<a href="#section-abstract-1" class="pilcrow">¶</a></p>
 </section>
 <section class="note rfcEditorRemove" id="section-note.1">
       <h2 id="name-discussion-venues">
