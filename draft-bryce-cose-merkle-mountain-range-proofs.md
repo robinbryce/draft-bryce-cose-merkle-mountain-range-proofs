@@ -36,10 +36,11 @@ informative:
 --- abstract
 
 This specification describes a protocol for the COSE encoding of verifiable commitments to data,
-providing immediate verifiability and efficient, safe replicability of these commitments.
+providing immediate verifiability and immediate, safe, replicability of these commitments.
 Using this scheme, any replicated copies are permanently verifiable and are permanently consistent with the complete data set.
 Additionally, the specification allows for historic commitments and the original data, if desired,
 to be pruned without impacting the verifiability of subsequent data or any replicated copies.
+Verifiers and auditors may be off line indefinitely, and yet be guaranteed they can prove integrity and consistency, or otherwise, against any future state.
 
 --- middle
 
