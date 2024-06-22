@@ -52,11 +52,13 @@ The MMR can also be seen as the node visitation order obtained by the post-order
 This specification defines algorithms for leaf addition, proofs of inclusion and consistency,
 and the related necessary primitives in order to make the advantages of this approach to Merkle trees available in an interoperable manner.
 
+Proving and verifying is defined in terms of the cryptographic, asynchronous, accumulator described by [ReyzinYakoubov]
+
 It further defines the COSE encoding of those proofs.
 
 The format of the underlying storage is outside the scope of this document, however some minimal requirements are established for interfacing with it.
 
-There are distinct advantages for maintainers of verifiable data and for parties relying on the verifiability of that data:
+There are distinct advantages for maintainers of verifiable data and for parties relying on the verifiability of that data when using this approach:
 
 - Updates to the persistent tree data are co-ordination free. Competing writers
   can safely use [Optimistic Concurrency Control](https://en.wikipedia.org/wiki/Optimistic_concurrency_control)
@@ -64,11 +66,13 @@ There are distinct advantages for maintainers of verifiable data and for parties
   This makes additions immediately available for replication and caching with mechanisms such as [HTTP_ETag](https://en.wikipedia.org/wiki/HTTP_ETag)
 - Proofs of inclusion for a specific element are permanently consistent with all future states of the tree.
   And, a tree state which fails this property is provably inconsistent.
-- Trees can be pruned without breaking these properties of inclusion and consistency.
+- A proof of inclusion can be verified against any historic accumulator,
+  provided the element being verified was included in the tree at the time the accumulator was obtained.
 - For a previously saved inclusion proof,
-  there are at most log 2 (n) future checkpoints required to show its validity against any future tree.
+  there are at most log 2 (n) future accumulator states required to show its validity against any future tree.
   Where n is the count of additions made after the entry was added.
-- The checkpoints themselves naturally emerge from the tree and are also permanently consistent with future states of the tree.
+- Trees can be pruned without breaking these properties of inclusion and consistency.
+- The accumulator states naturally emerge from the tree and are also permanently consistent with future states of the tree.
 - Any tree state which fails to satisfy these properties is provably inconsistent.
 - For both proofs of inclusion and proofs of consistency,
   the authentication paths are strict prefixes of all future authentication paths for those same items.
