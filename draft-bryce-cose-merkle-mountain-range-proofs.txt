@@ -206,9 +206,7 @@ Table of Contents
       maintaining a tree in this way.  ReyzinYakoubov
       (https://eprint.iacr.org/2015/718.pdf) defines the properties of
       these, which are particularly relevant here, as "Low update
-      frequency" and "Old-Accumulator Compatibility".  The checkpoint
-      mentioned above is exactly the accumulator state for any valid
-      tree size.
+      frequency" and "Old-Accumulator Compatibility".
 
    *  As the post order traversal index is permanently identifying for
       any elements siblings and parents, the authentication path element
