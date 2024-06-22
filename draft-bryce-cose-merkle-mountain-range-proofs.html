@@ -1340,59 +1340,64 @@ This is typically abbreviated as MMR.
 The MMR can also be seen as the node visitation order obtained by the post-order traversal of any binary tree.<a href="#section-1-1" class="pilcrow">¶</a></p>
 <p id="section-1-2">This specification defines algorithms for leaf addition, proofs of inclusion and consistency,
 and the related necessary primitives in order to make the advantages of this approach to Merkle trees available in an interoperable manner.<a href="#section-1-2" class="pilcrow">¶</a></p>
-<p id="section-1-3">It further defines the COSE encoding of those proofs.<a href="#section-1-3" class="pilcrow">¶</a></p>
-<p id="section-1-4">The format of the underlying storage is outside the scope of this document, however some minimal requirements are established for interfacing with it.<a href="#section-1-4" class="pilcrow">¶</a></p>
-<p id="section-1-5">There are distinct advantages for maintainers of verifiable data and for parties relying on the verifiability of that data:<a href="#section-1-5" class="pilcrow">¶</a></p>
+<p id="section-1-3">Proving and verifying is defined in terms of the cryptographic, asynchronous, accumulator described by <a href="https://eprint.iacr.org/2015/718.pdf">ReyzinYakoubov</a><a href="#section-1-3" class="pilcrow">¶</a></p>
+<p id="section-1-4">It further defines the COSE encoding of those proofs.<a href="#section-1-4" class="pilcrow">¶</a></p>
+<p id="section-1-5">The format of the underlying storage is outside the scope of this document, however some minimal requirements are established for interfacing with it.<a href="#section-1-5" class="pilcrow">¶</a></p>
+<p id="section-1-6">There are distinct advantages for maintainers of verifiable data and for parties relying on the verifiability of that data when using this approach:<a href="#section-1-6" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-1-6.1">
-          <p id="section-1-6.1.1">Updates to the persistent tree data are co-ordination free. Competing writers
-can safely use <a href="https://en.wikipedia.org/wiki/Optimistic_concurrency_control">Optimistic Concurrency Control</a><a href="#section-1-6.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-1-7.1">
+          <p id="section-1-7.1.1">Updates to the persistent tree data are co-ordination free. Competing writers
+can safely use <a href="https://en.wikipedia.org/wiki/Optimistic_concurrency_control">Optimistic Concurrency Control</a><a href="#section-1-7.1.1" class="pilcrow">¶</a></p>
 </li>
-        <li class="normal" id="section-1-6.2">
-          <p id="section-1-6.2.1">Tree data does not change once written.
-This makes additions immediately available for replication and caching with mechanisms such as <a href="https://en.wikipedia.org/wiki/HTTP_ETag">HTTP_ETag</a><a href="#section-1-6.2.1" class="pilcrow">¶</a></p>
+        <li class="normal" id="section-1-7.2">
+          <p id="section-1-7.2.1">Tree data does not change once written.
+This makes additions immediately available for replication and caching with mechanisms such as <a href="https://en.wikipedia.org/wiki/HTTP_ETag">HTTP_ETag</a><a href="#section-1-7.2.1" class="pilcrow">¶</a></p>
 </li>
-        <li class="normal" id="section-1-6.3">
-          <p id="section-1-6.3.1">Proofs of inclusion for a specific element are permanently consistent with all future states of the tree.
-And, a tree state which fails this property is provably inconsistent.<a href="#section-1-6.3.1" class="pilcrow">¶</a></p>
+        <li class="normal" id="section-1-7.3">
+          <p id="section-1-7.3.1">Proofs of inclusion for a specific element are permanently consistent with all future states of the tree.
+And, a tree state which fails this property is provably inconsistent.<a href="#section-1-7.3.1" class="pilcrow">¶</a></p>
 </li>
-        <li class="normal" id="section-1-6.4">
-          <p id="section-1-6.4.1">Trees can be pruned without breaking these properties of inclusion and consistency.<a href="#section-1-6.4.1" class="pilcrow">¶</a></p>
+        <li class="normal" id="section-1-7.4">
+          <p id="section-1-7.4.1">A proof of inclusion can be verified against any historic accumulator,
+provided the element being verified was included in the tree at the time the accumulator was obtained.<a href="#section-1-7.4.1" class="pilcrow">¶</a></p>
 </li>
-        <li class="normal" id="section-1-6.5">
-          <p id="section-1-6.5.1">For a previously saved inclusion proof,
-there are at most log 2 (n) future checkpoints required to show its validity against any future tree.
-Where n is the count of additions made after the entry was added.<a href="#section-1-6.5.1" class="pilcrow">¶</a></p>
+        <li class="normal" id="section-1-7.5">
+          <p id="section-1-7.5.1">For a previously saved inclusion proof,
+there are at most log 2 (n) future accumulator states required to show its validity against any future tree.
+Where n is the count of additions made after the entry was added.<a href="#section-1-7.5.1" class="pilcrow">¶</a></p>
 </li>
-        <li class="normal" id="section-1-6.6">
-          <p id="section-1-6.6.1">The checkpoints themselves naturally emerge from the tree and are also permanently consistent with future states of the tree.<a href="#section-1-6.6.1" class="pilcrow">¶</a></p>
+        <li class="normal" id="section-1-7.6">
+          <p id="section-1-7.6.1">Trees can be pruned without breaking these properties of inclusion and consistency.<a href="#section-1-7.6.1" class="pilcrow">¶</a></p>
 </li>
-        <li class="normal" id="section-1-6.7">
-          <p id="section-1-6.7.1">Any tree state which fails to satisfy these properties is provably inconsistent.<a href="#section-1-6.7.1" class="pilcrow">¶</a></p>
+        <li class="normal" id="section-1-7.7">
+          <p id="section-1-7.7.1">The accumulator states naturally emerge from the tree and are also permanently consistent with future states of the tree.<a href="#section-1-7.7.1" class="pilcrow">¶</a></p>
 </li>
-        <li class="normal" id="section-1-6.8">
-          <p id="section-1-6.8.1">For both proofs of inclusion and proofs of consistency,
-the authentication paths are strict prefixes of all future authentication paths for those same items.<a href="#section-1-6.8.1" class="pilcrow">¶</a></p>
+        <li class="normal" id="section-1-7.8">
+          <p id="section-1-7.8.1">Any tree state which fails to satisfy these properties is provably inconsistent.<a href="#section-1-7.8.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="section-1-7.9">
+          <p id="section-1-7.9.1">For both proofs of inclusion and proofs of consistency,
+the authentication paths are strict prefixes of all future authentication paths for those same items.<a href="#section-1-7.9.1" class="pilcrow">¶</a></p>
 </li>
       </ul>
-<p id="section-1-7">The above advantages mostly follow from:<a href="#section-1-7" class="pilcrow">¶</a></p>
+<p id="section-1-8">The above advantages mostly follow from:<a href="#section-1-8" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-1-8.1">
-          <p id="section-1-8.1.1">A post order traversal of a binary tree results in a naturally linear storage organization. As observed  in <a href="https://static.usenix.org/event/sec09/tech/full_papers/crosby.pdf">CrosbySecondaryStorage</a>.<a href="#section-1-8.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-1-9.1">
+          <p id="section-1-9.1.1">A post order traversal of a binary tree results in a naturally linear storage organization. As observed  in <a href="https://static.usenix.org/event/sec09/tech/full_papers/crosby.pdf">CrosbySecondaryStorage</a>.<a href="#section-1-9.1.1" class="pilcrow">¶</a></p>
 </li>
-        <li class="normal" id="section-1-8.2">
-          <p id="section-1-8.2.1">An asynchronous cryptographic accumulator naturally emerges when maintaining a tree in this way.
+        <li class="normal" id="section-1-9.2">
+          <p id="section-1-9.2.1">An asynchronous cryptographic accumulator naturally emerges when maintaining a tree in this way.
 <a href="https://eprint.iacr.org/2015/718.pdf">ReyzinYakoubov</a> defines the properties of these, which are particularly relevant here, as "Low update frequency" and "Old-Accumulator Compatibility".
-The checkpoint mentioned above is exactly the accumulator state for any valid tree size.<a href="#section-1-8.2.1" class="pilcrow">¶</a></p>
+The checkpoint mentioned above is exactly the accumulator state for any valid tree size.<a href="#section-1-9.2.1" class="pilcrow">¶</a></p>
 </li>
-        <li class="normal" id="section-1-8.3">
-          <p id="section-1-8.3.1">As the post order traversal index is permanently identifying for any elements siblings and parents,
+        <li class="normal" id="section-1-9.3">
+          <p id="section-1-9.3.1">As the post order traversal index is permanently identifying for any elements siblings and parents,
 the authentication path element indices is known and permanent.
-It can be easily computed without needing to materialize the tree in whole or in part.<a href="#section-1-8.3.1" class="pilcrow">¶</a></p>
+It can be easily computed without needing to materialize the tree in whole or in part.<a href="#section-1-9.3.1" class="pilcrow">¶</a></p>
 </li>
       </ul>
-<p id="section-1-9">Further work in <a href="https://eprint.iacr.org/2021/038.pdf">BNT</a> defines additional advantages for contexts in which "stream" processing of verifiable data is desirable.
-Post-order, Pre-order and in-order tree traversal are defined by <a href="https://www-cs-faculty.stanford.edu/~knuth/taocp.html">KnuthTBT</a><a href="#section-1-9" class="pilcrow">¶</a></p>
+<p id="section-1-10">Further work in <a href="https://eprint.iacr.org/2021/038.pdf">BNT</a> defines additional advantages for contexts in which "stream" processing of verifiable data is desirable.
+Post-order, Pre-order and in-order tree traversal are defined by <a href="https://www-cs-faculty.stanford.edu/~knuth/taocp.html">KnuthTBT</a><a href="#section-1-10" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="conventions-and-definitions">

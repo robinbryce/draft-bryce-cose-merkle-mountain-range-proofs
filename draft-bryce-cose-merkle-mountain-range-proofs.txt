@@ -144,6 +144,10 @@ Table of Contents
    order to make the advantages of this approach to Merkle trees
    available in an interoperable manner.
 
+   Proving and verifying is defined in terms of the cryptographic,
+   asynchronous, accumulator described by ReyzinYakoubov
+   (https://eprint.iacr.org/2015/718.pdf)
+
    It further defines the COSE encoding of those proofs.
 
    The format of the underlying storage is outside the scope of this
@@ -151,7 +155,8 @@ Table of Contents
    interfacing with it.
 
    There are distinct advantages for maintainers of verifiable data and
-   for parties relying on the verifiability of that data:
+   for parties relying on the verifiability of that data when using this
+   approach:
 
    *  Updates to the persistent tree data are co-ordination free.
       Competing writers can safely use Optimistic Concurrency Control
@@ -165,16 +170,20 @@ Table of Contents
       consistent with all future states of the tree.  And, a tree state
       which fails this property is provably inconsistent.
 
+   *  A proof of inclusion can be verified against any historic
+      accumulator, provided the element being verified was included in
+      the tree at the time the accumulator was obtained.
+
+   *  For a previously saved inclusion proof, there are at most log 2
+      (n) future accumulator states required to show its validity
+      against any future tree.  Where n is the count of additions made
+      after the entry was added.
+
    *  Trees can be pruned without breaking these properties of inclusion
       and consistency.
 
-   *  For a previously saved inclusion proof, there are at most log 2
-      (n) future checkpoints required to show its validity against any
-      future tree.  Where n is the count of additions made after the
-      entry was added.
-
-   *  The checkpoints themselves naturally emerge from the tree and are
-      also permanently consistent with future states of the tree.
+   *  The accumulator states naturally emerge from the tree and are also
+      permanently consistent with future states of the tree.
 
    *  Any tree state which fails to satisfy these properties is provably
       inconsistent.
