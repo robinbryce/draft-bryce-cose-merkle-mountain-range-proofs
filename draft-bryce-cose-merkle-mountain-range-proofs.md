@@ -83,7 +83,6 @@ The above advantages mostly follow from:
 - A post order traversal of a binary tree results in a naturally linear storage organization. As observed  in [CrosbySecondaryStorage].
 - An asynchronous cryptographic accumulator naturally emerges when maintaining a tree in this way.
   [ReyzinYakoubov] defines the properties of these, which are particularly relevant here, as "Low update frequency" and "Old-Accumulator Compatibility".
-  The checkpoint mentioned above is exactly the accumulator state for any valid tree size.
 - As the post order traversal index is permanently identifying for any elements siblings and parents,
   the authentication path element indices is known and permanent.
   It can be easily computed without needing to materialize the tree in whole or in part.
