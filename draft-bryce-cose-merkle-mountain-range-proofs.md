@@ -1,5 +1,5 @@
 ---
-title: "Merkle Mountain Range for Immediately Verifiable and Efficiently Replicable Commitments"
+title: "Merkle Mountain Range for Immediately Verifiable and Replicable Commitments"
 abbrev: MMRIVER
 cat: exp
 docname: draft-bryce-cose-merkle-mountain-range-proofs-latest
@@ -455,17 +455,25 @@ Given
 
 Verification MUST require that the path is fully consumed during verification.
 The algorithm above defers that final requirement to the caller.
+
 Where the caller is verifying a single proof of inclusion, they MUST check the returned consumed length equals the length of the poof provided.
-Where the caller is verifying a series of concatenated proofs of inclusion, such as for consistency proofs,
-the caller MUST ensure the entire concatenated series of proofs is fully consumed.
-In the case of concatenated inclusion proof verification,
-the sub range of the aggregate proof must be advanced by the returned consumed length on each call.
 
 Consistency proofs concatenate inclusion proofs for each accumulator peak in the origin mmr state.
 
+Where the caller is verifying a series of concatenated proofs of inclusion, such as for consistency proofs,
+the caller MUST ensure the entire concatenated series of proofs is fully consumed.
+
+In the case of concatenated inclusion proof verification,
+the sub range of the aggregate proof must be advanced by the returned consumed length on each call.
+
+For "old accumulator compatibility", the application MUST establish the prefix length of the proof needed to produce the `root` value in the old accumulator. This prefix length MUST then be used when deciding if the provided proof has been fully consumed by verification.
+
+
 The process expressed in python is
 
-    def verify_inclusion_path(s: int, i: int, nodehash: bytes, proof: List[bytes], root: bytes) -> Tuple[bool, int]:
+    def verify_inclusion_path(
+        s: int, i: int, nodehash: bytes,
+        proof: List[bytes], root: bytes) -> Tuple[bool, int]:
 
         if len(proof) == 0 and nodehash == root:
             return (True, 0)
@@ -490,22 +498,20 @@ The process expressed in python is
 
 ## ConsistencyProof
 
-Words tbd
+Creates a proof of consistency between the identified MMR's.
+
+The returned path is the concatenation of the inclusion proofs
+authenticating the peaks of MMR(a) in MMR(b)
 
 The process expressed in python is
 
     def consistency_proof(asize: int, bsize: int) -> List[int]:
-        """Returns a proof of consistency between the MMR's identified by asize and bsize.
-
-        The returned path is the concatenation of the inclusion proofs
-        authenticating the peaks of MMR(a) in MMR(b)
-        """
         apeaks = peaks(asize)
 
         proof = []
 
         for apos in apeaks:
-            proof.extend(index_proof_path(bsize, apos-1))
+            proof.extend(inclusion_proof_path(bsize, apos-1))
 
         return proof
 
@@ -517,8 +523,7 @@ The process expressed in python is
             asize: int, bsize: int,
             aaccumulator: List[bytes], baccumulator: List[bytes],
             path: List[bytes]) -> bool:
-        """
-        """
+
         apeakpositions = peaks(asize)
         bpeakpositions = peaks(bsize)
 
@@ -557,25 +562,21 @@ The process expressed in python is
 `IndexHeight(i)` returns the zero based height `g` of the node index `i`
 
     def index_height(i) -> int:
-        """Returns the 0 based height of the mmr entry indexed by i"""
-        # convert the index to a position to take advantage of the bit patterns afforded
         pos = i + 1
         while not all_ones(pos):
           pos = pos - most_sig_bit(pos) + 1
 
         return pos.bit_length() - 1
 
-
 ## Peaks
 
 `Peaks(S)` returns the peak positions for `MMR(S)` (Note: these are just the corresponding storage indices + 1)
 
-    def peaks(s) -> List[int]:
-        """Returns the peak indices for MMR(s)
+Returns the peak indices for MMR(s)
 
-        Assumes MMR(s) is complete, implementations can check for this condition by
-        testing the height of s+1
-        """
+Assumes MMR(s) is complete, implementations can check for this condition by testing the height of s+1
+
+    def peaks(s) -> List[int]:
 
         peak = 0
         peaks = []
@@ -618,17 +619,12 @@ Expressed as python
 
 ## PeaksBitmap
 
-`PeaksBitmap(s)` returns the count of leaves in `MMR(s)`,
-this algorithm is named for the fact that the set bit positions correspond to the heights of the  peaks present in the MMR.
+`PeaksBitmap(s)` Returns a mask with a bit set for each peak,
+interpreted as an integer this is also the count of leaves in `MMR(s)`,
 
 Expressed in python
 
     def peaks_bitmap(s: int) -> int:
-        """Returns a mask with a bit set for each peak,
-
-        The resulting binary value is also the count of leaves contained in the
-        largest complete MMR included in, or equal to, s
-        """
         if s == 0:
             return 0
 
@@ -695,7 +691,8 @@ This is essentially a ^2 *floor* function for the accumulation of bits:
 An illustrative example of some outputs
 
     TopHeight(1) = TopHeight(2) = 0
-    TopHeight(2) = TopHeight(3) = TopHeight(4) = TopHeigth(5) = TopHeight(6) = 1
+    TopHeight(2) = TopHeight(3) = TopHeight(4) = TopHeigth(5)
+        = TopHeight(6) = 1
     TopHeight(7) = 2
 
     2       7
@@ -712,15 +709,16 @@ An illustrative example of some outputs
 
 ## MostSigBit
 
+Returns the mask for the the most significant bit in pos
+
 `1 << (BitLength(pos) - 1)`
 
 Expressed in python
 
     def most_sig_bit(pos) -> int:
-        """Returns the mask for the the most significant bit in pos"""
         return 1 << (pos.bit_length() - 1)
 
-We assume the following primitives for working with bits as they have obvious implementations.
+We assume the following primitives for working with bits as they commonly have library or hardware support.
 
 ## BitLength
 
@@ -738,8 +736,6 @@ Tests if all bits, from the most significant that is set, are 1, b0111 would be 
 In python,
 
     def all_ones(pos) -> bool:
-        """Returns true if all bits, starting with the most significant, are 1"""
-
         msb = most_sig_bit(pos)
         mask = (1 << (msb + 1)) - 1
         return pos == mask
@@ -933,45 +929,45 @@ We define `H(v)` for test vector leaf values `f` as the SHA-256 hash of the the 
 
  | i  |                          node values                           |
  |:---|----------------------------------------------------------------|
- |  0 |af5570f5a1810b7af78caf4bc70a660f0df51e42baf91d4de5b2328de0e83dfc|
- |  1 |cd2662154e6d76b2b2b92e70c0cac3ccf534f9b74eb5b89819ec509083d00a50|
- |  2 |ad104051c516812ea5874ca3ff06d0258303623d04307c41ec80a7a18b332ef8|
- |  3 |d5688a52d55a02ec4aea5ec1eadfffe1c9e0ee6a4ddbe2377f98326d42dfc975|
- |  4 |8005f02d43fa06e7d0585fb64c961d57e318b27a145c857bcd3a6bdb413ff7fc|
- |  5 |9a18d3bc0a7d505ef45f985992270914cc02b44c91ccabba448c546a4b70f0f0|
- |  6 |827f3213c1de0d4c6277caccc1eeca325e45dfe2c65adce1943774218db61f88|
- |  7 |a3eb8db89fc5123ccfd49585059f292bc40a1c0d550b860f24f84efb4760fbf2|
- |  8 |4c0e071832d527694adea57b50dd7b2164c2a47c02940dcf26fa07c44d6d222a|
- |  9 |b8faf5f748f149b04018491a51334499fd8b6060c42a835f361fa9665562d12d|
- | 10 |8d85f8467240628a94819b26bee26e3a9b2804334c63482deacec8d64ab4e1e7|
- | 11 |0b5000b73a53f0916c93c68f4b9b6ba8af5a10978634ae4f2237e1f3fbe324fa|
- | 12 |6f3360ad3e99ab4ba39f2cbaf13da56ead8c9e697b03b901532ced50f7030fea|
- | 13 |508326f17c5f2769338cb00105faba3bf7862ca1e5c9f63ba2287e1f3cf2807a|
- | 14 |78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112|
- | 15 |e66c57014a6156061ae669809ec5d735e484e8fcfd540e110c9b04f84c0b4504|
- | 16 |998e907bfbb34f71c66b6dc6c40fe98ca6d2d5a29755bc5a04824c36082a61d1|
- | 17 |f4a0db79de0fee128fbe95ecf3509646203909dc447ae911aa29416bf6fcba21|
- | 18 |5bc67471c189d78c76461dcab6141a733bdab3799d1d69e0c419119c92e82b3d|
- | 19 |1b8d0103e3a8d9ce8bda3bff71225be4b5bb18830466ae94f517321b7ecc6f94|
- | 20 |0a4d7e66c92de549b765d9e2191027ff2a4ea8a7bd3eb04b0ed8ee063bad1f70|
- | 21 |61b3ff808934301578c9ed7402e3dd7dfe98b630acdf26d1fd2698a3c4a22710|
- | 22 |7a42e3892368f826928202014a6ca95a3d8d846df25088da80018663edf96b1c|
- | 23 |aed2b8245fdc8acc45eda51abc7d07e612c25f05cadd1579f3474f0bf1f6bdc6|
- | 24 |dd7efba5f1824103f1fa820a5c9e6cd90a82cf123d88bd035c7e5da0aba8a9ae|
- | 25 |561f627b4213258dc8863498bb9b07c904c3c65a78c1a36bca329154d1ded213|
- | 26 |1209fe3bc3497e47376dfbd9df0600a17c63384c85f859671956d8289e5a0be8|
- | 27 |6b4a3bd095c63d1dffae1ac03eb8264fdce7d51d2ac26ad0ebf9847f5b9be230|
- | 28 |4459f4d6c764dbaa6ebad24b0a3df644d84c3527c961c64aab2e39c58e027eb1|
- | 29 |77651b3eec6774e62545ae04900c39a32841e2b4bac80e2ba93755115252aae1|
- | 30 |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7|
- | 31 |1664a6e0ea12d234b4911d011800bb0f8c1101a0f9a49a91ee6e2493e34d8e7b|
- | 32 |707d56f1f282aee234577e650bea2e7b18bb6131a499582be18876aba99d4b60|
- | 33 |0c9f36783b5929d43c97fe4b170d12137e6950ef1b3a8bd254b15bbacbfdee7f|
- | 34 |4d75f61869104baa4ccff5be73311be9bdd6cc31779301dfc699479403c8a786|
- | 35 |0764c726a72f8e1d245f332a1d022fffdada0c4cb2a016886e4b33b66cb9a53f|
- | 36 |c861552e9e17c41447d375c37928f9fa5d387d1e8470678107781c20a97ebc8f|
- | 37 |6a169105dcc487dbbae5747a0fd9b1d33a40320cf91cf9a323579139e7ff72aa|
- | 38 |e9a5f5201eb3c3c856e0a224527af5ac7eb1767fb1aff9bd53ba41a60cde9785|
+ | 0|af5570f5a1810b7af78caf4bc70a660f0df51e42baf91d4de5b2328de0e83dfc|
+ | 1|cd2662154e6d76b2b2b92e70c0cac3ccf534f9b74eb5b89819ec509083d00a50|
+ | 2|ad104051c516812ea5874ca3ff06d0258303623d04307c41ec80a7a18b332ef8|
+ | 3|d5688a52d55a02ec4aea5ec1eadfffe1c9e0ee6a4ddbe2377f98326d42dfc975|
+ | 4|8005f02d43fa06e7d0585fb64c961d57e318b27a145c857bcd3a6bdb413ff7fc|
+ | 5|9a18d3bc0a7d505ef45f985992270914cc02b44c91ccabba448c546a4b70f0f0|
+ | 6|827f3213c1de0d4c6277caccc1eeca325e45dfe2c65adce1943774218db61f88|
+ | 7|a3eb8db89fc5123ccfd49585059f292bc40a1c0d550b860f24f84efb4760fbf2|
+ | 8|4c0e071832d527694adea57b50dd7b2164c2a47c02940dcf26fa07c44d6d222a|
+ | 9|b8faf5f748f149b04018491a51334499fd8b6060c42a835f361fa9665562d12d|
+ |10|8d85f8467240628a94819b26bee26e3a9b2804334c63482deacec8d64ab4e1e7|
+ |11|0b5000b73a53f0916c93c68f4b9b6ba8af5a10978634ae4f2237e1f3fbe324fa|
+ |12|6f3360ad3e99ab4ba39f2cbaf13da56ead8c9e697b03b901532ced50f7030fea|
+ |13|508326f17c5f2769338cb00105faba3bf7862ca1e5c9f63ba2287e1f3cf2807a|
+ |14|78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112|
+ |15|e66c57014a6156061ae669809ec5d735e484e8fcfd540e110c9b04f84c0b4504|
+ |16|998e907bfbb34f71c66b6dc6c40fe98ca6d2d5a29755bc5a04824c36082a61d1|
+ |17|f4a0db79de0fee128fbe95ecf3509646203909dc447ae911aa29416bf6fcba21|
+ |18|5bc67471c189d78c76461dcab6141a733bdab3799d1d69e0c419119c92e82b3d|
+ |19|1b8d0103e3a8d9ce8bda3bff71225be4b5bb18830466ae94f517321b7ecc6f94|
+ |20|0a4d7e66c92de549b765d9e2191027ff2a4ea8a7bd3eb04b0ed8ee063bad1f70|
+ |21|61b3ff808934301578c9ed7402e3dd7dfe98b630acdf26d1fd2698a3c4a22710|
+ |22|7a42e3892368f826928202014a6ca95a3d8d846df25088da80018663edf96b1c|
+ |23|aed2b8245fdc8acc45eda51abc7d07e612c25f05cadd1579f3474f0bf1f6bdc6|
+ |24|dd7efba5f1824103f1fa820a5c9e6cd90a82cf123d88bd035c7e5da0aba8a9ae|
+ |25|561f627b4213258dc8863498bb9b07c904c3c65a78c1a36bca329154d1ded213|
+ |26|1209fe3bc3497e47376dfbd9df0600a17c63384c85f859671956d8289e5a0be8|
+ |27|6b4a3bd095c63d1dffae1ac03eb8264fdce7d51d2ac26ad0ebf9847f5b9be230|
+ |28|4459f4d6c764dbaa6ebad24b0a3df644d84c3527c961c64aab2e39c58e027eb1|
+ |29|77651b3eec6774e62545ae04900c39a32841e2b4bac80e2ba93755115252aae1|
+ |30|d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7|
+ |31|1664a6e0ea12d234b4911d011800bb0f8c1101a0f9a49a91ee6e2493e34d8e7b|
+ |32|707d56f1f282aee234577e650bea2e7b18bb6131a499582be18876aba99d4b60|
+ |33|0c9f36783b5929d43c97fe4b170d12137e6950ef1b3a8bd254b15bbacbfdee7f|
+ |34|4d75f61869104baa4ccff5be73311be9bdd6cc31779301dfc699479403c8a786|
+ |35|0764c726a72f8e1d245f332a1d022fffdada0c4cb2a016886e4b33b66cb9a53f|
+ |36|c861552e9e17c41447d375c37928f9fa5d387d1e8470678107781c20a97ebc8f|
+ |37|6a169105dcc487dbbae5747a0fd9b1d33a40320cf91cf9a323579139e7ff72aa|
+ |38|e9a5f5201eb3c3c856e0a224527af5ac7eb1767fb1aff9bd53ba41a60cde9785|
 
 ## Peak (accumulator) positions and values for all MMR's to MMR(39)
 
@@ -1004,29 +1000,29 @@ We define `H(v)` for test vector leaf values `f` as the SHA-256 hash of the the 
 
 When the positions are converted to indices they will retrieve the following values from the MMR
 
-| S-1  |        accumulator peaks |
-|----|--------------------------------|
-|   0| af5570f5a1810b7af78caf4bc70a660f0df51e42baf91d4de5b2328de0e83dfc
-|   2| ad104051c516812ea5874ca3ff06d0258303623d04307c41ec80a7a18b332ef8
-|   3| ad104051c516812ea5874ca3ff06d0258303623d04307c41ec80a7a18b332ef8, d5688a52d55a02ec4aea5ec1eadfffe1c9e0ee6a4ddbe2377f98326d42dfc975
-|   6| 827f3213c1de0d4c6277caccc1eeca325e45dfe2c65adce1943774218db61f88
-|   7| 827f3213c1de0d4c6277caccc1eeca325e45dfe2c65adce1943774218db61f88, a3eb8db89fc5123ccfd49585059f292bc40a1c0d550b860f24f84efb4760fbf2
-|   9| 827f3213c1de0d4c6277caccc1eeca325e45dfe2c65adce1943774218db61f88, b8faf5f748f149b04018491a51334499fd8b6060c42a835f361fa9665562d12d
-|  10| 827f3213c1de0d4c6277caccc1eeca325e45dfe2c65adce1943774218db61f88, b8faf5f748f149b04018491a51334499fd8b6060c42a835f361fa9665562d12d, 8d85f8467240628a94819b26bee26e3a9b2804334c63482deacec8d64ab4e1e7
-|  14| 78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112
-|  15| 78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112, e66c57014a6156061ae669809ec5d735e484e8fcfd540e110c9b04f84c0b4504
-|  17| 78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112, f4a0db79de0fee128fbe95ecf3509646203909dc447ae911aa29416bf6fcba21
-|  18| 78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112, f4a0db79de0fee128fbe95ecf3509646203909dc447ae911aa29416bf6fcba21, 5bc67471c189d78c76461dcab6141a733bdab3799d1d69e0c419119c92e82b3d
-|  21| 78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112, 61b3ff808934301578c9ed7402e3dd7dfe98b630acdf26d1fd2698a3c4a22710
-|  22| 78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112, 61b3ff808934301578c9ed7402e3dd7dfe98b630acdf26d1fd2698a3c4a22710, 7a42e3892368f826928202014a6ca95a3d8d846df25088da80018663edf96b1c
-|  24| 78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112, 61b3ff808934301578c9ed7402e3dd7dfe98b630acdf26d1fd2698a3c4a22710, dd7efba5f1824103f1fa820a5c9e6cd90a82cf123d88bd035c7e5da0aba8a9ae
-|  25| 78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112, 61b3ff808934301578c9ed7402e3dd7dfe98b630acdf26d1fd2698a3c4a22710, dd7efba5f1824103f1fa820a5c9e6cd90a82cf123d88bd035c7e5da0aba8a9ae, 561f627b4213258dc8863498bb9b07c904c3c65a78c1a36bca329154d1ded213
-|  30| d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7
-|  31| d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7, 1664a6e0ea12d234b4911d011800bb0f8c1101a0f9a49a91ee6e2493e34d8e7b
-|  33| d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7, 0c9f36783b5929d43c97fe4b170d12137e6950ef1b3a8bd254b15bbacbfdee7f
-|  34| d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7, 0c9f36783b5929d43c97fe4b170d12137e6950ef1b3a8bd254b15bbacbfdee7f, 4d75f61869104baa4ccff5be73311be9bdd6cc31779301dfc699479403c8a786
-|  37| d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7, 6a169105dcc487dbbae5747a0fd9b1d33a40320cf91cf9a323579139e7ff72aa
-|  38| d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7, 6a169105dcc487dbbae5747a0fd9b1d33a40320cf91cf9a323579139e7ff72aa, e9a5f5201eb3c3c856e0a224527af5ac7eb1767fb1aff9bd53ba41a60cde9785
+|S-1|        accumulator peaks |
+|--|--------------------------------|
+| 0|af5570f5a1810b7af78caf4bc70a660f0df51e42baf91d4de5b2328de0e83dfc
+| 2|ad104051c516812ea5874ca3ff06d0258303623d04307c41ec80a7a18b332ef8
+| 3|ad104051c516812ea5874ca3ff06d0258303623d04307c41ec80a7a18b332ef8, d5688a52d55a02ec4aea5ec1eadfffe1c9e0ee6a4ddbe2377f98326d42dfc975
+| 6|827f3213c1de0d4c6277caccc1eeca325e45dfe2c65adce1943774218db61f88
+| 7|827f3213c1de0d4c6277caccc1eeca325e45dfe2c65adce1943774218db61f88, a3eb8db89fc5123ccfd49585059f292bc40a1c0d550b860f24f84efb4760fbf2
+| 9|827f3213c1de0d4c6277caccc1eeca325e45dfe2c65adce1943774218db61f88, b8faf5f748f149b04018491a51334499fd8b6060c42a835f361fa9665562d12d
+|10|827f3213c1de0d4c6277caccc1eeca325e45dfe2c65adce1943774218db61f88, b8faf5f748f149b04018491a51334499fd8b6060c42a835f361fa9665562d12d, 8d85f8467240628a94819b26bee26e3a9b2804334c63482deacec8d64ab4e1e7
+|14|78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112
+|15|78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112, e66c57014a6156061ae669809ec5d735e484e8fcfd540e110c9b04f84c0b4504
+|17|78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112, f4a0db79de0fee128fbe95ecf3509646203909dc447ae911aa29416bf6fcba21
+|18|78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112, f4a0db79de0fee128fbe95ecf3509646203909dc447ae911aa29416bf6fcba21, 5bc67471c189d78c76461dcab6141a733bdab3799d1d69e0c419119c92e82b3d
+|21|78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112, 61b3ff808934301578c9ed7402e3dd7dfe98b630acdf26d1fd2698a3c4a22710
+|22|78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112, 61b3ff808934301578c9ed7402e3dd7dfe98b630acdf26d1fd2698a3c4a22710, 7a42e3892368f826928202014a6ca95a3d8d846df25088da80018663edf96b1c
+|24|78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112, 61b3ff808934301578c9ed7402e3dd7dfe98b630acdf26d1fd2698a3c4a22710, dd7efba5f1824103f1fa820a5c9e6cd90a82cf123d88bd035c7e5da0aba8a9ae
+|25|78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112, 61b3ff808934301578c9ed7402e3dd7dfe98b630acdf26d1fd2698a3c4a22710, dd7efba5f1824103f1fa820a5c9e6cd90a82cf123d88bd035c7e5da0aba8a9ae, 561f627b4213258dc8863498bb9b07c904c3c65a78c1a36bca329154d1ded213
+|30|d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7
+|31|d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7, 1664a6e0ea12d234b4911d011800bb0f8c1101a0f9a49a91ee6e2493e34d8e7b
+|33|d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7, 0c9f36783b5929d43c97fe4b170d12137e6950ef1b3a8bd254b15bbacbfdee7f
+|34|d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7, 0c9f36783b5929d43c97fe4b170d12137e6950ef1b3a8bd254b15bbacbfdee7f, 4d75f61869104baa4ccff5be73311be9bdd6cc31779301dfc699479403c8a786
+|37|d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7, 6a169105dcc487dbbae5747a0fd9b1d33a40320cf91cf9a323579139e7ff72aa
+|38|d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7, 6a169105dcc487dbbae5747a0fd9b1d33a40320cf91cf9a323579139e7ff72aa, e9a5f5201eb3c3c856e0a224527af5ac7eb1767fb1aff9bd53ba41a60cde9785
 
 ## node height, leaf count and peak mask
 
@@ -1074,220 +1070,220 @@ This table also ilustrates that the authentication path for any single entry onl
 It is therefore guaranteed to be a prefix of any future path for the same entry.
 
 | i  | MMR  |inclusion path|accumulator|accumulator root index|
-|:---|---:|--------------------|--------------------|----|
-|   0|MMR(1) |[]                  |[0]                 |0   |
-|   0|MMR(3) |[1]                 |[2]                 |0   |
-|   0|MMR(7) |[1, 5]              |[6]                 |0   |
-|   0|MMR(10)|[1, 5]              |[6, 9]              |0   |
-|   0|MMR(15)|[1, 5, 13]          |[14]                |0   |
-|   0|MMR(18)|[1, 5, 13]          |[14, 17]            |0   |
-|   0|MMR(22)|[1, 5, 13]          |[14, 21]            |0   |
-|   0|MMR(25)|[1, 5, 13]          |[14, 21, 24]        |0   |
-|   0|MMR(31)|[1, 5, 13, 29]      |[30]                |0   |
-|   0|MMR(34)|[1, 5, 13, 29]      |[30, 33]            |0   |
-|   0|MMR(38)|[1, 5, 13, 29]      |[30, 37]            |0   |
-|   1|MMR(3) |[0]                 |[2]                 |0   |
-|   1|MMR(7) |[0, 5]              |[6]                 |0   |
-|   1|MMR(10)|[0, 5]              |[6, 9]              |0   |
-|   1|MMR(15)|[0, 5, 13]          |[14]                |0   |
-|   1|MMR(18)|[0, 5, 13]          |[14, 17]            |0   |
-|   1|MMR(22)|[0, 5, 13]          |[14, 21]            |0   |
-|   1|MMR(25)|[0, 5, 13]          |[14, 21, 24]        |0   |
-|   1|MMR(31)|[0, 5, 13, 29]      |[30]                |0   |
-|   1|MMR(34)|[0, 5, 13, 29]      |[30, 33]            |0   |
-|   1|MMR(38)|[0, 5, 13, 29]      |[30, 37]            |0   |
-|   2|MMR(3) |[]                  |[2]                 |0   |
-|   2|MMR(7) |[5]                 |[6]                 |0   |
-|   2|MMR(10)|[5]                 |[6, 9]              |0   |
-|   2|MMR(15)|[5, 13]             |[14]                |0   |
-|   2|MMR(18)|[5, 13]             |[14, 17]            |0   |
-|   2|MMR(22)|[5, 13]             |[14, 21]            |0   |
-|   2|MMR(25)|[5, 13]             |[14, 21, 24]        |0   |
-|   2|MMR(31)|[5, 13, 29]         |[30]                |0   |
-|   2|MMR(34)|[5, 13, 29]         |[30, 33]            |0   |
-|   2|MMR(38)|[5, 13, 29]         |[30, 37]            |0   |
-|   3|MMR(4) |[]                  |[2, 3]              |1   |
-|   3|MMR(7) |[4, 2]              |[6]                 |0   |
-|   3|MMR(10)|[4, 2]              |[6, 9]              |0   |
-|   3|MMR(15)|[4, 2, 13]          |[14]                |0   |
-|   3|MMR(18)|[4, 2, 13]          |[14, 17]            |0   |
-|   3|MMR(22)|[4, 2, 13]          |[14, 21]            |0   |
-|   3|MMR(25)|[4, 2, 13]          |[14, 21, 24]        |0   |
-|   3|MMR(31)|[4, 2, 13, 29]      |[30]                |0   |
-|   3|MMR(34)|[4, 2, 13, 29]      |[30, 33]            |0   |
-|   3|MMR(38)|[4, 2, 13, 29]      |[30, 37]            |0   |
-|   4|MMR(7) |[3, 2]              |[6]                 |0   |
-|   4|MMR(10)|[3, 2]              |[6, 9]              |0   |
-|   4|MMR(15)|[3, 2, 13]          |[14]                |0   |
-|   4|MMR(18)|[3, 2, 13]          |[14, 17]            |0   |
-|   4|MMR(22)|[3, 2, 13]          |[14, 21]            |0   |
-|   4|MMR(25)|[3, 2, 13]          |[14, 21, 24]        |0   |
-|   4|MMR(31)|[3, 2, 13, 29]      |[30]                |0   |
-|   4|MMR(34)|[3, 2, 13, 29]      |[30, 33]            |0   |
-|   4|MMR(38)|[3, 2, 13, 29]      |[30, 37]            |0   |
-|   5|MMR(7) |[2]                 |[6]                 |0   |
-|   5|MMR(10)|[2]                 |[6, 9]              |0   |
-|   5|MMR(15)|[2, 13]             |[14]                |0   |
-|   5|MMR(18)|[2, 13]             |[14, 17]            |0   |
-|   5|MMR(22)|[2, 13]             |[14, 21]            |0   |
-|   5|MMR(25)|[2, 13]             |[14, 21, 24]        |0   |
-|   5|MMR(31)|[2, 13, 29]         |[30]                |0   |
-|   5|MMR(34)|[2, 13, 29]         |[30, 33]            |0   |
-|   5|MMR(38)|[2, 13, 29]         |[30, 37]            |0   |
-|   6|MMR(7) |[]                  |[6]                 |0   |
-|   6|MMR(10)|[]                  |[6, 9]              |0   |
-|   6|MMR(15)|[13]                |[14]                |0   |
-|   6|MMR(18)|[13]                |[14, 17]            |0   |
-|   6|MMR(22)|[13]                |[14, 21]            |0   |
-|   6|MMR(25)|[13]                |[14, 21, 24]        |0   |
-|   6|MMR(31)|[13, 29]            |[30]                |0   |
-|   6|MMR(34)|[13, 29]            |[30, 33]            |0   |
-|   6|MMR(38)|[13, 29]            |[30, 37]            |0   |
-|   7|MMR(8) |[]                  |[6, 7]              |1   |
-|   7|MMR(10)|[8]                 |[6, 9]              |1   |
-|   7|MMR(15)|[8, 12, 6]          |[14]                |0   |
-|   7|MMR(18)|[8, 12, 6]          |[14, 17]            |0   |
-|   7|MMR(22)|[8, 12, 6]          |[14, 21]            |0   |
-|   7|MMR(25)|[8, 12, 6]          |[14, 21, 24]        |0   |
-|   7|MMR(31)|[8, 12, 6, 29]      |[30]                |0   |
-|   7|MMR(34)|[8, 12, 6, 29]      |[30, 33]            |0   |
-|   7|MMR(38)|[8, 12, 6, 29]      |[30, 37]            |0   |
-|   8|MMR(10)|[7]                 |[6, 9]              |1   |
-|   8|MMR(15)|[7, 12, 6]          |[14]                |0   |
-|   8|MMR(18)|[7, 12, 6]          |[14, 17]            |0   |
-|   8|MMR(22)|[7, 12, 6]          |[14, 21]            |0   |
-|   8|MMR(25)|[7, 12, 6]          |[14, 21, 24]        |0   |
-|   8|MMR(31)|[7, 12, 6, 29]      |[30]                |0   |
-|   8|MMR(34)|[7, 12, 6, 29]      |[30, 33]            |0   |
-|   8|MMR(38)|[7, 12, 6, 29]      |[30, 37]            |0   |
-|   9|MMR(10)|[]                  |[6, 9]              |1   |
-|   9|MMR(15)|[12, 6]             |[14]                |0   |
-|   9|MMR(18)|[12, 6]             |[14, 17]            |0   |
-|   9|MMR(22)|[12, 6]             |[14, 21]            |0   |
-|   9|MMR(25)|[12, 6]             |[14, 21, 24]        |0   |
-|   9|MMR(31)|[12, 6, 29]         |[30]                |0   |
-|   9|MMR(34)|[12, 6, 29]         |[30, 33]            |0   |
-|   9|MMR(38)|[12, 6, 29]         |[30, 37]            |0   |
-|  10|MMR(11)|[]                  |[6, 9, 10]          |2   |
-|  10|MMR(15)|[11, 9, 6]          |[14]                |0   |
-|  10|MMR(18)|[11, 9, 6]          |[14, 17]            |0   |
-|  10|MMR(22)|[11, 9, 6]          |[14, 21]            |0   |
-|  10|MMR(25)|[11, 9, 6]          |[14, 21, 24]        |0   |
-|  10|MMR(31)|[11, 9, 6, 29]      |[30]                |0   |
-|  10|MMR(34)|[11, 9, 6, 29]      |[30, 33]            |0   |
-|  10|MMR(38)|[11, 9, 6, 29]      |[30, 37]            |0   |
-|  11|MMR(15)|[10, 9, 6]          |[14]                |0   |
-|  11|MMR(18)|[10, 9, 6]          |[14, 17]            |0   |
-|  11|MMR(22)|[10, 9, 6]          |[14, 21]            |0   |
-|  11|MMR(25)|[10, 9, 6]          |[14, 21, 24]        |0   |
-|  11|MMR(31)|[10, 9, 6, 29]      |[30]                |0   |
-|  11|MMR(34)|[10, 9, 6, 29]      |[30, 33]            |0   |
-|  11|MMR(38)|[10, 9, 6, 29]      |[30, 37]            |0   |
-|  12|MMR(15)|[9, 6]              |[14]                |0   |
-|  12|MMR(18)|[9, 6]              |[14, 17]            |0   |
-|  12|MMR(22)|[9, 6]              |[14, 21]            |0   |
-|  12|MMR(25)|[9, 6]              |[14, 21, 24]        |0   |
-|  12|MMR(31)|[9, 6, 29]          |[30]                |0   |
-|  12|MMR(34)|[9, 6, 29]          |[30, 33]            |0   |
-|  12|MMR(38)|[9, 6, 29]          |[30, 37]            |0   |
-|  13|MMR(15)|[6]                 |[14]                |0   |
-|  13|MMR(18)|[6]                 |[14, 17]            |0   |
-|  13|MMR(22)|[6]                 |[14, 21]            |0   |
-|  13|MMR(25)|[6]                 |[14, 21, 24]        |0   |
-|  13|MMR(31)|[6, 29]             |[30]                |0   |
-|  13|MMR(34)|[6, 29]             |[30, 33]            |0   |
-|  13|MMR(38)|[6, 29]             |[30, 37]            |0   |
-|  14|MMR(15)|[]                  |[14]                |0   |
-|  14|MMR(18)|[]                  |[14, 17]            |0   |
-|  14|MMR(22)|[]                  |[14, 21]            |0   |
-|  14|MMR(25)|[]                  |[14, 21, 24]        |0   |
-|  14|MMR(31)|[29]                |[30]                |0   |
-|  14|MMR(34)|[29]                |[30, 33]            |0   |
-|  14|MMR(38)|[29]                |[30, 37]            |0   |
-|  15|MMR(16)|[]                  |[14, 15]            |1   |
-|  15|MMR(18)|[16]                |[14, 17]            |1   |
-|  15|MMR(22)|[16, 20]            |[14, 21]            |1   |
-|  15|MMR(25)|[16, 20]            |[14, 21, 24]        |1   |
-|  15|MMR(31)|[16, 20, 28, 14]    |[30]                |0   |
-|  15|MMR(34)|[16, 20, 28, 14]    |[30, 33]            |0   |
-|  15|MMR(38)|[16, 20, 28, 14]    |[30, 37]            |0   |
-|  16|MMR(18)|[15]                |[14, 17]            |1   |
-|  16|MMR(22)|[15, 20]            |[14, 21]            |1   |
-|  16|MMR(25)|[15, 20]            |[14, 21, 24]        |1   |
-|  16|MMR(31)|[15, 20, 28, 14]    |[30]                |0   |
-|  16|MMR(34)|[15, 20, 28, 14]    |[30, 33]            |0   |
-|  16|MMR(38)|[15, 20, 28, 14]    |[30, 37]            |0   |
-|  17|MMR(18)|[]                  |[14, 17]            |1   |
-|  17|MMR(22)|[20]                |[14, 21]            |1   |
-|  17|MMR(25)|[20]                |[14, 21, 24]        |1   |
-|  17|MMR(31)|[20, 28, 14]        |[30]                |0   |
-|  17|MMR(34)|[20, 28, 14]        |[30, 33]            |0   |
-|  17|MMR(38)|[20, 28, 14]        |[30, 37]            |0   |
-|  18|MMR(19)|[]                  |[14, 17, 18]        |2   |
-|  18|MMR(22)|[19, 17]            |[14, 21]            |1   |
-|  18|MMR(25)|[19, 17]            |[14, 21, 24]        |1   |
-|  18|MMR(31)|[19, 17, 28, 14]    |[30]                |0   |
-|  18|MMR(34)|[19, 17, 28, 14]    |[30, 33]            |0   |
-|  18|MMR(38)|[19, 17, 28, 14]    |[30, 37]            |0   |
-|  19|MMR(22)|[18, 17]            |[14, 21]            |1   |
-|  19|MMR(25)|[18, 17]            |[14, 21, 24]        |1   |
-|  19|MMR(31)|[18, 17, 28, 14]    |[30]                |0   |
-|  19|MMR(34)|[18, 17, 28, 14]    |[30, 33]            |0   |
-|  19|MMR(38)|[18, 17, 28, 14]    |[30, 37]            |0   |
-|  20|MMR(22)|[17]                |[14, 21]            |1   |
-|  20|MMR(25)|[17]                |[14, 21, 24]        |1   |
-|  20|MMR(31)|[17, 28, 14]        |[30]                |0   |
-|  20|MMR(34)|[17, 28, 14]        |[30, 33]            |0   |
-|  20|MMR(38)|[17, 28, 14]        |[30, 37]            |0   |
-|  21|MMR(22)|[]                  |[14, 21]            |1   |
-|  21|MMR(25)|[]                  |[14, 21, 24]        |1   |
-|  21|MMR(31)|[28, 14]            |[30]                |0   |
-|  21|MMR(34)|[28, 14]            |[30, 33]            |0   |
-|  21|MMR(38)|[28, 14]            |[30, 37]            |0   |
-|  22|MMR(23)|[]                  |[14, 21, 22]        |2   |
-|  22|MMR(25)|[23]                |[14, 21, 24]        |2   |
-|  22|MMR(31)|[23, 27, 21, 14]    |[30]                |0   |
-|  22|MMR(34)|[23, 27, 21, 14]    |[30, 33]            |0   |
-|  22|MMR(38)|[23, 27, 21, 14]    |[30, 37]            |0   |
-|  23|MMR(25)|[22]                |[14, 21, 24]        |2   |
-|  23|MMR(31)|[22, 27, 21, 14]    |[30]                |0   |
-|  23|MMR(34)|[22, 27, 21, 14]    |[30, 33]            |0   |
-|  23|MMR(38)|[22, 27, 21, 14]    |[30, 37]            |0   |
-|  24|MMR(25)|[]                  |[14, 21, 24]        |2   |
-|  24|MMR(31)|[27, 21, 14]        |[30]                |0   |
-|  24|MMR(34)|[27, 21, 14]        |[30, 33]            |0   |
-|  24|MMR(38)|[27, 21, 14]        |[30, 37]            |0   |
-|  25|MMR(26)|[]                  |[14, 21, 24, 25]    |3   |
-|  25|MMR(31)|[26, 24, 21, 14]    |[30]                |0   |
-|  25|MMR(34)|[26, 24, 21, 14]    |[30, 33]            |0   |
-|  25|MMR(38)|[26, 24, 21, 14]    |[30, 37]            |0   |
-|  26|MMR(31)|[25, 24, 21, 14]    |[30]                |0   |
-|  26|MMR(34)|[25, 24, 21, 14]    |[30, 33]            |0   |
-|  26|MMR(38)|[25, 24, 21, 14]    |[30, 37]            |0   |
-|  27|MMR(31)|[24, 21, 14]        |[30]                |0   |
-|  27|MMR(34)|[24, 21, 14]        |[30, 33]            |0   |
-|  27|MMR(38)|[24, 21, 14]        |[30, 37]            |0   |
-|  28|MMR(31)|[21, 14]            |[30]                |0   |
-|  28|MMR(34)|[21, 14]            |[30, 33]            |0   |
-|  28|MMR(38)|[21, 14]            |[30, 37]            |0   |
-|  29|MMR(31)|[14]                |[30]                |0   |
-|  29|MMR(34)|[14]                |[30, 33]            |0   |
-|  29|MMR(38)|[14]                |[30, 37]            |0   |
-|  30|MMR(31)|[]                  |[30]                |0   |
-|  30|MMR(34)|[]                  |[30, 33]            |0   |
-|  30|MMR(38)|[]                  |[30, 37]            |0   |
-|  31|MMR(32)|[]                  |[30, 31]            |1   |
-|  31|MMR(34)|[32]                |[30, 33]            |1   |
-|  31|MMR(38)|[32, 36]            |[30, 37]            |1   |
-|  32|MMR(34)|[31]                |[30, 33]            |1   |
-|  32|MMR(38)|[31, 36]            |[30, 37]            |1   |
-|  33|MMR(34)|[]                  |[30, 33]            |1   |
-|  33|MMR(38)|[36]                |[30, 37]            |1   |
-|  34|MMR(35)|[]                  |[30, 33, 34]        |2   |
-|  34|MMR(38)|[35, 33]            |[30, 37]            |1   |
-|  35|MMR(38)|[34, 33]            |[30, 37]            |1   |
-|  36|MMR(38)|[33]                |[30, 37]            |1   |
-|  37|MMR(38)|[]                  |[30, 37]            |1   |
+|:---|----:|------------------|------------------|----|
+| 0|MMR(1) |                  |0                 |0   |
+| 0|MMR(3) |1                 |2                 |0   |
+| 0|MMR(7) |1, 5              |6                 |0   |
+| 0|MMR(10)|1, 5              |6, 9              |0   |
+| 0|MMR(15)|1, 5, 13          |14                |0   |
+| 0|MMR(18)|1, 5, 13          |14, 17            |0   |
+| 0|MMR(22)|1, 5, 13          |14, 21            |0   |
+| 0|MMR(25)|1, 5, 13          |14, 21, 24        |0   |
+| 0|MMR(31)|1, 5, 13, 29      |30                |0   |
+| 0|MMR(34)|1, 5, 13, 29      |30, 33            |0   |
+| 0|MMR(38)|1, 5, 13, 29      |30, 37            |0   |
+| 1|MMR(3) |0                 |2                 |0   |
+| 1|MMR(7) |0, 5              |6                 |0   |
+| 1|MMR(10)|0, 5              |6, 9              |0   |
+| 1|MMR(15)|0, 5, 13          |14                |0   |
+| 1|MMR(18)|0, 5, 13          |14, 17            |0   |
+| 1|MMR(22)|0, 5, 13          |14, 21            |0   |
+| 1|MMR(25)|0, 5, 13          |14, 21, 24        |0   |
+| 1|MMR(31)|0, 5, 13, 29      |30                |0   |
+| 1|MMR(34)|0, 5, 13, 29      |30, 33            |0   |
+| 1|MMR(38)|0, 5, 13, 29      |30, 37            |0   |
+| 2|MMR(3) |                  |2                 |0   |
+| 2|MMR(7) |5                 |6                 |0   |
+| 2|MMR(10)|5                 |6, 9              |0   |
+| 2|MMR(15)|5, 13             |14                |0   |
+| 2|MMR(18)|5, 13             |14, 17            |0   |
+| 2|MMR(22)|5, 13             |14, 21            |0   |
+| 2|MMR(25)|5, 13             |14, 21, 24        |0   |
+| 2|MMR(31)|5, 13, 29         |30                |0   |
+| 2|MMR(34)|5, 13, 29         |30, 33            |0   |
+| 2|MMR(38)|5, 13, 29         |30, 37            |0   |
+| 3|MMR(4) |                  |2, 3              |1   |
+| 3|MMR(7) |4, 2              |6                 |0   |
+| 3|MMR(10)|4, 2              |6, 9              |0   |
+| 3|MMR(15)|4, 2, 13          |14                |0   |
+| 3|MMR(18)|4, 2, 13          |14, 17            |0   |
+| 3|MMR(22)|4, 2, 13          |14, 21            |0   |
+| 3|MMR(25)|4, 2, 13          |14, 21, 24        |0   |
+| 3|MMR(31)|4, 2, 13, 29      |30                |0   |
+| 3|MMR(34)|4, 2, 13, 29      |30, 33            |0   |
+| 3|MMR(38)|4, 2, 13, 29      |30, 37            |0   |
+| 4|MMR(7) |3, 2              |6                 |0   |
+| 4|MMR(10)|3, 2              |6, 9              |0   |
+| 4|MMR(15)|3, 2, 13          |14                |0   |
+| 4|MMR(18)|3, 2, 13          |14, 17            |0   |
+| 4|MMR(22)|3, 2, 13          |14, 21            |0   |
+| 4|MMR(25)|3, 2, 13          |14, 21, 24        |0   |
+| 4|MMR(31)|3, 2, 13, 29      |30                |0   |
+| 4|MMR(34)|3, 2, 13, 29      |30, 33            |0   |
+| 4|MMR(38)|3, 2, 13, 29      |30, 37            |0   |
+| 5|MMR(7) |2                 |6                 |0   |
+| 5|MMR(10)|2                 |6, 9              |0   |
+| 5|MMR(15)|2, 13             |14                |0   |
+| 5|MMR(18)|2, 13             |14, 17            |0   |
+| 5|MMR(22)|2, 13             |14, 21            |0   |
+| 5|MMR(25)|2, 13             |14, 21, 24        |0   |
+| 5|MMR(31)|2, 13, 29         |30                |0   |
+| 5|MMR(34)|2, 13, 29         |30, 33            |0   |
+| 5|MMR(38)|2, 13, 29         |30, 37            |0   |
+| 6|MMR(7) |                  |6                 |0   |
+| 6|MMR(10)|                  |6, 9              |0   |
+| 6|MMR(15)|13                |14                |0   |
+| 6|MMR(18)|13                |14, 17            |0   |
+| 6|MMR(22)|13                |14, 21            |0   |
+| 6|MMR(25)|13                |14, 21, 24        |0   |
+| 6|MMR(31)|13, 29            |30                |0   |
+| 6|MMR(34)|13, 29            |30, 33            |0   |
+| 6|MMR(38)|13, 29            |30, 37            |0   |
+| 7|MMR(8) |                  |6, 7              |1   |
+| 7|MMR(10)|8                 |6, 9              |1   |
+| 7|MMR(15)|8, 12, 6          |14                |0   |
+| 7|MMR(18)|8, 12, 6          |14, 17            |0   |
+| 7|MMR(22)|8, 12, 6          |14, 21            |0   |
+| 7|MMR(25)|8, 12, 6          |14, 21, 24        |0   |
+| 7|MMR(31)|8, 12, 6, 29      |30                |0   |
+| 7|MMR(34)|8, 12, 6, 29      |30, 33            |0   |
+| 7|MMR(38)|8, 12, 6, 29      |30, 37            |0   |
+| 8|MMR(10)|7                 |6, 9              |1   |
+| 8|MMR(15)|7, 12, 6          |14                |0   |
+| 8|MMR(18)|7, 12, 6          |14, 17            |0   |
+| 8|MMR(22)|7, 12, 6          |14, 21            |0   |
+| 8|MMR(25)|7, 12, 6          |14, 21, 24        |0   |
+| 8|MMR(31)|7, 12, 6, 29      |30                |0   |
+| 8|MMR(34)|7, 12, 6, 29      |30, 33            |0   |
+| 8|MMR(38)|7, 12, 6, 29      |30, 37            |0   |
+| 9|MMR(10)|                  |6, 9              |1   |
+| 9|MMR(15)|12, 6             |14                |0   |
+| 9|MMR(18)|12, 6             |14, 17            |0   |
+| 9|MMR(22)|12, 6             |14, 21            |0   |
+| 9|MMR(25)|12, 6             |14, 21, 24        |0   |
+| 9|MMR(31)|12, 6, 29         |30                |0   |
+| 9|MMR(34)|12, 6, 29         |30, 33            |0   |
+| 9|MMR(38)|12, 6, 29         |30, 37            |0   |
+|10|MMR(11)|                  |6, 9, 10          |2   |
+|10|MMR(15)|11, 9, 6          |14                |0   |
+|10|MMR(18)|11, 9, 6          |14, 17            |0   |
+|10|MMR(22)|11, 9, 6          |14, 21            |0   |
+|10|MMR(25)|11, 9, 6          |14, 21, 24        |0   |
+|10|MMR(31)|11, 9, 6, 29      |30                |0   |
+|10|MMR(34)|11, 9, 6, 29      |30, 33            |0   |
+|10|MMR(38)|11, 9, 6, 29      |30, 37            |0   |
+|11|MMR(15)|10, 9, 6          |14                |0   |
+|11|MMR(18)|10, 9, 6          |14, 17            |0   |
+|11|MMR(22)|10, 9, 6          |14, 21            |0   |
+|11|MMR(25)|10, 9, 6          |14, 21, 24        |0   |
+|11|MMR(31)|10, 9, 6, 29      |30                |0   |
+|11|MMR(34)|10, 9, 6, 29      |30, 33            |0   |
+|11|MMR(38)|10, 9, 6, 29      |30, 37            |0   |
+|12|MMR(15)|9, 6              |14                |0   |
+|12|MMR(18)|9, 6              |14, 17            |0   |
+|12|MMR(22)|9, 6              |14, 21            |0   |
+|12|MMR(25)|9, 6              |14, 21, 24        |0   |
+|12|MMR(31)|9, 6, 29          |30                |0   |
+|12|MMR(34)|9, 6, 29          |30, 33            |0   |
+|12|MMR(38)|9, 6, 29          |30, 37            |0   |
+|13|MMR(15)|6                 |14                |0   |
+|13|MMR(18)|6                 |14, 17            |0   |
+|13|MMR(22)|6                 |14, 21            |0   |
+|13|MMR(25)|6                 |14, 21, 24        |0   |
+|13|MMR(31)|6, 29             |30                |0   |
+|13|MMR(34)|6, 29             |30, 33            |0   |
+|13|MMR(38)|6, 29             |30, 37            |0   |
+|14|MMR(15)|                  |14                |0   |
+|14|MMR(18)|                  |14, 17            |0   |
+|14|MMR(22)|                  |14, 21            |0   |
+|14|MMR(25)|                  |14, 21, 24        |0   |
+|14|MMR(31)|29                |30                |0   |
+|14|MMR(34)|29                |30, 33            |0   |
+|14|MMR(38)|29                |30, 37            |0   |
+|15|MMR(16)|                  |14, 15            |1   |
+|15|MMR(18)|16                |14, 17            |1   |
+|15|MMR(22)|16, 20            |14, 21            |1   |
+|15|MMR(25)|16, 20            |14, 21, 24        |1   |
+|15|MMR(31)|16, 20, 28, 14    |30                |0   |
+|15|MMR(34)|16, 20, 28, 14    |30, 33            |0   |
+|15|MMR(38)|16, 20, 28, 14    |30, 37            |0   |
+|16|MMR(18)|15                |14, 17            |1   |
+|16|MMR(22)|15, 20            |14, 21            |1   |
+|16|MMR(25)|15, 20            |14, 21, 24        |1   |
+|16|MMR(31)|15, 20, 28, 14    |30                |0   |
+|16|MMR(34)|15, 20, 28, 14    |30, 33            |0   |
+|16|MMR(38)|15, 20, 28, 14    |30, 37            |0   |
+|17|MMR(18)|                  |14, 17            |1   |
+|17|MMR(22)|20                |14, 21            |1   |
+|17|MMR(25)|20                |14, 21, 24        |1   |
+|17|MMR(31)|20, 28, 14        |30                |0   |
+|17|MMR(34)|20, 28, 14        |30, 33            |0   |
+|17|MMR(38)|20, 28, 14        |30, 37            |0   |
+|18|MMR(19)|                  |14, 17, 18        |2   |
+|18|MMR(22)|19, 17            |14, 21            |1   |
+|18|MMR(25)|19, 17            |14, 21, 24        |1   |
+|18|MMR(31)|19, 17, 28, 14    |30                |0   |
+|18|MMR(34)|19, 17, 28, 14    |30, 33            |0   |
+|18|MMR(38)|19, 17, 28, 14    |30, 37            |0   |
+|19|MMR(22)|18, 17            |14, 21            |1   |
+|19|MMR(25)|18, 17            |14, 21, 24        |1   |
+|19|MMR(31)|18, 17, 28, 14    |30                |0   |
+|19|MMR(34)|18, 17, 28, 14    |30, 33            |0   |
+|19|MMR(38)|18, 17, 28, 14    |30, 37            |0   |
+|20|MMR(22)|17                |14, 21            |1   |
+|20|MMR(25)|17                |14, 21, 24        |1   |
+|20|MMR(31)|17, 28, 14        |30                |0   |
+|20|MMR(34)|17, 28, 14        |30, 33            |0   |
+|20|MMR(38)|17, 28, 14        |30, 37            |0   |
+|21|MMR(22)|                  |14, 21            |1   |
+|21|MMR(25)|                  |14, 21, 24        |1   |
+|21|MMR(31)|28, 14            |30                |0   |
+|21|MMR(34)|28, 14            |30, 33            |0   |
+|21|MMR(38)|28, 14            |30, 37            |0   |
+|22|MMR(23)|                  |14, 21, 22        |2   |
+|22|MMR(25)|23                |14, 21, 24        |2   |
+|22|MMR(31)|23, 27, 21, 14    |30                |0   |
+|22|MMR(34)|23, 27, 21, 14    |30, 33            |0   |
+|22|MMR(38)|23, 27, 21, 14    |30, 37            |0   |
+|23|MMR(25)|22                |14, 21, 24        |2   |
+|23|MMR(31)|22, 27, 21, 14    |30                |0   |
+|23|MMR(34)|22, 27, 21, 14    |30, 33            |0   |
+|23|MMR(38)|22, 27, 21, 14    |30, 37            |0   |
+|24|MMR(25)|                  |14, 21, 24        |2   |
+|24|MMR(31)|27, 21, 14        |30                |0   |
+|24|MMR(34)|27, 21, 14        |30, 33            |0   |
+|24|MMR(38)|27, 21, 14        |30, 37            |0   |
+|25|MMR(26)|                  |14, 21, 24, 25    |3   |
+|25|MMR(31)|26, 24, 21, 14    |30                |0   |
+|25|MMR(34)|26, 24, 21, 14    |30, 33            |0   |
+|25|MMR(38)|26, 24, 21, 14    |30, 37            |0   |
+|26|MMR(31)|25, 24, 21, 14    |30                |0   |
+|26|MMR(34)|25, 24, 21, 14    |30, 33            |0   |
+|26|MMR(38)|25, 24, 21, 14    |30, 37            |0   |
+|27|MMR(31)|24, 21, 14        |30                |0   |
+|27|MMR(34)|24, 21, 14        |30, 33            |0   |
+|27|MMR(38)|24, 21, 14        |30, 37            |0   |
+|28|MMR(31)|21, 14            |30                |0   |
+|28|MMR(34)|21, 14            |30, 33            |0   |
+|28|MMR(38)|21, 14            |30, 37            |0   |
+|29|MMR(31)|14                |30                |0   |
+|29|MMR(34)|14                |30, 33            |0   |
+|29|MMR(38)|14                |30, 37            |0   |
+|30|MMR(31)|                  |30                |0   |
+|30|MMR(34)|                  |30, 33            |0   |
+|30|MMR(38)|                  |30, 37            |0   |
+|31|MMR(32)|                  |30, 31            |1   |
+|31|MMR(34)|32                |30, 33            |1   |
+|31|MMR(38)|32, 36            |30, 37            |1   |
+|32|MMR(34)|31                |30, 33            |1   |
+|32|MMR(38)|31, 36            |30, 37            |1   |
+|33|MMR(34)|                  |30, 33            |1   |
+|33|MMR(38)|36                |30, 37            |1   |
+|34|MMR(35)|                  |30, 33, 34        |2   |
+|34|MMR(38)|35, 33            |30, 37            |1   |
+|35|MMR(38)|34, 33            |30, 37            |1   |
+|36|MMR(38)|33                |30, 37            |1   |
+|37|MMR(38)|                  |30, 37            |1   |
 
 ## Accumulator peak hashes
 
