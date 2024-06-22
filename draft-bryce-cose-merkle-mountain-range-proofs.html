@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta content="Common,Latin" name="scripts">
 <meta content="initial-scale=1.0" name="viewport">
-<title>Merkle Mountain Range for Immediately Verifiable and Efficiently Replicable Commitments</title>
+<title>Merkle Mountain Range for Immediately Verifiable and Replicable Commitments</title>
 <meta content="Robin Bryce" name="author">
 <meta content="
        This specification describes a protocol for the COSE encoding of verifiable commitments to data,
@@ -1033,7 +1033,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
 </tr></thead>
 <tfoot><tr>
 <td class="left">Bryce</td>
-<td class="center">Expires 23 December 2024</td>
+<td class="center">Expires 24 December 2024</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1046,12 +1046,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="internet-draft">draft-bryce-cose-merkle-mountain-range-proofs-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2024-06-21" class="published">21 June 2024</time>
+<time datetime="2024-06-22" class="published">22 June 2024</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Experimental</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2024-12-23">23 December 2024</time></dd>
+<dd class="expires"><time datetime="2024-12-24">24 December 2024</time></dd>
 <dt class="label-authors">Author:</dt>
 <dd class="authors">
 <div class="author">
@@ -1061,7 +1061,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
 </dd>
 </dl>
 </div>
-<h1 id="title">Merkle Mountain Range for Immediately Verifiable and Efficiently Replicable Commitments</h1>
+<h1 id="title">Merkle Mountain Range for Immediately Verifiable and Replicable Commitments</h1>
 <section id="section-abstract">
       <h2 id="abstract"><a href="#abstract" class="selfRef">Abstract</a></h2>
 <p id="section-abstract-1">This specification describes a protocol for the COSE encoding of verifiable commitments to data,
@@ -1100,7 +1100,7 @@ to be pruned without impacting the verifiability of subsequent data or any repli
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 23 December 2024.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 24 December 2024.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1912,17 +1912,20 @@ Return index to the caller and indicate success.<a href="#section-11.1-5.4.2.3.1
 </li>
         </ol>
 <p id="section-11.1-6">Verification <span class="bcp14">MUST</span> require that the path is fully consumed during verification.
-The algorithm above defers that final requirement to the caller.
-Where the caller is verifying a single proof of inclusion, they <span class="bcp14">MUST</span> check the returned consumed length equals the length of the poof provided.
-Where the caller is verifying a series of concatenated proofs of inclusion, such as for consistency proofs,
-the caller <span class="bcp14">MUST</span> ensure the entire concatenated series of proofs is fully consumed.
-In the case of concatenated inclusion proof verification,
-the sub range of the aggregate proof must be advanced by the returned consumed length on each call.<a href="#section-11.1-6" class="pilcrow">¶</a></p>
-<p id="section-11.1-7">Consistency proofs concatenate inclusion proofs for each accumulator peak in the origin mmr state.<a href="#section-11.1-7" class="pilcrow">¶</a></p>
-<p id="section-11.1-8">The process expressed in python is<a href="#section-11.1-8" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="section-11.1-9">
+The algorithm above defers that final requirement to the caller.<a href="#section-11.1-6" class="pilcrow">¶</a></p>
+<p id="section-11.1-7">Where the caller is verifying a single proof of inclusion, they <span class="bcp14">MUST</span> check the returned consumed length equals the length of the poof provided.<a href="#section-11.1-7" class="pilcrow">¶</a></p>
+<p id="section-11.1-8">Consistency proofs concatenate inclusion proofs for each accumulator peak in the origin mmr state.<a href="#section-11.1-8" class="pilcrow">¶</a></p>
+<p id="section-11.1-9">Where the caller is verifying a series of concatenated proofs of inclusion, such as for consistency proofs,
+the caller <span class="bcp14">MUST</span> ensure the entire concatenated series of proofs is fully consumed.<a href="#section-11.1-9" class="pilcrow">¶</a></p>
+<p id="section-11.1-10">In the case of concatenated inclusion proof verification,
+the sub range of the aggregate proof must be advanced by the returned consumed length on each call.<a href="#section-11.1-10" class="pilcrow">¶</a></p>
+<p id="section-11.1-11">For "old accumulator compatibility", the application <span class="bcp14">MUST</span> establish the prefix length of the proof needed to produce the <code>root</code> value in the old accumulator. This prefix length <span class="bcp14">MUST</span> then be used when deciding if the provided proof has been fully consumed by verification.<a href="#section-11.1-11" class="pilcrow">¶</a></p>
+<p id="section-11.1-12">The process expressed in python is<a href="#section-11.1-12" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-11.1-13">
 <pre>
-def verify_inclusion_path(s: int, i: int, nodehash: bytes, proof: List[bytes], root: bytes) -&gt; Tuple[bool, int]:
+def verify_inclusion_path(
+    s: int, i: int, nodehash: bytes,
+    proof: List[bytes], root: bytes) -&gt; Tuple[bool, int]:
 
     if len(proof) == 0 and nodehash == root:
         return (True, 0)
@@ -1944,7 +1947,7 @@ def verify_inclusion_path(s: int, i: int, nodehash: bytes, proof: List[bytes], r
         g = g + 1
 
     return (False, len(proof))
-</pre><a href="#section-11.1-9" class="pilcrow">¶</a>
+</pre><a href="#section-11.1-13" class="pilcrow">¶</a>
 </div>
 </section>
 </div>
@@ -1953,25 +1956,22 @@ def verify_inclusion_path(s: int, i: int, nodehash: bytes, proof: List[bytes], r
         <h3 id="name-consistencyproof">
 <a href="#section-11.2" class="section-number selfRef">11.2. </a><a href="#name-consistencyproof" class="section-name selfRef">ConsistencyProof</a>
         </h3>
-<p id="section-11.2-1">Words tbd<a href="#section-11.2-1" class="pilcrow">¶</a></p>
-<p id="section-11.2-2">The process expressed in python is<a href="#section-11.2-2" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="section-11.2-3">
+<p id="section-11.2-1">Creates a proof of consistency between the identified MMR's.<a href="#section-11.2-1" class="pilcrow">¶</a></p>
+<p id="section-11.2-2">The returned path is the concatenation of the inclusion proofs
+authenticating the peaks of MMR(a) in MMR(b)<a href="#section-11.2-2" class="pilcrow">¶</a></p>
+<p id="section-11.2-3">The process expressed in python is<a href="#section-11.2-3" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-11.2-4">
 <pre>
 def consistency_proof(asize: int, bsize: int) -&gt; List[int]:
-    """Returns a proof of consistency between the MMR's identified by asize and bsize.
-
-    The returned path is the concatenation of the inclusion proofs
-    authenticating the peaks of MMR(a) in MMR(b)
-    """
     apeaks = peaks(asize)
 
     proof = []
 
     for apos in apeaks:
-        proof.extend(index_proof_path(bsize, apos-1))
+        proof.extend(inclusion_proof_path(bsize, apos-1))
 
     return proof
-</pre><a href="#section-11.2-3" class="pilcrow">¶</a>
+</pre><a href="#section-11.2-4" class="pilcrow">¶</a>
 </div>
 </section>
 </div>
@@ -1987,8 +1987,7 @@ def verify_consistency(
         asize: int, bsize: int,
         aaccumulator: List[bytes], baccumulator: List[bytes],
         path: List[bytes]) -&gt; bool:
-    """
-    """
+
     apeakpositions = peaks(asize)
     bpeakpositions = peaks(bsize)
 
@@ -2039,8 +2038,6 @@ def verify_consistency(
 <div class="alignLeft art-text artwork" id="section-12.1-2">
 <pre>
 def index_height(i) -&gt; int:
-    """Returns the 0 based height of the mmr entry indexed by i"""
-    # convert the index to a position to take advantage of the bit patterns afforded
     pos = i + 1
     while not all_ones(pos):
       pos = pos - most_sig_bit(pos) + 1
@@ -2056,14 +2053,11 @@ def index_height(i) -&gt; int:
 <a href="#section-12.2" class="section-number selfRef">12.2. </a><a href="#name-peaks" class="section-name selfRef">Peaks</a>
         </h3>
 <p id="section-12.2-1"><code>Peaks(S)</code> returns the peak positions for <code>MMR(S)</code> (Note: these are just the corresponding storage indices + 1)<a href="#section-12.2-1" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="section-12.2-2">
+<p id="section-12.2-2">Returns the peak indices for MMR(s)<a href="#section-12.2-2" class="pilcrow">¶</a></p>
+<p id="section-12.2-3">Assumes MMR(s) is complete, implementations can check for this condition by testing the height of s+1<a href="#section-12.2-3" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-12.2-4">
 <pre>
 def peaks(s) -&gt; List[int]:
-    """Returns the peak indices for MMR(s)
-
-    Assumes MMR(s) is complete, implementations can check for this condition by
-    testing the height of s+1
-    """
 
     peak = 0
     peaks = []
@@ -2075,7 +2069,7 @@ def peaks(s) -&gt; List[int]:
         s -= highest_size
 
     return peaks
-</pre><a href="#section-12.2-2" class="pilcrow">¶</a>
+</pre><a href="#section-12.2-4" class="pilcrow">¶</a>
 </div>
 </section>
 </div>
@@ -2129,17 +2123,12 @@ def peak_index(e:int, g:int) -&gt; int:
         <h3 id="name-peaksbitmap">
 <a href="#section-12.5" class="section-number selfRef">12.5. </a><a href="#name-peaksbitmap" class="section-name selfRef">PeaksBitmap</a>
         </h3>
-<p id="section-12.5-1"><code>PeaksBitmap(s)</code> returns the count of leaves in <code>MMR(s)</code>,
-this algorithm is named for the fact that the set bit positions correspond to the heights of the  peaks present in the MMR.<a href="#section-12.5-1" class="pilcrow">¶</a></p>
+<p id="section-12.5-1"><code>PeaksBitmap(s)</code> Returns a mask with a bit set for each peak,
+interpreted as an integer this is also the count of leaves in <code>MMR(s)</code>,<a href="#section-12.5-1" class="pilcrow">¶</a></p>
 <p id="section-12.5-2">Expressed in python<a href="#section-12.5-2" class="pilcrow">¶</a></p>
 <div class="alignLeft art-text artwork" id="section-12.5-3">
 <pre>
 def peaks_bitmap(s: int) -&gt; int:
-    """Returns a mask with a bit set for each peak,
-
-    The resulting binary value is also the count of leaves contained in the
-    largest complete MMR included in, or equal to, s
-    """
     if s == 0:
         return 0
 
@@ -2224,7 +2213,8 @@ This is essentially a ^2 <em>floor</em> function for the accumulation of bits:<a
 <div class="alignLeft art-text artwork" id="section-13.4-3">
 <pre>
 TopHeight(1) = TopHeight(2) = 0
-TopHeight(2) = TopHeight(3) = TopHeight(4) = TopHeigth(5) = TopHeight(6) = 1
+TopHeight(2) = TopHeight(3) = TopHeight(4) = TopHeigth(5)
+    = TopHeight(6) = 1
 TopHeight(7) = 2
 
 2       7
@@ -2250,16 +2240,16 @@ TopHeight(7) = 2
         <h3 id="name-mostsigbit">
 <a href="#section-13.6" class="section-number selfRef">13.6. </a><a href="#name-mostsigbit" class="section-name selfRef">MostSigBit</a>
         </h3>
-<p id="section-13.6-1"><code>1 &lt;&lt; (BitLength(pos) - 1)</code><a href="#section-13.6-1" class="pilcrow">¶</a></p>
-<p id="section-13.6-2">Expressed in python<a href="#section-13.6-2" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="section-13.6-3">
+<p id="section-13.6-1">Returns the mask for the the most significant bit in pos<a href="#section-13.6-1" class="pilcrow">¶</a></p>
+<p id="section-13.6-2"><code>1 &lt;&lt; (BitLength(pos) - 1)</code><a href="#section-13.6-2" class="pilcrow">¶</a></p>
+<p id="section-13.6-3">Expressed in python<a href="#section-13.6-3" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-13.6-4">
 <pre>
 def most_sig_bit(pos) -&gt; int:
-    """Returns the mask for the the most significant bit in pos"""
     return 1 &lt;&lt; (pos.bit_length() - 1)
-</pre><a href="#section-13.6-3" class="pilcrow">¶</a>
+</pre><a href="#section-13.6-4" class="pilcrow">¶</a>
 </div>
-<p id="section-13.6-4">We assume the following primitives for working with bits as they have obvious implementations.<a href="#section-13.6-4" class="pilcrow">¶</a></p>
+<p id="section-13.6-5">We assume the following primitives for working with bits as they commonly have library or hardware support.<a href="#section-13.6-5" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="bitlength">
@@ -2287,8 +2277,6 @@ def bit_length(pos):
 <div class="alignLeft art-text artwork" id="section-13.8-3">
 <pre>
 def all_ones(pos) -&gt; bool:
-    """Returns true if all bits, starting with the most significant, are 1"""
-
     msb = most_sig_bit(pos)
     mask = (1 &lt;&lt; (msb + 1)) - 1
     return pos == mask
@@ -3347,1492 +3335,1492 @@ It is therefore guaranteed to be a prefix of any future path for the same entry.
             <tr>
               <td class="text-left" rowspan="1" colspan="1">0</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(1)</td>
-              <td class="text-left" rowspan="1" colspan="1">[]</td>
-              <td class="text-left" rowspan="1" colspan="1">[0]</td>
+              <td class="text-left" rowspan="1" colspan="1"> </td>
+              <td class="text-left" rowspan="1" colspan="1">0</td>
               <td class="text-left" rowspan="1" colspan="1">0</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">0</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(3)</td>
-              <td class="text-left" rowspan="1" colspan="1">[1]</td>
-              <td class="text-left" rowspan="1" colspan="1">[2]</td>
+              <td class="text-left" rowspan="1" colspan="1">1</td>
+              <td class="text-left" rowspan="1" colspan="1">2</td>
               <td class="text-left" rowspan="1" colspan="1">0</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">0</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(7)</td>
-              <td class="text-left" rowspan="1" colspan="1">[1, 5]</td>
-              <td class="text-left" rowspan="1" colspan="1">[6]</td>
+              <td class="text-left" rowspan="1" colspan="1">1, 5</td>
+              <td class="text-left" rowspan="1" colspan="1">6</td>
               <td class="text-left" rowspan="1" colspan="1">0</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">0</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(10)</td>
-              <td class="text-left" rowspan="1" colspan="1">[1, 5]</td>
-              <td class="text-left" rowspan="1" colspan="1">[6, 9]</td>
+              <td class="text-left" rowspan="1" colspan="1">1, 5</td>
+              <td class="text-left" rowspan="1" colspan="1">6, 9</td>
               <td class="text-left" rowspan="1" colspan="1">0</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">0</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(15)</td>
-              <td class="text-left" rowspan="1" colspan="1">[1, 5, 13]</td>
-              <td class="text-left" rowspan="1" colspan="1">[14]</td>
+              <td class="text-left" rowspan="1" colspan="1">1, 5, 13</td>
+              <td class="text-left" rowspan="1" colspan="1">14</td>
               <td class="text-left" rowspan="1" colspan="1">0</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">0</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(18)</td>
-              <td class="text-left" rowspan="1" colspan="1">[1, 5, 13]</td>
-              <td class="text-left" rowspan="1" colspan="1">[14, 17]</td>
+              <td class="text-left" rowspan="1" colspan="1">1, 5, 13</td>
+              <td class="text-left" rowspan="1" colspan="1">14, 17</td>
               <td class="text-left" rowspan="1" colspan="1">0</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">0</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(22)</td>
-              <td class="text-left" rowspan="1" colspan="1">[1, 5, 13]</td>
-              <td class="text-left" rowspan="1" colspan="1">[14, 21]</td>
+              <td class="text-left" rowspan="1" colspan="1">1, 5, 13</td>
+              <td class="text-left" rowspan="1" colspan="1">14, 21</td>
               <td class="text-left" rowspan="1" colspan="1">0</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">0</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(25)</td>
-              <td class="text-left" rowspan="1" colspan="1">[1, 5, 13]</td>
-              <td class="text-left" rowspan="1" colspan="1">[14, 21, 24]</td>
+              <td class="text-left" rowspan="1" colspan="1">1, 5, 13</td>
+              <td class="text-left" rowspan="1" colspan="1">14, 21, 24</td>
               <td class="text-left" rowspan="1" colspan="1">0</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">0</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(31)</td>
-              <td class="text-left" rowspan="1" colspan="1">[1, 5, 13, 29]</td>
-              <td class="text-left" rowspan="1" colspan="1">[30]</td>
+              <td class="text-left" rowspan="1" colspan="1">1, 5, 13, 29</td>
+              <td class="text-left" rowspan="1" colspan="1">30</td>
               <td class="text-left" rowspan="1" colspan="1">0</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">0</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(34)</td>
-              <td class="text-left" rowspan="1" colspan="1">[1, 5, 13, 29]</td>
-              <td class="text-left" rowspan="1" colspan="1">[30, 33]</td>
+              <td class="text-left" rowspan="1" colspan="1">1, 5, 13, 29</td>
+              <td class="text-left" rowspan="1" colspan="1">30, 33</td>
               <td class="text-left" rowspan="1" colspan="1">0</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">0</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(38)</td>
-              <td class="text-left" rowspan="1" colspan="1">[1, 5, 13, 29]</td>
-              <td class="text-left" rowspan="1" colspan="1">[30, 37]</td>
+              <td class="text-left" rowspan="1" colspan="1">1, 5, 13, 29</td>
+              <td class="text-left" rowspan="1" colspan="1">30, 37</td>
               <td class="text-left" rowspan="1" colspan="1">0</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">1</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(3)</td>
-              <td class="text-left" rowspan="1" colspan="1">[0]</td>
-              <td class="text-left" rowspan="1" colspan="1">[2]</td>
+              <td class="text-left" rowspan="1" colspan="1">0</td>
+              <td class="text-left" rowspan="1" colspan="1">2</td>
               <td class="text-left" rowspan="1" colspan="1">0</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">1</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(7)</td>
-              <td class="text-left" rowspan="1" colspan="1">[0, 5]</td>
-              <td class="text-left" rowspan="1" colspan="1">[6]</td>
+              <td class="text-left" rowspan="1" colspan="1">0, 5</td>
+              <td class="text-left" rowspan="1" colspan="1">6</td>
               <td class="text-left" rowspan="1" colspan="1">0</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">1</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(10)</td>
-              <td class="text-left" rowspan="1" colspan="1">[0, 5]</td>
-              <td class="text-left" rowspan="1" colspan="1">[6, 9]</td>
+              <td class="text-left" rowspan="1" colspan="1">0, 5</td>
+              <td class="text-left" rowspan="1" colspan="1">6, 9</td>
               <td class="text-left" rowspan="1" colspan="1">0</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">1</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(15)</td>
-              <td class="text-left" rowspan="1" colspan="1">[0, 5, 13]</td>
-              <td class="text-left" rowspan="1" colspan="1">[14]</td>
+              <td class="text-left" rowspan="1" colspan="1">0, 5, 13</td>
+              <td class="text-left" rowspan="1" colspan="1">14</td>
               <td class="text-left" rowspan="1" colspan="1">0</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">1</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(18)</td>
-              <td class="text-left" rowspan="1" colspan="1">[0, 5, 13]</td>
-              <td class="text-left" rowspan="1" colspan="1">[14, 17]</td>
+              <td class="text-left" rowspan="1" colspan="1">0, 5, 13</td>
+              <td class="text-left" rowspan="1" colspan="1">14, 17</td>
               <td class="text-left" rowspan="1" colspan="1">0</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">1</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(22)</td>
-              <td class="text-left" rowspan="1" colspan="1">[0, 5, 13]</td>
-              <td class="text-left" rowspan="1" colspan="1">[14, 21]</td>
+              <td class="text-left" rowspan="1" colspan="1">0, 5, 13</td>
+              <td class="text-left" rowspan="1" colspan="1">14, 21</td>
               <td class="text-left" rowspan="1" colspan="1">0</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">1</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(25)</td>
-              <td class="text-left" rowspan="1" colspan="1">[0, 5, 13]</td>
-              <td class="text-left" rowspan="1" colspan="1">[14, 21, 24]</td>
+              <td class="text-left" rowspan="1" colspan="1">0, 5, 13</td>
+              <td class="text-left" rowspan="1" colspan="1">14, 21, 24</td>
               <td class="text-left" rowspan="1" colspan="1">0</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">1</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(31)</td>
-              <td class="text-left" rowspan="1" colspan="1">[0, 5, 13, 29]</td>
-              <td class="text-left" rowspan="1" colspan="1">[30]</td>
+              <td class="text-left" rowspan="1" colspan="1">0, 5, 13, 29</td>
+              <td class="text-left" rowspan="1" colspan="1">30</td>
               <td class="text-left" rowspan="1" colspan="1">0</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">1</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(34)</td>
-              <td class="text-left" rowspan="1" colspan="1">[0, 5, 13, 29]</td>
-              <td class="text-left" rowspan="1" colspan="1">[30, 33]</td>
+              <td class="text-left" rowspan="1" colspan="1">0, 5, 13, 29</td>
+              <td class="text-left" rowspan="1" colspan="1">30, 33</td>
               <td class="text-left" rowspan="1" colspan="1">0</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">1</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(38)</td>
-              <td class="text-left" rowspan="1" colspan="1">[0, 5, 13, 29]</td>
-              <td class="text-left" rowspan="1" colspan="1">[30, 37]</td>
+              <td class="text-left" rowspan="1" colspan="1">0, 5, 13, 29</td>
+              <td class="text-left" rowspan="1" colspan="1">30, 37</td>
               <td class="text-left" rowspan="1" colspan="1">0</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">2</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(3)</td>
-              <td class="text-left" rowspan="1" colspan="1">[]</td>
-              <td class="text-left" rowspan="1" colspan="1">[2]</td>
+              <td class="text-left" rowspan="1" colspan="1"> </td>
+              <td class="text-left" rowspan="1" colspan="1">2</td>
               <td class="text-left" rowspan="1" colspan="1">0</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">2</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(7)</td>
-              <td class="text-left" rowspan="1" colspan="1">[5]</td>
-              <td class="text-left" rowspan="1" colspan="1">[6]</td>
+              <td class="text-left" rowspan="1" colspan="1">5</td>
+              <td class="text-left" rowspan="1" colspan="1">6</td>
               <td class="text-left" rowspan="1" colspan="1">0</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">2</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(10)</td>
-              <td class="text-left" rowspan="1" colspan="1">[5]</td>
-              <td class="text-left" rowspan="1" colspan="1">[6, 9]</td>
+              <td class="text-left" rowspan="1" colspan="1">5</td>
+              <td class="text-left" rowspan="1" colspan="1">6, 9</td>
               <td class="text-left" rowspan="1" colspan="1">0</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">2</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(15)</td>
-              <td class="text-left" rowspan="1" colspan="1">[5, 13]</td>
-              <td class="text-left" rowspan="1" colspan="1">[14]</td>
+              <td class="text-left" rowspan="1" colspan="1">5, 13</td>
+              <td class="text-left" rowspan="1" colspan="1">14</td>
               <td class="text-left" rowspan="1" colspan="1">0</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">2</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(18)</td>
-              <td class="text-left" rowspan="1" colspan="1">[5, 13]</td>
-              <td class="text-left" rowspan="1" colspan="1">[14, 17]</td>
+              <td class="text-left" rowspan="1" colspan="1">5, 13</td>
+              <td class="text-left" rowspan="1" colspan="1">14, 17</td>
               <td class="text-left" rowspan="1" colspan="1">0</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">2</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(22)</td>
-              <td class="text-left" rowspan="1" colspan="1">[5, 13]</td>
-              <td class="text-left" rowspan="1" colspan="1">[14, 21]</td>
+              <td class="text-left" rowspan="1" colspan="1">5, 13</td>
+              <td class="text-left" rowspan="1" colspan="1">14, 21</td>
               <td class="text-left" rowspan="1" colspan="1">0</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">2</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(25)</td>
-              <td class="text-left" rowspan="1" colspan="1">[5, 13]</td>
-              <td class="text-left" rowspan="1" colspan="1">[14, 21, 24]</td>
+              <td class="text-left" rowspan="1" colspan="1">5, 13</td>
+              <td class="text-left" rowspan="1" colspan="1">14, 21, 24</td>
               <td class="text-left" rowspan="1" colspan="1">0</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">2</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(31)</td>
-              <td class="text-left" rowspan="1" colspan="1">[5, 13, 29]</td>
-              <td class="text-left" rowspan="1" colspan="1">[30]</td>
+              <td class="text-left" rowspan="1" colspan="1">5, 13, 29</td>
+              <td class="text-left" rowspan="1" colspan="1">30</td>
               <td class="text-left" rowspan="1" colspan="1">0</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">2</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(34)</td>
-              <td class="text-left" rowspan="1" colspan="1">[5, 13, 29]</td>
-              <td class="text-left" rowspan="1" colspan="1">[30, 33]</td>
+              <td class="text-left" rowspan="1" colspan="1">5, 13, 29</td>
+              <td class="text-left" rowspan="1" colspan="1">30, 33</td>
               <td class="text-left" rowspan="1" colspan="1">0</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">2</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(38)</td>
-              <td class="text-left" rowspan="1" colspan="1">[5, 13, 29]</td>
-              <td class="text-left" rowspan="1" colspan="1">[30, 37]</td>
+              <td class="text-left" rowspan="1" colspan="1">5, 13, 29</td>
+              <td class="text-left" rowspan="1" colspan="1">30, 37</td>
               <td class="text-left" rowspan="1" colspan="1">0</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">3</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(4)</td>
-              <td class="text-left" rowspan="1" colspan="1">[]</td>
-              <td class="text-left" rowspan="1" colspan="1">[2, 3]</td>
+              <td class="text-left" rowspan="1" colspan="1"> </td>
+              <td class="text-left" rowspan="1" colspan="1">2, 3</td>
               <td class="text-left" rowspan="1" colspan="1">1</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">3</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(7)</td>
-              <td class="text-left" rowspan="1" colspan="1">[4, 2]</td>
-              <td class="text-left" rowspan="1" colspan="1">[6]</td>
+              <td class="text-left" rowspan="1" colspan="1">4, 2</td>
+              <td class="text-left" rowspan="1" colspan="1">6</td>
               <td class="text-left" rowspan="1" colspan="1">0</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">3</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(10)</td>
-              <td class="text-left" rowspan="1" colspan="1">[4, 2]</td>
-              <td class="text-left" rowspan="1" colspan="1">[6, 9]</td>
+              <td class="text-left" rowspan="1" colspan="1">4, 2</td>
+              <td class="text-left" rowspan="1" colspan="1">6, 9</td>
               <td class="text-left" rowspan="1" colspan="1">0</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">3</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(15)</td>
-              <td class="text-left" rowspan="1" colspan="1">[4, 2, 13]</td>
-              <td class="text-left" rowspan="1" colspan="1">[14]</td>
+              <td class="text-left" rowspan="1" colspan="1">4, 2, 13</td>
+              <td class="text-left" rowspan="1" colspan="1">14</td>
               <td class="text-left" rowspan="1" colspan="1">0</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">3</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(18)</td>
-              <td class="text-left" rowspan="1" colspan="1">[4, 2, 13]</td>
-              <td class="text-left" rowspan="1" colspan="1">[14, 17]</td>
+              <td class="text-left" rowspan="1" colspan="1">4, 2, 13</td>
+              <td class="text-left" rowspan="1" colspan="1">14, 17</td>
               <td class="text-left" rowspan="1" colspan="1">0</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">3</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(22)</td>
-              <td class="text-left" rowspan="1" colspan="1">[4, 2, 13]</td>
-              <td class="text-left" rowspan="1" colspan="1">[14, 21]</td>
+              <td class="text-left" rowspan="1" colspan="1">4, 2, 13</td>
+              <td class="text-left" rowspan="1" colspan="1">14, 21</td>
               <td class="text-left" rowspan="1" colspan="1">0</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">3</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(25)</td>
-              <td class="text-left" rowspan="1" colspan="1">[4, 2, 13]</td>
-              <td class="text-left" rowspan="1" colspan="1">[14, 21, 24]</td>
+              <td class="text-left" rowspan="1" colspan="1">4, 2, 13</td>
+              <td class="text-left" rowspan="1" colspan="1">14, 21, 24</td>
               <td class="text-left" rowspan="1" colspan="1">0</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">3</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(31)</td>
-              <td class="text-left" rowspan="1" colspan="1">[4, 2, 13, 29]</td>
-              <td class="text-left" rowspan="1" colspan="1">[30]</td>
+              <td class="text-left" rowspan="1" colspan="1">4, 2, 13, 29</td>
+              <td class="text-left" rowspan="1" colspan="1">30</td>
               <td class="text-left" rowspan="1" colspan="1">0</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">3</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(34)</td>
-              <td class="text-left" rowspan="1" colspan="1">[4, 2, 13, 29]</td>
-              <td class="text-left" rowspan="1" colspan="1">[30, 33]</td>
+              <td class="text-left" rowspan="1" colspan="1">4, 2, 13, 29</td>
+              <td class="text-left" rowspan="1" colspan="1">30, 33</td>
               <td class="text-left" rowspan="1" colspan="1">0</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">3</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(38)</td>
-              <td class="text-left" rowspan="1" colspan="1">[4, 2, 13, 29]</td>
-              <td class="text-left" rowspan="1" colspan="1">[30, 37]</td>
+              <td class="text-left" rowspan="1" colspan="1">4, 2, 13, 29</td>
+              <td class="text-left" rowspan="1" colspan="1">30, 37</td>
               <td class="text-left" rowspan="1" colspan="1">0</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">4</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(7)</td>
-              <td class="text-left" rowspan="1" colspan="1">[3, 2]</td>
-              <td class="text-left" rowspan="1" colspan="1">[6]</td>
+              <td class="text-left" rowspan="1" colspan="1">3, 2</td>
+              <td class="text-left" rowspan="1" colspan="1">6</td>
               <td class="text-left" rowspan="1" colspan="1">0</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">4</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(10)</td>
-              <td class="text-left" rowspan="1" colspan="1">[3, 2]</td>
-              <td class="text-left" rowspan="1" colspan="1">[6, 9]</td>
+              <td class="text-left" rowspan="1" colspan="1">3, 2</td>
+              <td class="text-left" rowspan="1" colspan="1">6, 9</td>
               <td class="text-left" rowspan="1" colspan="1">0</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">4</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(15)</td>
-              <td class="text-left" rowspan="1" colspan="1">[3, 2, 13]</td>
-              <td class="text-left" rowspan="1" colspan="1">[14]</td>
+              <td class="text-left" rowspan="1" colspan="1">3, 2, 13</td>
+              <td class="text-left" rowspan="1" colspan="1">14</td>
               <td class="text-left" rowspan="1" colspan="1">0</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">4</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(18)</td>
-              <td class="text-left" rowspan="1" colspan="1">[3, 2, 13]</td>
-              <td class="text-left" rowspan="1" colspan="1">[14, 17]</td>
+              <td class="text-left" rowspan="1" colspan="1">3, 2, 13</td>
+              <td class="text-left" rowspan="1" colspan="1">14, 17</td>
               <td class="text-left" rowspan="1" colspan="1">0</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">4</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(22)</td>
-              <td class="text-left" rowspan="1" colspan="1">[3, 2, 13]</td>
-              <td class="text-left" rowspan="1" colspan="1">[14, 21]</td>
+              <td class="text-left" rowspan="1" colspan="1">3, 2, 13</td>
+              <td class="text-left" rowspan="1" colspan="1">14, 21</td>
               <td class="text-left" rowspan="1" colspan="1">0</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">4</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(25)</td>
-              <td class="text-left" rowspan="1" colspan="1">[3, 2, 13]</td>
-              <td class="text-left" rowspan="1" colspan="1">[14, 21, 24]</td>
+              <td class="text-left" rowspan="1" colspan="1">3, 2, 13</td>
+              <td class="text-left" rowspan="1" colspan="1">14, 21, 24</td>
               <td class="text-left" rowspan="1" colspan="1">0</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">4</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(31)</td>
-              <td class="text-left" rowspan="1" colspan="1">[3, 2, 13, 29]</td>
-              <td class="text-left" rowspan="1" colspan="1">[30]</td>
+              <td class="text-left" rowspan="1" colspan="1">3, 2, 13, 29</td>
+              <td class="text-left" rowspan="1" colspan="1">30</td>
               <td class="text-left" rowspan="1" colspan="1">0</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">4</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(34)</td>
-              <td class="text-left" rowspan="1" colspan="1">[3, 2, 13, 29]</td>
-              <td class="text-left" rowspan="1" colspan="1">[30, 33]</td>
+              <td class="text-left" rowspan="1" colspan="1">3, 2, 13, 29</td>
+              <td class="text-left" rowspan="1" colspan="1">30, 33</td>
               <td class="text-left" rowspan="1" colspan="1">0</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">4</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(38)</td>
-              <td class="text-left" rowspan="1" colspan="1">[3, 2, 13, 29]</td>
-              <td class="text-left" rowspan="1" colspan="1">[30, 37]</td>
+              <td class="text-left" rowspan="1" colspan="1">3, 2, 13, 29</td>
+              <td class="text-left" rowspan="1" colspan="1">30, 37</td>
               <td class="text-left" rowspan="1" colspan="1">0</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">5</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(7)</td>
-              <td class="text-left" rowspan="1" colspan="1">[2]</td>
-              <td class="text-left" rowspan="1" colspan="1">[6]</td>
+              <td class="text-left" rowspan="1" colspan="1">2</td>
+              <td class="text-left" rowspan="1" colspan="1">6</td>
               <td class="text-left" rowspan="1" colspan="1">0</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">5</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(10)</td>
-              <td class="text-left" rowspan="1" colspan="1">[2]</td>
-              <td class="text-left" rowspan="1" colspan="1">[6, 9]</td>
+              <td class="text-left" rowspan="1" colspan="1">2</td>
+              <td class="text-left" rowspan="1" colspan="1">6, 9</td>
               <td class="text-left" rowspan="1" colspan="1">0</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">5</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(15)</td>
-              <td class="text-left" rowspan="1" colspan="1">[2, 13]</td>
-              <td class="text-left" rowspan="1" colspan="1">[14]</td>
+              <td class="text-left" rowspan="1" colspan="1">2, 13</td>
+              <td class="text-left" rowspan="1" colspan="1">14</td>
               <td class="text-left" rowspan="1" colspan="1">0</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">5</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(18)</td>
-              <td class="text-left" rowspan="1" colspan="1">[2, 13]</td>
-              <td class="text-left" rowspan="1" colspan="1">[14, 17]</td>
+              <td class="text-left" rowspan="1" colspan="1">2, 13</td>
+              <td class="text-left" rowspan="1" colspan="1">14, 17</td>
               <td class="text-left" rowspan="1" colspan="1">0</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">5</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(22)</td>
-              <td class="text-left" rowspan="1" colspan="1">[2, 13]</td>
-              <td class="text-left" rowspan="1" colspan="1">[14, 21]</td>
+              <td class="text-left" rowspan="1" colspan="1">2, 13</td>
+              <td class="text-left" rowspan="1" colspan="1">14, 21</td>
               <td class="text-left" rowspan="1" colspan="1">0</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">5</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(25)</td>
-              <td class="text-left" rowspan="1" colspan="1">[2, 13]</td>
-              <td class="text-left" rowspan="1" colspan="1">[14, 21, 24]</td>
+              <td class="text-left" rowspan="1" colspan="1">2, 13</td>
+              <td class="text-left" rowspan="1" colspan="1">14, 21, 24</td>
               <td class="text-left" rowspan="1" colspan="1">0</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">5</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(31)</td>
-              <td class="text-left" rowspan="1" colspan="1">[2, 13, 29]</td>
-              <td class="text-left" rowspan="1" colspan="1">[30]</td>
+              <td class="text-left" rowspan="1" colspan="1">2, 13, 29</td>
+              <td class="text-left" rowspan="1" colspan="1">30</td>
               <td class="text-left" rowspan="1" colspan="1">0</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">5</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(34)</td>
-              <td class="text-left" rowspan="1" colspan="1">[2, 13, 29]</td>
-              <td class="text-left" rowspan="1" colspan="1">[30, 33]</td>
+              <td class="text-left" rowspan="1" colspan="1">2, 13, 29</td>
+              <td class="text-left" rowspan="1" colspan="1">30, 33</td>
               <td class="text-left" rowspan="1" colspan="1">0</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">5</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(38)</td>
-              <td class="text-left" rowspan="1" colspan="1">[2, 13, 29]</td>
-              <td class="text-left" rowspan="1" colspan="1">[30, 37]</td>
+              <td class="text-left" rowspan="1" colspan="1">2, 13, 29</td>
+              <td class="text-left" rowspan="1" colspan="1">30, 37</td>
               <td class="text-left" rowspan="1" colspan="1">0</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">6</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(7)</td>
-              <td class="text-left" rowspan="1" colspan="1">[]</td>
-              <td class="text-left" rowspan="1" colspan="1">[6]</td>
+              <td class="text-left" rowspan="1" colspan="1"> </td>
+              <td class="text-left" rowspan="1" colspan="1">6</td>
               <td class="text-left" rowspan="1" colspan="1">0</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">6</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(10)</td>
-              <td class="text-left" rowspan="1" colspan="1">[]</td>
-              <td class="text-left" rowspan="1" colspan="1">[6, 9]</td>
+              <td class="text-left" rowspan="1" colspan="1"> </td>
+              <td class="text-left" rowspan="1" colspan="1">6, 9</td>
               <td class="text-left" rowspan="1" colspan="1">0</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">6</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(15)</td>
-              <td class="text-left" rowspan="1" colspan="1">[13]</td>
-              <td class="text-left" rowspan="1" colspan="1">[14]</td>
+              <td class="text-left" rowspan="1" colspan="1">13</td>
+              <td class="text-left" rowspan="1" colspan="1">14</td>
               <td class="text-left" rowspan="1" colspan="1">0</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">6</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(18)</td>
-              <td class="text-left" rowspan="1" colspan="1">[13]</td>
-              <td class="text-left" rowspan="1" colspan="1">[14, 17]</td>
+              <td class="text-left" rowspan="1" colspan="1">13</td>
+              <td class="text-left" rowspan="1" colspan="1">14, 17</td>
               <td class="text-left" rowspan="1" colspan="1">0</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">6</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(22)</td>
-              <td class="text-left" rowspan="1" colspan="1">[13]</td>
-              <td class="text-left" rowspan="1" colspan="1">[14, 21]</td>
+              <td class="text-left" rowspan="1" colspan="1">13</td>
+              <td class="text-left" rowspan="1" colspan="1">14, 21</td>
               <td class="text-left" rowspan="1" colspan="1">0</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">6</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(25)</td>
-              <td class="text-left" rowspan="1" colspan="1">[13]</td>
-              <td class="text-left" rowspan="1" colspan="1">[14, 21, 24]</td>
+              <td class="text-left" rowspan="1" colspan="1">13</td>
+              <td class="text-left" rowspan="1" colspan="1">14, 21, 24</td>
               <td class="text-left" rowspan="1" colspan="1">0</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">6</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(31)</td>
-              <td class="text-left" rowspan="1" colspan="1">[13, 29]</td>
-              <td class="text-left" rowspan="1" colspan="1">[30]</td>
+              <td class="text-left" rowspan="1" colspan="1">13, 29</td>
+              <td class="text-left" rowspan="1" colspan="1">30</td>
               <td class="text-left" rowspan="1" colspan="1">0</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">6</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(34)</td>
-              <td class="text-left" rowspan="1" colspan="1">[13, 29]</td>
-              <td class="text-left" rowspan="1" colspan="1">[30, 33]</td>
+              <td class="text-left" rowspan="1" colspan="1">13, 29</td>
+              <td class="text-left" rowspan="1" colspan="1">30, 33</td>
               <td class="text-left" rowspan="1" colspan="1">0</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">6</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(38)</td>
-              <td class="text-left" rowspan="1" colspan="1">[13, 29]</td>
-              <td class="text-left" rowspan="1" colspan="1">[30, 37]</td>
+              <td class="text-left" rowspan="1" colspan="1">13, 29</td>
+              <td class="text-left" rowspan="1" colspan="1">30, 37</td>
               <td class="text-left" rowspan="1" colspan="1">0</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">7</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(8)</td>
-              <td class="text-left" rowspan="1" colspan="1">[]</td>
-              <td class="text-left" rowspan="1" colspan="1">[6, 7]</td>
+              <td class="text-left" rowspan="1" colspan="1"> </td>
+              <td class="text-left" rowspan="1" colspan="1">6, 7</td>
               <td class="text-left" rowspan="1" colspan="1">1</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">7</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(10)</td>
-              <td class="text-left" rowspan="1" colspan="1">[8]</td>
-              <td class="text-left" rowspan="1" colspan="1">[6, 9]</td>
+              <td class="text-left" rowspan="1" colspan="1">8</td>
+              <td class="text-left" rowspan="1" colspan="1">6, 9</td>
               <td class="text-left" rowspan="1" colspan="1">1</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">7</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(15)</td>
-              <td class="text-left" rowspan="1" colspan="1">[8, 12, 6]</td>
-              <td class="text-left" rowspan="1" colspan="1">[14]</td>
+              <td class="text-left" rowspan="1" colspan="1">8, 12, 6</td>
+              <td class="text-left" rowspan="1" colspan="1">14</td>
               <td class="text-left" rowspan="1" colspan="1">0</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">7</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(18)</td>
-              <td class="text-left" rowspan="1" colspan="1">[8, 12, 6]</td>
-              <td class="text-left" rowspan="1" colspan="1">[14, 17]</td>
+              <td class="text-left" rowspan="1" colspan="1">8, 12, 6</td>
+              <td class="text-left" rowspan="1" colspan="1">14, 17</td>
               <td class="text-left" rowspan="1" colspan="1">0</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">7</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(22)</td>
-              <td class="text-left" rowspan="1" colspan="1">[8, 12, 6]</td>
-              <td class="text-left" rowspan="1" colspan="1">[14, 21]</td>
+              <td class="text-left" rowspan="1" colspan="1">8, 12, 6</td>
+              <td class="text-left" rowspan="1" colspan="1">14, 21</td>
               <td class="text-left" rowspan="1" colspan="1">0</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">7</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(25)</td>
-              <td class="text-left" rowspan="1" colspan="1">[8, 12, 6]</td>
-              <td class="text-left" rowspan="1" colspan="1">[14, 21, 24]</td>
+              <td class="text-left" rowspan="1" colspan="1">8, 12, 6</td>
+              <td class="text-left" rowspan="1" colspan="1">14, 21, 24</td>
               <td class="text-left" rowspan="1" colspan="1">0</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">7</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(31)</td>
-              <td class="text-left" rowspan="1" colspan="1">[8, 12, 6, 29]</td>
-              <td class="text-left" rowspan="1" colspan="1">[30]</td>
+              <td class="text-left" rowspan="1" colspan="1">8, 12, 6, 29</td>
+              <td class="text-left" rowspan="1" colspan="1">30</td>
               <td class="text-left" rowspan="1" colspan="1">0</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">7</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(34)</td>
-              <td class="text-left" rowspan="1" colspan="1">[8, 12, 6, 29]</td>
-              <td class="text-left" rowspan="1" colspan="1">[30, 33]</td>
+              <td class="text-left" rowspan="1" colspan="1">8, 12, 6, 29</td>
+              <td class="text-left" rowspan="1" colspan="1">30, 33</td>
               <td class="text-left" rowspan="1" colspan="1">0</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">7</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(38)</td>
-              <td class="text-left" rowspan="1" colspan="1">[8, 12, 6, 29]</td>
-              <td class="text-left" rowspan="1" colspan="1">[30, 37]</td>
+              <td class="text-left" rowspan="1" colspan="1">8, 12, 6, 29</td>
+              <td class="text-left" rowspan="1" colspan="1">30, 37</td>
               <td class="text-left" rowspan="1" colspan="1">0</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">8</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(10)</td>
-              <td class="text-left" rowspan="1" colspan="1">[7]</td>
-              <td class="text-left" rowspan="1" colspan="1">[6, 9]</td>
+              <td class="text-left" rowspan="1" colspan="1">7</td>
+              <td class="text-left" rowspan="1" colspan="1">6, 9</td>
               <td class="text-left" rowspan="1" colspan="1">1</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">8</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(15)</td>
-              <td class="text-left" rowspan="1" colspan="1">[7, 12, 6]</td>
-              <td class="text-left" rowspan="1" colspan="1">[14]</td>
+              <td class="text-left" rowspan="1" colspan="1">7, 12, 6</td>
+              <td class="text-left" rowspan="1" colspan="1">14</td>
               <td class="text-left" rowspan="1" colspan="1">0</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">8</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(18)</td>
-              <td class="text-left" rowspan="1" colspan="1">[7, 12, 6]</td>
-              <td class="text-left" rowspan="1" colspan="1">[14, 17]</td>
+              <td class="text-left" rowspan="1" colspan="1">7, 12, 6</td>
+              <td class="text-left" rowspan="1" colspan="1">14, 17</td>
               <td class="text-left" rowspan="1" colspan="1">0</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">8</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(22)</td>
-              <td class="text-left" rowspan="1" colspan="1">[7, 12, 6]</td>
-              <td class="text-left" rowspan="1" colspan="1">[14, 21]</td>
+              <td class="text-left" rowspan="1" colspan="1">7, 12, 6</td>
+              <td class="text-left" rowspan="1" colspan="1">14, 21</td>
               <td class="text-left" rowspan="1" colspan="1">0</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">8</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(25)</td>
-              <td class="text-left" rowspan="1" colspan="1">[7, 12, 6]</td>
-              <td class="text-left" rowspan="1" colspan="1">[14, 21, 24]</td>
+              <td class="text-left" rowspan="1" colspan="1">7, 12, 6</td>
+              <td class="text-left" rowspan="1" colspan="1">14, 21, 24</td>
               <td class="text-left" rowspan="1" colspan="1">0</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">8</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(31)</td>
-              <td class="text-left" rowspan="1" colspan="1">[7, 12, 6, 29]</td>
-              <td class="text-left" rowspan="1" colspan="1">[30]</td>
+              <td class="text-left" rowspan="1" colspan="1">7, 12, 6, 29</td>
+              <td class="text-left" rowspan="1" colspan="1">30</td>
               <td class="text-left" rowspan="1" colspan="1">0</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">8</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(34)</td>
-              <td class="text-left" rowspan="1" colspan="1">[7, 12, 6, 29]</td>
-              <td class="text-left" rowspan="1" colspan="1">[30, 33]</td>
+              <td class="text-left" rowspan="1" colspan="1">7, 12, 6, 29</td>
+              <td class="text-left" rowspan="1" colspan="1">30, 33</td>
               <td class="text-left" rowspan="1" colspan="1">0</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">8</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(38)</td>
-              <td class="text-left" rowspan="1" colspan="1">[7, 12, 6, 29]</td>
-              <td class="text-left" rowspan="1" colspan="1">[30, 37]</td>
+              <td class="text-left" rowspan="1" colspan="1">7, 12, 6, 29</td>
+              <td class="text-left" rowspan="1" colspan="1">30, 37</td>
               <td class="text-left" rowspan="1" colspan="1">0</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">9</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(10)</td>
-              <td class="text-left" rowspan="1" colspan="1">[]</td>
-              <td class="text-left" rowspan="1" colspan="1">[6, 9]</td>
+              <td class="text-left" rowspan="1" colspan="1"> </td>
+              <td class="text-left" rowspan="1" colspan="1">6, 9</td>
               <td class="text-left" rowspan="1" colspan="1">1</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">9</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(15)</td>
-              <td class="text-left" rowspan="1" colspan="1">[12, 6]</td>
-              <td class="text-left" rowspan="1" colspan="1">[14]</td>
+              <td class="text-left" rowspan="1" colspan="1">12, 6</td>
+              <td class="text-left" rowspan="1" colspan="1">14</td>
               <td class="text-left" rowspan="1" colspan="1">0</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">9</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(18)</td>
-              <td class="text-left" rowspan="1" colspan="1">[12, 6]</td>
-              <td class="text-left" rowspan="1" colspan="1">[14, 17]</td>
+              <td class="text-left" rowspan="1" colspan="1">12, 6</td>
+              <td class="text-left" rowspan="1" colspan="1">14, 17</td>
               <td class="text-left" rowspan="1" colspan="1">0</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">9</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(22)</td>
-              <td class="text-left" rowspan="1" colspan="1">[12, 6]</td>
-              <td class="text-left" rowspan="1" colspan="1">[14, 21]</td>
+              <td class="text-left" rowspan="1" colspan="1">12, 6</td>
+              <td class="text-left" rowspan="1" colspan="1">14, 21</td>
               <td class="text-left" rowspan="1" colspan="1">0</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">9</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(25)</td>
-              <td class="text-left" rowspan="1" colspan="1">[12, 6]</td>
-              <td class="text-left" rowspan="1" colspan="1">[14, 21, 24]</td>
+              <td class="text-left" rowspan="1" colspan="1">12, 6</td>
+              <td class="text-left" rowspan="1" colspan="1">14, 21, 24</td>
               <td class="text-left" rowspan="1" colspan="1">0</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">9</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(31)</td>
-              <td class="text-left" rowspan="1" colspan="1">[12, 6, 29]</td>
-              <td class="text-left" rowspan="1" colspan="1">[30]</td>
+              <td class="text-left" rowspan="1" colspan="1">12, 6, 29</td>
+              <td class="text-left" rowspan="1" colspan="1">30</td>
               <td class="text-left" rowspan="1" colspan="1">0</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">9</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(34)</td>
-              <td class="text-left" rowspan="1" colspan="1">[12, 6, 29]</td>
-              <td class="text-left" rowspan="1" colspan="1">[30, 33]</td>
+              <td class="text-left" rowspan="1" colspan="1">12, 6, 29</td>
+              <td class="text-left" rowspan="1" colspan="1">30, 33</td>
               <td class="text-left" rowspan="1" colspan="1">0</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">9</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(38)</td>
-              <td class="text-left" rowspan="1" colspan="1">[12, 6, 29]</td>
-              <td class="text-left" rowspan="1" colspan="1">[30, 37]</td>
+              <td class="text-left" rowspan="1" colspan="1">12, 6, 29</td>
+              <td class="text-left" rowspan="1" colspan="1">30, 37</td>
               <td class="text-left" rowspan="1" colspan="1">0</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">10</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(11)</td>
-              <td class="text-left" rowspan="1" colspan="1">[]</td>
-              <td class="text-left" rowspan="1" colspan="1">[6, 9, 10]</td>
+              <td class="text-left" rowspan="1" colspan="1"> </td>
+              <td class="text-left" rowspan="1" colspan="1">6, 9, 10</td>
               <td class="text-left" rowspan="1" colspan="1">2</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">10</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(15)</td>
-              <td class="text-left" rowspan="1" colspan="1">[11, 9, 6]</td>
-              <td class="text-left" rowspan="1" colspan="1">[14]</td>
+              <td class="text-left" rowspan="1" colspan="1">11, 9, 6</td>
+              <td class="text-left" rowspan="1" colspan="1">14</td>
               <td class="text-left" rowspan="1" colspan="1">0</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">10</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(18)</td>
-              <td class="text-left" rowspan="1" colspan="1">[11, 9, 6]</td>
-              <td class="text-left" rowspan="1" colspan="1">[14, 17]</td>
+              <td class="text-left" rowspan="1" colspan="1">11, 9, 6</td>
+              <td class="text-left" rowspan="1" colspan="1">14, 17</td>
               <td class="text-left" rowspan="1" colspan="1">0</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">10</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(22)</td>
-              <td class="text-left" rowspan="1" colspan="1">[11, 9, 6]</td>
-              <td class="text-left" rowspan="1" colspan="1">[14, 21]</td>
+              <td class="text-left" rowspan="1" colspan="1">11, 9, 6</td>
+              <td class="text-left" rowspan="1" colspan="1">14, 21</td>
               <td class="text-left" rowspan="1" colspan="1">0</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">10</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(25)</td>
-              <td class="text-left" rowspan="1" colspan="1">[11, 9, 6]</td>
-              <td class="text-left" rowspan="1" colspan="1">[14, 21, 24]</td>
+              <td class="text-left" rowspan="1" colspan="1">11, 9, 6</td>
+              <td class="text-left" rowspan="1" colspan="1">14, 21, 24</td>
               <td class="text-left" rowspan="1" colspan="1">0</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">10</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(31)</td>
-              <td class="text-left" rowspan="1" colspan="1">[11, 9, 6, 29]</td>
-              <td class="text-left" rowspan="1" colspan="1">[30]</td>
+              <td class="text-left" rowspan="1" colspan="1">11, 9, 6, 29</td>
+              <td class="text-left" rowspan="1" colspan="1">30</td>
               <td class="text-left" rowspan="1" colspan="1">0</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">10</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(34)</td>
-              <td class="text-left" rowspan="1" colspan="1">[11, 9, 6, 29]</td>
-              <td class="text-left" rowspan="1" colspan="1">[30, 33]</td>
+              <td class="text-left" rowspan="1" colspan="1">11, 9, 6, 29</td>
+              <td class="text-left" rowspan="1" colspan="1">30, 33</td>
               <td class="text-left" rowspan="1" colspan="1">0</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">10</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(38)</td>
-              <td class="text-left" rowspan="1" colspan="1">[11, 9, 6, 29]</td>
-              <td class="text-left" rowspan="1" colspan="1">[30, 37]</td>
+              <td class="text-left" rowspan="1" colspan="1">11, 9, 6, 29</td>
+              <td class="text-left" rowspan="1" colspan="1">30, 37</td>
               <td class="text-left" rowspan="1" colspan="1">0</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">11</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(15)</td>
-              <td class="text-left" rowspan="1" colspan="1">[10, 9, 6]</td>
-              <td class="text-left" rowspan="1" colspan="1">[14]</td>
+              <td class="text-left" rowspan="1" colspan="1">10, 9, 6</td>
+              <td class="text-left" rowspan="1" colspan="1">14</td>
               <td class="text-left" rowspan="1" colspan="1">0</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">11</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(18)</td>
-              <td class="text-left" rowspan="1" colspan="1">[10, 9, 6]</td>
-              <td class="text-left" rowspan="1" colspan="1">[14, 17]</td>
+              <td class="text-left" rowspan="1" colspan="1">10, 9, 6</td>
+              <td class="text-left" rowspan="1" colspan="1">14, 17</td>
               <td class="text-left" rowspan="1" colspan="1">0</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">11</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(22)</td>
-              <td class="text-left" rowspan="1" colspan="1">[10, 9, 6]</td>
-              <td class="text-left" rowspan="1" colspan="1">[14, 21]</td>
+              <td class="text-left" rowspan="1" colspan="1">10, 9, 6</td>
+              <td class="text-left" rowspan="1" colspan="1">14, 21</td>
               <td class="text-left" rowspan="1" colspan="1">0</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">11</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(25)</td>
-              <td class="text-left" rowspan="1" colspan="1">[10, 9, 6]</td>
-              <td class="text-left" rowspan="1" colspan="1">[14, 21, 24]</td>
+              <td class="text-left" rowspan="1" colspan="1">10, 9, 6</td>
+              <td class="text-left" rowspan="1" colspan="1">14, 21, 24</td>
               <td class="text-left" rowspan="1" colspan="1">0</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">11</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(31)</td>
-              <td class="text-left" rowspan="1" colspan="1">[10, 9, 6, 29]</td>
-              <td class="text-left" rowspan="1" colspan="1">[30]</td>
+              <td class="text-left" rowspan="1" colspan="1">10, 9, 6, 29</td>
+              <td class="text-left" rowspan="1" colspan="1">30</td>
               <td class="text-left" rowspan="1" colspan="1">0</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">11</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(34)</td>
-              <td class="text-left" rowspan="1" colspan="1">[10, 9, 6, 29]</td>
-              <td class="text-left" rowspan="1" colspan="1">[30, 33]</td>
+              <td class="text-left" rowspan="1" colspan="1">10, 9, 6, 29</td>
+              <td class="text-left" rowspan="1" colspan="1">30, 33</td>
               <td class="text-left" rowspan="1" colspan="1">0</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">11</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(38)</td>
-              <td class="text-left" rowspan="1" colspan="1">[10, 9, 6, 29]</td>
-              <td class="text-left" rowspan="1" colspan="1">[30, 37]</td>
+              <td class="text-left" rowspan="1" colspan="1">10, 9, 6, 29</td>
+              <td class="text-left" rowspan="1" colspan="1">30, 37</td>
               <td class="text-left" rowspan="1" colspan="1">0</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">12</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(15)</td>
-              <td class="text-left" rowspan="1" colspan="1">[9, 6]</td>
-              <td class="text-left" rowspan="1" colspan="1">[14]</td>
+              <td class="text-left" rowspan="1" colspan="1">9, 6</td>
+              <td class="text-left" rowspan="1" colspan="1">14</td>
               <td class="text-left" rowspan="1" colspan="1">0</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">12</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(18)</td>
-              <td class="text-left" rowspan="1" colspan="1">[9, 6]</td>
-              <td class="text-left" rowspan="1" colspan="1">[14, 17]</td>
+              <td class="text-left" rowspan="1" colspan="1">9, 6</td>
+              <td class="text-left" rowspan="1" colspan="1">14, 17</td>
               <td class="text-left" rowspan="1" colspan="1">0</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">12</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(22)</td>
-              <td class="text-left" rowspan="1" colspan="1">[9, 6]</td>
-              <td class="text-left" rowspan="1" colspan="1">[14, 21]</td>
+              <td class="text-left" rowspan="1" colspan="1">9, 6</td>
+              <td class="text-left" rowspan="1" colspan="1">14, 21</td>
               <td class="text-left" rowspan="1" colspan="1">0</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">12</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(25)</td>
-              <td class="text-left" rowspan="1" colspan="1">[9, 6]</td>
-              <td class="text-left" rowspan="1" colspan="1">[14, 21, 24]</td>
+              <td class="text-left" rowspan="1" colspan="1">9, 6</td>
+              <td class="text-left" rowspan="1" colspan="1">14, 21, 24</td>
               <td class="text-left" rowspan="1" colspan="1">0</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">12</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(31)</td>
-              <td class="text-left" rowspan="1" colspan="1">[9, 6, 29]</td>
-              <td class="text-left" rowspan="1" colspan="1">[30]</td>
+              <td class="text-left" rowspan="1" colspan="1">9, 6, 29</td>
+              <td class="text-left" rowspan="1" colspan="1">30</td>
               <td class="text-left" rowspan="1" colspan="1">0</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">12</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(34)</td>
-              <td class="text-left" rowspan="1" colspan="1">[9, 6, 29]</td>
-              <td class="text-left" rowspan="1" colspan="1">[30, 33]</td>
+              <td class="text-left" rowspan="1" colspan="1">9, 6, 29</td>
+              <td class="text-left" rowspan="1" colspan="1">30, 33</td>
               <td class="text-left" rowspan="1" colspan="1">0</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">12</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(38)</td>
-              <td class="text-left" rowspan="1" colspan="1">[9, 6, 29]</td>
-              <td class="text-left" rowspan="1" colspan="1">[30, 37]</td>
+              <td class="text-left" rowspan="1" colspan="1">9, 6, 29</td>
+              <td class="text-left" rowspan="1" colspan="1">30, 37</td>
               <td class="text-left" rowspan="1" colspan="1">0</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">13</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(15)</td>
-              <td class="text-left" rowspan="1" colspan="1">[6]</td>
-              <td class="text-left" rowspan="1" colspan="1">[14]</td>
+              <td class="text-left" rowspan="1" colspan="1">6</td>
+              <td class="text-left" rowspan="1" colspan="1">14</td>
               <td class="text-left" rowspan="1" colspan="1">0</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">13</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(18)</td>
-              <td class="text-left" rowspan="1" colspan="1">[6]</td>
-              <td class="text-left" rowspan="1" colspan="1">[14, 17]</td>
+              <td class="text-left" rowspan="1" colspan="1">6</td>
+              <td class="text-left" rowspan="1" colspan="1">14, 17</td>
               <td class="text-left" rowspan="1" colspan="1">0</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">13</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(22)</td>
-              <td class="text-left" rowspan="1" colspan="1">[6]</td>
-              <td class="text-left" rowspan="1" colspan="1">[14, 21]</td>
+              <td class="text-left" rowspan="1" colspan="1">6</td>
+              <td class="text-left" rowspan="1" colspan="1">14, 21</td>
               <td class="text-left" rowspan="1" colspan="1">0</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">13</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(25)</td>
-              <td class="text-left" rowspan="1" colspan="1">[6]</td>
-              <td class="text-left" rowspan="1" colspan="1">[14, 21, 24]</td>
+              <td class="text-left" rowspan="1" colspan="1">6</td>
+              <td class="text-left" rowspan="1" colspan="1">14, 21, 24</td>
               <td class="text-left" rowspan="1" colspan="1">0</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">13</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(31)</td>
-              <td class="text-left" rowspan="1" colspan="1">[6, 29]</td>
-              <td class="text-left" rowspan="1" colspan="1">[30]</td>
+              <td class="text-left" rowspan="1" colspan="1">6, 29</td>
+              <td class="text-left" rowspan="1" colspan="1">30</td>
               <td class="text-left" rowspan="1" colspan="1">0</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">13</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(34)</td>
-              <td class="text-left" rowspan="1" colspan="1">[6, 29]</td>
-              <td class="text-left" rowspan="1" colspan="1">[30, 33]</td>
+              <td class="text-left" rowspan="1" colspan="1">6, 29</td>
+              <td class="text-left" rowspan="1" colspan="1">30, 33</td>
               <td class="text-left" rowspan="1" colspan="1">0</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">13</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(38)</td>
-              <td class="text-left" rowspan="1" colspan="1">[6, 29]</td>
-              <td class="text-left" rowspan="1" colspan="1">[30, 37]</td>
+              <td class="text-left" rowspan="1" colspan="1">6, 29</td>
+              <td class="text-left" rowspan="1" colspan="1">30, 37</td>
               <td class="text-left" rowspan="1" colspan="1">0</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">14</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(15)</td>
-              <td class="text-left" rowspan="1" colspan="1">[]</td>
-              <td class="text-left" rowspan="1" colspan="1">[14]</td>
+              <td class="text-left" rowspan="1" colspan="1"> </td>
+              <td class="text-left" rowspan="1" colspan="1">14</td>
               <td class="text-left" rowspan="1" colspan="1">0</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">14</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(18)</td>
-              <td class="text-left" rowspan="1" colspan="1">[]</td>
-              <td class="text-left" rowspan="1" colspan="1">[14, 17]</td>
+              <td class="text-left" rowspan="1" colspan="1"> </td>
+              <td class="text-left" rowspan="1" colspan="1">14, 17</td>
               <td class="text-left" rowspan="1" colspan="1">0</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">14</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(22)</td>
-              <td class="text-left" rowspan="1" colspan="1">[]</td>
-              <td class="text-left" rowspan="1" colspan="1">[14, 21]</td>
+              <td class="text-left" rowspan="1" colspan="1"> </td>
+              <td class="text-left" rowspan="1" colspan="1">14, 21</td>
               <td class="text-left" rowspan="1" colspan="1">0</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">14</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(25)</td>
-              <td class="text-left" rowspan="1" colspan="1">[]</td>
-              <td class="text-left" rowspan="1" colspan="1">[14, 21, 24]</td>
+              <td class="text-left" rowspan="1" colspan="1"> </td>
+              <td class="text-left" rowspan="1" colspan="1">14, 21, 24</td>
               <td class="text-left" rowspan="1" colspan="1">0</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">14</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(31)</td>
-              <td class="text-left" rowspan="1" colspan="1">[29]</td>
-              <td class="text-left" rowspan="1" colspan="1">[30]</td>
+              <td class="text-left" rowspan="1" colspan="1">29</td>
+              <td class="text-left" rowspan="1" colspan="1">30</td>
               <td class="text-left" rowspan="1" colspan="1">0</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">14</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(34)</td>
-              <td class="text-left" rowspan="1" colspan="1">[29]</td>
-              <td class="text-left" rowspan="1" colspan="1">[30, 33]</td>
+              <td class="text-left" rowspan="1" colspan="1">29</td>
+              <td class="text-left" rowspan="1" colspan="1">30, 33</td>
               <td class="text-left" rowspan="1" colspan="1">0</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">14</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(38)</td>
-              <td class="text-left" rowspan="1" colspan="1">[29]</td>
-              <td class="text-left" rowspan="1" colspan="1">[30, 37]</td>
+              <td class="text-left" rowspan="1" colspan="1">29</td>
+              <td class="text-left" rowspan="1" colspan="1">30, 37</td>
               <td class="text-left" rowspan="1" colspan="1">0</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">15</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(16)</td>
-              <td class="text-left" rowspan="1" colspan="1">[]</td>
-              <td class="text-left" rowspan="1" colspan="1">[14, 15]</td>
+              <td class="text-left" rowspan="1" colspan="1"> </td>
+              <td class="text-left" rowspan="1" colspan="1">14, 15</td>
               <td class="text-left" rowspan="1" colspan="1">1</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">15</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(18)</td>
-              <td class="text-left" rowspan="1" colspan="1">[16]</td>
-              <td class="text-left" rowspan="1" colspan="1">[14, 17]</td>
+              <td class="text-left" rowspan="1" colspan="1">16</td>
+              <td class="text-left" rowspan="1" colspan="1">14, 17</td>
               <td class="text-left" rowspan="1" colspan="1">1</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">15</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(22)</td>
-              <td class="text-left" rowspan="1" colspan="1">[16, 20]</td>
-              <td class="text-left" rowspan="1" colspan="1">[14, 21]</td>
+              <td class="text-left" rowspan="1" colspan="1">16, 20</td>
+              <td class="text-left" rowspan="1" colspan="1">14, 21</td>
               <td class="text-left" rowspan="1" colspan="1">1</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">15</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(25)</td>
-              <td class="text-left" rowspan="1" colspan="1">[16, 20]</td>
-              <td class="text-left" rowspan="1" colspan="1">[14, 21, 24]</td>
+              <td class="text-left" rowspan="1" colspan="1">16, 20</td>
+              <td class="text-left" rowspan="1" colspan="1">14, 21, 24</td>
               <td class="text-left" rowspan="1" colspan="1">1</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">15</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(31)</td>
-              <td class="text-left" rowspan="1" colspan="1">[16, 20, 28, 14]</td>
-              <td class="text-left" rowspan="1" colspan="1">[30]</td>
+              <td class="text-left" rowspan="1" colspan="1">16, 20, 28, 14</td>
+              <td class="text-left" rowspan="1" colspan="1">30</td>
               <td class="text-left" rowspan="1" colspan="1">0</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">15</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(34)</td>
-              <td class="text-left" rowspan="1" colspan="1">[16, 20, 28, 14]</td>
-              <td class="text-left" rowspan="1" colspan="1">[30, 33]</td>
+              <td class="text-left" rowspan="1" colspan="1">16, 20, 28, 14</td>
+              <td class="text-left" rowspan="1" colspan="1">30, 33</td>
               <td class="text-left" rowspan="1" colspan="1">0</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">15</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(38)</td>
-              <td class="text-left" rowspan="1" colspan="1">[16, 20, 28, 14]</td>
-              <td class="text-left" rowspan="1" colspan="1">[30, 37]</td>
+              <td class="text-left" rowspan="1" colspan="1">16, 20, 28, 14</td>
+              <td class="text-left" rowspan="1" colspan="1">30, 37</td>
               <td class="text-left" rowspan="1" colspan="1">0</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">16</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(18)</td>
-              <td class="text-left" rowspan="1" colspan="1">[15]</td>
-              <td class="text-left" rowspan="1" colspan="1">[14, 17]</td>
+              <td class="text-left" rowspan="1" colspan="1">15</td>
+              <td class="text-left" rowspan="1" colspan="1">14, 17</td>
               <td class="text-left" rowspan="1" colspan="1">1</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">16</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(22)</td>
-              <td class="text-left" rowspan="1" colspan="1">[15, 20]</td>
-              <td class="text-left" rowspan="1" colspan="1">[14, 21]</td>
+              <td class="text-left" rowspan="1" colspan="1">15, 20</td>
+              <td class="text-left" rowspan="1" colspan="1">14, 21</td>
               <td class="text-left" rowspan="1" colspan="1">1</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">16</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(25)</td>
-              <td class="text-left" rowspan="1" colspan="1">[15, 20]</td>
-              <td class="text-left" rowspan="1" colspan="1">[14, 21, 24]</td>
+              <td class="text-left" rowspan="1" colspan="1">15, 20</td>
+              <td class="text-left" rowspan="1" colspan="1">14, 21, 24</td>
               <td class="text-left" rowspan="1" colspan="1">1</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">16</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(31)</td>
-              <td class="text-left" rowspan="1" colspan="1">[15, 20, 28, 14]</td>
-              <td class="text-left" rowspan="1" colspan="1">[30]</td>
+              <td class="text-left" rowspan="1" colspan="1">15, 20, 28, 14</td>
+              <td class="text-left" rowspan="1" colspan="1">30</td>
               <td class="text-left" rowspan="1" colspan="1">0</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">16</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(34)</td>
-              <td class="text-left" rowspan="1" colspan="1">[15, 20, 28, 14]</td>
-              <td class="text-left" rowspan="1" colspan="1">[30, 33]</td>
+              <td class="text-left" rowspan="1" colspan="1">15, 20, 28, 14</td>
+              <td class="text-left" rowspan="1" colspan="1">30, 33</td>
               <td class="text-left" rowspan="1" colspan="1">0</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">16</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(38)</td>
-              <td class="text-left" rowspan="1" colspan="1">[15, 20, 28, 14]</td>
-              <td class="text-left" rowspan="1" colspan="1">[30, 37]</td>
+              <td class="text-left" rowspan="1" colspan="1">15, 20, 28, 14</td>
+              <td class="text-left" rowspan="1" colspan="1">30, 37</td>
               <td class="text-left" rowspan="1" colspan="1">0</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">17</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(18)</td>
-              <td class="text-left" rowspan="1" colspan="1">[]</td>
-              <td class="text-left" rowspan="1" colspan="1">[14, 17]</td>
+              <td class="text-left" rowspan="1" colspan="1"> </td>
+              <td class="text-left" rowspan="1" colspan="1">14, 17</td>
               <td class="text-left" rowspan="1" colspan="1">1</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">17</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(22)</td>
-              <td class="text-left" rowspan="1" colspan="1">[20]</td>
-              <td class="text-left" rowspan="1" colspan="1">[14, 21]</td>
+              <td class="text-left" rowspan="1" colspan="1">20</td>
+              <td class="text-left" rowspan="1" colspan="1">14, 21</td>
               <td class="text-left" rowspan="1" colspan="1">1</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">17</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(25)</td>
-              <td class="text-left" rowspan="1" colspan="1">[20]</td>
-              <td class="text-left" rowspan="1" colspan="1">[14, 21, 24]</td>
+              <td class="text-left" rowspan="1" colspan="1">20</td>
+              <td class="text-left" rowspan="1" colspan="1">14, 21, 24</td>
               <td class="text-left" rowspan="1" colspan="1">1</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">17</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(31)</td>
-              <td class="text-left" rowspan="1" colspan="1">[20, 28, 14]</td>
-              <td class="text-left" rowspan="1" colspan="1">[30]</td>
+              <td class="text-left" rowspan="1" colspan="1">20, 28, 14</td>
+              <td class="text-left" rowspan="1" colspan="1">30</td>
               <td class="text-left" rowspan="1" colspan="1">0</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">17</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(34)</td>
-              <td class="text-left" rowspan="1" colspan="1">[20, 28, 14]</td>
-              <td class="text-left" rowspan="1" colspan="1">[30, 33]</td>
+              <td class="text-left" rowspan="1" colspan="1">20, 28, 14</td>
+              <td class="text-left" rowspan="1" colspan="1">30, 33</td>
               <td class="text-left" rowspan="1" colspan="1">0</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">17</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(38)</td>
-              <td class="text-left" rowspan="1" colspan="1">[20, 28, 14]</td>
-              <td class="text-left" rowspan="1" colspan="1">[30, 37]</td>
+              <td class="text-left" rowspan="1" colspan="1">20, 28, 14</td>
+              <td class="text-left" rowspan="1" colspan="1">30, 37</td>
               <td class="text-left" rowspan="1" colspan="1">0</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">18</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(19)</td>
-              <td class="text-left" rowspan="1" colspan="1">[]</td>
-              <td class="text-left" rowspan="1" colspan="1">[14, 17, 18]</td>
+              <td class="text-left" rowspan="1" colspan="1"> </td>
+              <td class="text-left" rowspan="1" colspan="1">14, 17, 18</td>
               <td class="text-left" rowspan="1" colspan="1">2</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">18</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(22)</td>
-              <td class="text-left" rowspan="1" colspan="1">[19, 17]</td>
-              <td class="text-left" rowspan="1" colspan="1">[14, 21]</td>
+              <td class="text-left" rowspan="1" colspan="1">19, 17</td>
+              <td class="text-left" rowspan="1" colspan="1">14, 21</td>
               <td class="text-left" rowspan="1" colspan="1">1</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">18</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(25)</td>
-              <td class="text-left" rowspan="1" colspan="1">[19, 17]</td>
-              <td class="text-left" rowspan="1" colspan="1">[14, 21, 24]</td>
+              <td class="text-left" rowspan="1" colspan="1">19, 17</td>
+              <td class="text-left" rowspan="1" colspan="1">14, 21, 24</td>
               <td class="text-left" rowspan="1" colspan="1">1</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">18</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(31)</td>
-              <td class="text-left" rowspan="1" colspan="1">[19, 17, 28, 14]</td>
-              <td class="text-left" rowspan="1" colspan="1">[30]</td>
+              <td class="text-left" rowspan="1" colspan="1">19, 17, 28, 14</td>
+              <td class="text-left" rowspan="1" colspan="1">30</td>
               <td class="text-left" rowspan="1" colspan="1">0</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">18</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(34)</td>
-              <td class="text-left" rowspan="1" colspan="1">[19, 17, 28, 14]</td>
-              <td class="text-left" rowspan="1" colspan="1">[30, 33]</td>
+              <td class="text-left" rowspan="1" colspan="1">19, 17, 28, 14</td>
+              <td class="text-left" rowspan="1" colspan="1">30, 33</td>
               <td class="text-left" rowspan="1" colspan="1">0</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">18</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(38)</td>
-              <td class="text-left" rowspan="1" colspan="1">[19, 17, 28, 14]</td>
-              <td class="text-left" rowspan="1" colspan="1">[30, 37]</td>
+              <td class="text-left" rowspan="1" colspan="1">19, 17, 28, 14</td>
+              <td class="text-left" rowspan="1" colspan="1">30, 37</td>
               <td class="text-left" rowspan="1" colspan="1">0</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">19</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(22)</td>
-              <td class="text-left" rowspan="1" colspan="1">[18, 17]</td>
-              <td class="text-left" rowspan="1" colspan="1">[14, 21]</td>
+              <td class="text-left" rowspan="1" colspan="1">18, 17</td>
+              <td class="text-left" rowspan="1" colspan="1">14, 21</td>
               <td class="text-left" rowspan="1" colspan="1">1</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">19</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(25)</td>
-              <td class="text-left" rowspan="1" colspan="1">[18, 17]</td>
-              <td class="text-left" rowspan="1" colspan="1">[14, 21, 24]</td>
+              <td class="text-left" rowspan="1" colspan="1">18, 17</td>
+              <td class="text-left" rowspan="1" colspan="1">14, 21, 24</td>
               <td class="text-left" rowspan="1" colspan="1">1</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">19</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(31)</td>
-              <td class="text-left" rowspan="1" colspan="1">[18, 17, 28, 14]</td>
-              <td class="text-left" rowspan="1" colspan="1">[30]</td>
+              <td class="text-left" rowspan="1" colspan="1">18, 17, 28, 14</td>
+              <td class="text-left" rowspan="1" colspan="1">30</td>
               <td class="text-left" rowspan="1" colspan="1">0</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">19</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(34)</td>
-              <td class="text-left" rowspan="1" colspan="1">[18, 17, 28, 14]</td>
-              <td class="text-left" rowspan="1" colspan="1">[30, 33]</td>
+              <td class="text-left" rowspan="1" colspan="1">18, 17, 28, 14</td>
+              <td class="text-left" rowspan="1" colspan="1">30, 33</td>
               <td class="text-left" rowspan="1" colspan="1">0</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">19</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(38)</td>
-              <td class="text-left" rowspan="1" colspan="1">[18, 17, 28, 14]</td>
-              <td class="text-left" rowspan="1" colspan="1">[30, 37]</td>
+              <td class="text-left" rowspan="1" colspan="1">18, 17, 28, 14</td>
+              <td class="text-left" rowspan="1" colspan="1">30, 37</td>
               <td class="text-left" rowspan="1" colspan="1">0</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">20</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(22)</td>
-              <td class="text-left" rowspan="1" colspan="1">[17]</td>
-              <td class="text-left" rowspan="1" colspan="1">[14, 21]</td>
+              <td class="text-left" rowspan="1" colspan="1">17</td>
+              <td class="text-left" rowspan="1" colspan="1">14, 21</td>
               <td class="text-left" rowspan="1" colspan="1">1</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">20</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(25)</td>
-              <td class="text-left" rowspan="1" colspan="1">[17]</td>
-              <td class="text-left" rowspan="1" colspan="1">[14, 21, 24]</td>
+              <td class="text-left" rowspan="1" colspan="1">17</td>
+              <td class="text-left" rowspan="1" colspan="1">14, 21, 24</td>
               <td class="text-left" rowspan="1" colspan="1">1</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">20</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(31)</td>
-              <td class="text-left" rowspan="1" colspan="1">[17, 28, 14]</td>
-              <td class="text-left" rowspan="1" colspan="1">[30]</td>
+              <td class="text-left" rowspan="1" colspan="1">17, 28, 14</td>
+              <td class="text-left" rowspan="1" colspan="1">30</td>
               <td class="text-left" rowspan="1" colspan="1">0</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">20</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(34)</td>
-              <td class="text-left" rowspan="1" colspan="1">[17, 28, 14]</td>
-              <td class="text-left" rowspan="1" colspan="1">[30, 33]</td>
+              <td class="text-left" rowspan="1" colspan="1">17, 28, 14</td>
+              <td class="text-left" rowspan="1" colspan="1">30, 33</td>
               <td class="text-left" rowspan="1" colspan="1">0</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">20</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(38)</td>
-              <td class="text-left" rowspan="1" colspan="1">[17, 28, 14]</td>
-              <td class="text-left" rowspan="1" colspan="1">[30, 37]</td>
+              <td class="text-left" rowspan="1" colspan="1">17, 28, 14</td>
+              <td class="text-left" rowspan="1" colspan="1">30, 37</td>
               <td class="text-left" rowspan="1" colspan="1">0</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">21</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(22)</td>
-              <td class="text-left" rowspan="1" colspan="1">[]</td>
-              <td class="text-left" rowspan="1" colspan="1">[14, 21]</td>
+              <td class="text-left" rowspan="1" colspan="1"> </td>
+              <td class="text-left" rowspan="1" colspan="1">14, 21</td>
               <td class="text-left" rowspan="1" colspan="1">1</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">21</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(25)</td>
-              <td class="text-left" rowspan="1" colspan="1">[]</td>
-              <td class="text-left" rowspan="1" colspan="1">[14, 21, 24]</td>
+              <td class="text-left" rowspan="1" colspan="1"> </td>
+              <td class="text-left" rowspan="1" colspan="1">14, 21, 24</td>
               <td class="text-left" rowspan="1" colspan="1">1</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">21</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(31)</td>
-              <td class="text-left" rowspan="1" colspan="1">[28, 14]</td>
-              <td class="text-left" rowspan="1" colspan="1">[30]</td>
+              <td class="text-left" rowspan="1" colspan="1">28, 14</td>
+              <td class="text-left" rowspan="1" colspan="1">30</td>
               <td class="text-left" rowspan="1" colspan="1">0</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">21</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(34)</td>
-              <td class="text-left" rowspan="1" colspan="1">[28, 14]</td>
-              <td class="text-left" rowspan="1" colspan="1">[30, 33]</td>
+              <td class="text-left" rowspan="1" colspan="1">28, 14</td>
+              <td class="text-left" rowspan="1" colspan="1">30, 33</td>
               <td class="text-left" rowspan="1" colspan="1">0</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">21</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(38)</td>
-              <td class="text-left" rowspan="1" colspan="1">[28, 14]</td>
-              <td class="text-left" rowspan="1" colspan="1">[30, 37]</td>
+              <td class="text-left" rowspan="1" colspan="1">28, 14</td>
+              <td class="text-left" rowspan="1" colspan="1">30, 37</td>
               <td class="text-left" rowspan="1" colspan="1">0</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">22</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(23)</td>
-              <td class="text-left" rowspan="1" colspan="1">[]</td>
-              <td class="text-left" rowspan="1" colspan="1">[14, 21, 22]</td>
+              <td class="text-left" rowspan="1" colspan="1"> </td>
+              <td class="text-left" rowspan="1" colspan="1">14, 21, 22</td>
               <td class="text-left" rowspan="1" colspan="1">2</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">22</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(25)</td>
-              <td class="text-left" rowspan="1" colspan="1">[23]</td>
-              <td class="text-left" rowspan="1" colspan="1">[14, 21, 24]</td>
+              <td class="text-left" rowspan="1" colspan="1">23</td>
+              <td class="text-left" rowspan="1" colspan="1">14, 21, 24</td>
               <td class="text-left" rowspan="1" colspan="1">2</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">22</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(31)</td>
-              <td class="text-left" rowspan="1" colspan="1">[23, 27, 21, 14]</td>
-              <td class="text-left" rowspan="1" colspan="1">[30]</td>
+              <td class="text-left" rowspan="1" colspan="1">23, 27, 21, 14</td>
+              <td class="text-left" rowspan="1" colspan="1">30</td>
               <td class="text-left" rowspan="1" colspan="1">0</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">22</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(34)</td>
-              <td class="text-left" rowspan="1" colspan="1">[23, 27, 21, 14]</td>
-              <td class="text-left" rowspan="1" colspan="1">[30, 33]</td>
+              <td class="text-left" rowspan="1" colspan="1">23, 27, 21, 14</td>
+              <td class="text-left" rowspan="1" colspan="1">30, 33</td>
               <td class="text-left" rowspan="1" colspan="1">0</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">22</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(38)</td>
-              <td class="text-left" rowspan="1" colspan="1">[23, 27, 21, 14]</td>
-              <td class="text-left" rowspan="1" colspan="1">[30, 37]</td>
+              <td class="text-left" rowspan="1" colspan="1">23, 27, 21, 14</td>
+              <td class="text-left" rowspan="1" colspan="1">30, 37</td>
               <td class="text-left" rowspan="1" colspan="1">0</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">23</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(25)</td>
-              <td class="text-left" rowspan="1" colspan="1">[22]</td>
-              <td class="text-left" rowspan="1" colspan="1">[14, 21, 24]</td>
+              <td class="text-left" rowspan="1" colspan="1">22</td>
+              <td class="text-left" rowspan="1" colspan="1">14, 21, 24</td>
               <td class="text-left" rowspan="1" colspan="1">2</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">23</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(31)</td>
-              <td class="text-left" rowspan="1" colspan="1">[22, 27, 21, 14]</td>
-              <td class="text-left" rowspan="1" colspan="1">[30]</td>
+              <td class="text-left" rowspan="1" colspan="1">22, 27, 21, 14</td>
+              <td class="text-left" rowspan="1" colspan="1">30</td>
               <td class="text-left" rowspan="1" colspan="1">0</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">23</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(34)</td>
-              <td class="text-left" rowspan="1" colspan="1">[22, 27, 21, 14]</td>
-              <td class="text-left" rowspan="1" colspan="1">[30, 33]</td>
+              <td class="text-left" rowspan="1" colspan="1">22, 27, 21, 14</td>
+              <td class="text-left" rowspan="1" colspan="1">30, 33</td>
               <td class="text-left" rowspan="1" colspan="1">0</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">23</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(38)</td>
-              <td class="text-left" rowspan="1" colspan="1">[22, 27, 21, 14]</td>
-              <td class="text-left" rowspan="1" colspan="1">[30, 37]</td>
+              <td class="text-left" rowspan="1" colspan="1">22, 27, 21, 14</td>
+              <td class="text-left" rowspan="1" colspan="1">30, 37</td>
               <td class="text-left" rowspan="1" colspan="1">0</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">24</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(25)</td>
-              <td class="text-left" rowspan="1" colspan="1">[]</td>
-              <td class="text-left" rowspan="1" colspan="1">[14, 21, 24]</td>
+              <td class="text-left" rowspan="1" colspan="1"> </td>
+              <td class="text-left" rowspan="1" colspan="1">14, 21, 24</td>
               <td class="text-left" rowspan="1" colspan="1">2</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">24</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(31)</td>
-              <td class="text-left" rowspan="1" colspan="1">[27, 21, 14]</td>
-              <td class="text-left" rowspan="1" colspan="1">[30]</td>
+              <td class="text-left" rowspan="1" colspan="1">27, 21, 14</td>
+              <td class="text-left" rowspan="1" colspan="1">30</td>
               <td class="text-left" rowspan="1" colspan="1">0</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">24</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(34)</td>
-              <td class="text-left" rowspan="1" colspan="1">[27, 21, 14]</td>
-              <td class="text-left" rowspan="1" colspan="1">[30, 33]</td>
+              <td class="text-left" rowspan="1" colspan="1">27, 21, 14</td>
+              <td class="text-left" rowspan="1" colspan="1">30, 33</td>
               <td class="text-left" rowspan="1" colspan="1">0</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">24</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(38)</td>
-              <td class="text-left" rowspan="1" colspan="1">[27, 21, 14]</td>
-              <td class="text-left" rowspan="1" colspan="1">[30, 37]</td>
+              <td class="text-left" rowspan="1" colspan="1">27, 21, 14</td>
+              <td class="text-left" rowspan="1" colspan="1">30, 37</td>
               <td class="text-left" rowspan="1" colspan="1">0</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">25</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(26)</td>
-              <td class="text-left" rowspan="1" colspan="1">[]</td>
-              <td class="text-left" rowspan="1" colspan="1">[14, 21, 24, 25]</td>
+              <td class="text-left" rowspan="1" colspan="1"> </td>
+              <td class="text-left" rowspan="1" colspan="1">14, 21, 24, 25</td>
               <td class="text-left" rowspan="1" colspan="1">3</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">25</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(31)</td>
-              <td class="text-left" rowspan="1" colspan="1">[26, 24, 21, 14]</td>
-              <td class="text-left" rowspan="1" colspan="1">[30]</td>
+              <td class="text-left" rowspan="1" colspan="1">26, 24, 21, 14</td>
+              <td class="text-left" rowspan="1" colspan="1">30</td>
               <td class="text-left" rowspan="1" colspan="1">0</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">25</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(34)</td>
-              <td class="text-left" rowspan="1" colspan="1">[26, 24, 21, 14]</td>
-              <td class="text-left" rowspan="1" colspan="1">[30, 33]</td>
+              <td class="text-left" rowspan="1" colspan="1">26, 24, 21, 14</td>
+              <td class="text-left" rowspan="1" colspan="1">30, 33</td>
               <td class="text-left" rowspan="1" colspan="1">0</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">25</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(38)</td>
-              <td class="text-left" rowspan="1" colspan="1">[26, 24, 21, 14]</td>
-              <td class="text-left" rowspan="1" colspan="1">[30, 37]</td>
+              <td class="text-left" rowspan="1" colspan="1">26, 24, 21, 14</td>
+              <td class="text-left" rowspan="1" colspan="1">30, 37</td>
               <td class="text-left" rowspan="1" colspan="1">0</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">26</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(31)</td>
-              <td class="text-left" rowspan="1" colspan="1">[25, 24, 21, 14]</td>
-              <td class="text-left" rowspan="1" colspan="1">[30]</td>
+              <td class="text-left" rowspan="1" colspan="1">25, 24, 21, 14</td>
+              <td class="text-left" rowspan="1" colspan="1">30</td>
               <td class="text-left" rowspan="1" colspan="1">0</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">26</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(34)</td>
-              <td class="text-left" rowspan="1" colspan="1">[25, 24, 21, 14]</td>
-              <td class="text-left" rowspan="1" colspan="1">[30, 33]</td>
+              <td class="text-left" rowspan="1" colspan="1">25, 24, 21, 14</td>
+              <td class="text-left" rowspan="1" colspan="1">30, 33</td>
               <td class="text-left" rowspan="1" colspan="1">0</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">26</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(38)</td>
-              <td class="text-left" rowspan="1" colspan="1">[25, 24, 21, 14]</td>
-              <td class="text-left" rowspan="1" colspan="1">[30, 37]</td>
+              <td class="text-left" rowspan="1" colspan="1">25, 24, 21, 14</td>
+              <td class="text-left" rowspan="1" colspan="1">30, 37</td>
               <td class="text-left" rowspan="1" colspan="1">0</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">27</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(31)</td>
-              <td class="text-left" rowspan="1" colspan="1">[24, 21, 14]</td>
-              <td class="text-left" rowspan="1" colspan="1">[30]</td>
+              <td class="text-left" rowspan="1" colspan="1">24, 21, 14</td>
+              <td class="text-left" rowspan="1" colspan="1">30</td>
               <td class="text-left" rowspan="1" colspan="1">0</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">27</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(34)</td>
-              <td class="text-left" rowspan="1" colspan="1">[24, 21, 14]</td>
-              <td class="text-left" rowspan="1" colspan="1">[30, 33]</td>
+              <td class="text-left" rowspan="1" colspan="1">24, 21, 14</td>
+              <td class="text-left" rowspan="1" colspan="1">30, 33</td>
               <td class="text-left" rowspan="1" colspan="1">0</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">27</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(38)</td>
-              <td class="text-left" rowspan="1" colspan="1">[24, 21, 14]</td>
-              <td class="text-left" rowspan="1" colspan="1">[30, 37]</td>
+              <td class="text-left" rowspan="1" colspan="1">24, 21, 14</td>
+              <td class="text-left" rowspan="1" colspan="1">30, 37</td>
               <td class="text-left" rowspan="1" colspan="1">0</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">28</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(31)</td>
-              <td class="text-left" rowspan="1" colspan="1">[21, 14]</td>
-              <td class="text-left" rowspan="1" colspan="1">[30]</td>
+              <td class="text-left" rowspan="1" colspan="1">21, 14</td>
+              <td class="text-left" rowspan="1" colspan="1">30</td>
               <td class="text-left" rowspan="1" colspan="1">0</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">28</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(34)</td>
-              <td class="text-left" rowspan="1" colspan="1">[21, 14]</td>
-              <td class="text-left" rowspan="1" colspan="1">[30, 33]</td>
+              <td class="text-left" rowspan="1" colspan="1">21, 14</td>
+              <td class="text-left" rowspan="1" colspan="1">30, 33</td>
               <td class="text-left" rowspan="1" colspan="1">0</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">28</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(38)</td>
-              <td class="text-left" rowspan="1" colspan="1">[21, 14]</td>
-              <td class="text-left" rowspan="1" colspan="1">[30, 37]</td>
+              <td class="text-left" rowspan="1" colspan="1">21, 14</td>
+              <td class="text-left" rowspan="1" colspan="1">30, 37</td>
               <td class="text-left" rowspan="1" colspan="1">0</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">29</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(31)</td>
-              <td class="text-left" rowspan="1" colspan="1">[14]</td>
-              <td class="text-left" rowspan="1" colspan="1">[30]</td>
+              <td class="text-left" rowspan="1" colspan="1">14</td>
+              <td class="text-left" rowspan="1" colspan="1">30</td>
               <td class="text-left" rowspan="1" colspan="1">0</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">29</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(34)</td>
-              <td class="text-left" rowspan="1" colspan="1">[14]</td>
-              <td class="text-left" rowspan="1" colspan="1">[30, 33]</td>
+              <td class="text-left" rowspan="1" colspan="1">14</td>
+              <td class="text-left" rowspan="1" colspan="1">30, 33</td>
               <td class="text-left" rowspan="1" colspan="1">0</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">29</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(38)</td>
-              <td class="text-left" rowspan="1" colspan="1">[14]</td>
-              <td class="text-left" rowspan="1" colspan="1">[30, 37]</td>
+              <td class="text-left" rowspan="1" colspan="1">14</td>
+              <td class="text-left" rowspan="1" colspan="1">30, 37</td>
               <td class="text-left" rowspan="1" colspan="1">0</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">30</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(31)</td>
-              <td class="text-left" rowspan="1" colspan="1">[]</td>
-              <td class="text-left" rowspan="1" colspan="1">[30]</td>
+              <td class="text-left" rowspan="1" colspan="1"> </td>
+              <td class="text-left" rowspan="1" colspan="1">30</td>
               <td class="text-left" rowspan="1" colspan="1">0</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">30</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(34)</td>
-              <td class="text-left" rowspan="1" colspan="1">[]</td>
-              <td class="text-left" rowspan="1" colspan="1">[30, 33]</td>
+              <td class="text-left" rowspan="1" colspan="1"> </td>
+              <td class="text-left" rowspan="1" colspan="1">30, 33</td>
               <td class="text-left" rowspan="1" colspan="1">0</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">30</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(38)</td>
-              <td class="text-left" rowspan="1" colspan="1">[]</td>
-              <td class="text-left" rowspan="1" colspan="1">[30, 37]</td>
+              <td class="text-left" rowspan="1" colspan="1"> </td>
+              <td class="text-left" rowspan="1" colspan="1">30, 37</td>
               <td class="text-left" rowspan="1" colspan="1">0</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">31</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(32)</td>
-              <td class="text-left" rowspan="1" colspan="1">[]</td>
-              <td class="text-left" rowspan="1" colspan="1">[30, 31]</td>
+              <td class="text-left" rowspan="1" colspan="1"> </td>
+              <td class="text-left" rowspan="1" colspan="1">30, 31</td>
               <td class="text-left" rowspan="1" colspan="1">1</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">31</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(34)</td>
-              <td class="text-left" rowspan="1" colspan="1">[32]</td>
-              <td class="text-left" rowspan="1" colspan="1">[30, 33]</td>
+              <td class="text-left" rowspan="1" colspan="1">32</td>
+              <td class="text-left" rowspan="1" colspan="1">30, 33</td>
               <td class="text-left" rowspan="1" colspan="1">1</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">31</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(38)</td>
-              <td class="text-left" rowspan="1" colspan="1">[32, 36]</td>
-              <td class="text-left" rowspan="1" colspan="1">[30, 37]</td>
+              <td class="text-left" rowspan="1" colspan="1">32, 36</td>
+              <td class="text-left" rowspan="1" colspan="1">30, 37</td>
               <td class="text-left" rowspan="1" colspan="1">1</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">32</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(34)</td>
-              <td class="text-left" rowspan="1" colspan="1">[31]</td>
-              <td class="text-left" rowspan="1" colspan="1">[30, 33]</td>
+              <td class="text-left" rowspan="1" colspan="1">31</td>
+              <td class="text-left" rowspan="1" colspan="1">30, 33</td>
               <td class="text-left" rowspan="1" colspan="1">1</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">32</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(38)</td>
-              <td class="text-left" rowspan="1" colspan="1">[31, 36]</td>
-              <td class="text-left" rowspan="1" colspan="1">[30, 37]</td>
+              <td class="text-left" rowspan="1" colspan="1">31, 36</td>
+              <td class="text-left" rowspan="1" colspan="1">30, 37</td>
               <td class="text-left" rowspan="1" colspan="1">1</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">33</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(34)</td>
-              <td class="text-left" rowspan="1" colspan="1">[]</td>
-              <td class="text-left" rowspan="1" colspan="1">[30, 33]</td>
+              <td class="text-left" rowspan="1" colspan="1"> </td>
+              <td class="text-left" rowspan="1" colspan="1">30, 33</td>
               <td class="text-left" rowspan="1" colspan="1">1</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">33</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(38)</td>
-              <td class="text-left" rowspan="1" colspan="1">[36]</td>
-              <td class="text-left" rowspan="1" colspan="1">[30, 37]</td>
+              <td class="text-left" rowspan="1" colspan="1">36</td>
+              <td class="text-left" rowspan="1" colspan="1">30, 37</td>
               <td class="text-left" rowspan="1" colspan="1">1</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">34</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(35)</td>
-              <td class="text-left" rowspan="1" colspan="1">[]</td>
-              <td class="text-left" rowspan="1" colspan="1">[30, 33, 34]</td>
+              <td class="text-left" rowspan="1" colspan="1"> </td>
+              <td class="text-left" rowspan="1" colspan="1">30, 33, 34</td>
               <td class="text-left" rowspan="1" colspan="1">2</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">34</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(38)</td>
-              <td class="text-left" rowspan="1" colspan="1">[35, 33]</td>
-              <td class="text-left" rowspan="1" colspan="1">[30, 37]</td>
+              <td class="text-left" rowspan="1" colspan="1">35, 33</td>
+              <td class="text-left" rowspan="1" colspan="1">30, 37</td>
               <td class="text-left" rowspan="1" colspan="1">1</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">35</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(38)</td>
-              <td class="text-left" rowspan="1" colspan="1">[34, 33]</td>
-              <td class="text-left" rowspan="1" colspan="1">[30, 37]</td>
+              <td class="text-left" rowspan="1" colspan="1">34, 33</td>
+              <td class="text-left" rowspan="1" colspan="1">30, 37</td>
               <td class="text-left" rowspan="1" colspan="1">1</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">36</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(38)</td>
-              <td class="text-left" rowspan="1" colspan="1">[33]</td>
-              <td class="text-left" rowspan="1" colspan="1">[30, 37]</td>
+              <td class="text-left" rowspan="1" colspan="1">33</td>
+              <td class="text-left" rowspan="1" colspan="1">30, 37</td>
               <td class="text-left" rowspan="1" colspan="1">1</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">37</td>
               <td class="text-right" rowspan="1" colspan="1">MMR(38)</td>
-              <td class="text-left" rowspan="1" colspan="1">[]</td>
-              <td class="text-left" rowspan="1" colspan="1">[30, 37]</td>
+              <td class="text-left" rowspan="1" colspan="1"> </td>
+              <td class="text-left" rowspan="1" colspan="1">30, 37</td>
               <td class="text-left" rowspan="1" colspan="1">1</td>
             </tr>
           </tbody>
