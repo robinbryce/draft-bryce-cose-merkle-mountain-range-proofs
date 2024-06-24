@@ -22,8 +22,9 @@ Abstract
    specification allows for historic commitments and the original data,
    if desired, to be pruned without impacting the verifiability of
    subsequent data or any replicated copies.  Verifiers and auditors may
-   be off line indefinitely, and yet be guaranteed they can prove
-   integrity and consistency, or otherwise, against any future state.
+   be off line indefinitely, and yet, once back online, be guaranteed
+   they can prove integrity and consistency, or otherwise, against any
+   future state they encounter.
 
 Discussion Venues
 
