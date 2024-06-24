@@ -836,7 +836,7 @@ A minimal reference implementation of this draft. Used to generate the test vect
 
 Reference only
 
-#### Mimblewimble ?
+### Mimblewimble ?
 
 Is specifically committing to positions as we describe, but is committing zero based indices, and uses BLAKE2B as the HASH-ALG. Accounting for those differences, their commitment trees would be compatible with this draft.
 
@@ -847,7 +847,7 @@ An implementation is available here:
 - https://github.com/mimblewimble/grin/blob/master/doc/mmr.md (Grin is a rust implementation of the mimblewimble protocol)
 - https://github.com/BeamMW/beam/blob/master/core/merkle.cpp (Beam is a C++ implementation of the mimblewimble protocol)
 
-#### ZCash ?
+### ZCash ?
 
 Uses an incompatible scheme for committing the sub trees, and additionally specifies how the leaf hash is produced.
 
