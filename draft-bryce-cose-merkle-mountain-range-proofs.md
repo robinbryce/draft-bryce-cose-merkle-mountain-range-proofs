@@ -40,7 +40,7 @@ providing immediate verifiability and immediate, safe, replicability of these co
 Using this scheme, any replicated copies are permanently verifiable and are permanently consistent with the complete data set.
 Additionally, the specification allows for historic commitments and the original data, if desired,
 to be pruned without impacting the verifiability of subsequent data or any replicated copies.
-Verifiers and auditors may be off line indefinitely, and yet be guaranteed they can prove integrity and consistency, or otherwise, against any future state.
+Verifiers and auditors may be off line indefinitely, and yet, once back online, be guaranteed they can prove integrity and consistency, or otherwise, against any future state they encounter.
 
 --- middle
 
