@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2024-06-25T00:24:40.233484+00:00",
+  "timestamp": "2024-06-27T00:24:40.220599+00:00",
   "repo": "datatrails/draft-bryce-cose-merkle-mountain-range-proofs",
   "labels": [
     {
@@ -63,6 +63,22 @@
       "body": "For the primary algorithms we have aligned with other specs (notably RFC 9162) in the use of \"plain english\" algorithm descriptions.\r\n\r\nWe have complimented that with python implementations.\r\n\r\nWe currently believe that python + helpful comments is more generaly useful. All things being equal, provided there is no specific process reason to have the plain english only version, we intend move the algorithm specifications to that form.\r\n\r\nThis issue has been created to track the choice we make here",
       "createdAt": "2024-06-24T13:46:56Z",
       "updatedAt": "2024-06-24T13:46:56Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 2,
+      "id": "I_kwDOMMUelc6NaOYs",
+      "title": "Section 2 - Clarify variable definitions",
+      "url": "https://github.com/datatrails/draft-bryce-cose-merkle-mountain-range-proofs/issues/2",
+      "state": "OPEN",
+      "author": "henry739",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "In [Section 2 - Conventions and Definitions](https://datatrails.github.io/draft-bryce-cose-merkle-mountain-range-proofs/draft-bryce-cose-merkle-mountain-range-proofs.html#name-conventions-and-definitions) there are opportunities to clarify things:\r\n\r\n```\r\ni shall be the index of a node in the MMR\r\npos shall be i+1\r\ne shall be the zero based index of leaf entry in the MMR\r\nf shall be a leaf value, which is H(x)\r\nh shall be the 1 based tree height\r\ng shall be the 0 based height, h-1\r\nv shall be any node, including a leaf node value, which will be the result of H(x).\r\nS shall be any valid MMR size, and is uniquely identifying for an MMR state\r\nA shall be the the accumulator for any valid MMR size S\r\nR shall be the the sparse accumulator, of [ReyzinYakoubov](https://eprint.iacr.org/2015/718.pdf), for any valid MMR size S\r\nH(x) shall be the SHA-256 digest of any value x\r\n|| shall mean concatenation of raw byte representations of the referenced values.\r\n```\r\n\r\n1. Without the context that I already have, I'm not sure its clear from the definition if `e` is the subset of `i` that are leaves, or if `e` is a zero-based enumeration of the leaves.\r\n2. It might be more intuitive to just inline `(h - 1)` rather than adding `g` as an additional variable to remember.\r\n3. Extend the zero-based and one-based descriptions to all of the variables where relevant (e.g. for `i` and `pos`.)\r\n4. Later in the document, `D` is referred to, without a definition - so it might be helpful to add that here.",
+      "createdAt": "2024-06-25T11:37:30Z",
+      "updatedAt": "2024-06-25T11:41:34Z",
       "closedAt": null,
       "comments": []
     }
