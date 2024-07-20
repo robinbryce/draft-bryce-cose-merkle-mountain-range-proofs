@@ -9,7 +9,8 @@
 <meta content="
        This specification describes a protocol for the COSE encoding of verifiable commitments to data,
 providing immediate verifiability and immediate, safe, replicability of these commitments.
-Using this scheme, any replicated copies are permanently verifiable and are permanently consistent with the complete data set.
+Using this scheme, any replicated copy of the data, or a sub range thereof,
+is permanently verifiable and is permanently consistent with the complete data set.
 The specification allows for historic commitments and the original data, if desired,
 to be pruned without impacting the verifiability of subsequent data or any replicated copies.
 Verifiers and auditors may be off line indefinitely, and yet, once back online,
@@ -1035,7 +1036,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
 </tr></thead>
 <tfoot><tr>
 <td class="left">Bryce</td>
-<td class="center">Expires 20 January 2025</td>
+<td class="center">Expires 21 January 2025</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1048,12 +1049,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="internet-draft">draft-bryce-cose-merkle-mountain-range-proofs-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2024-07-19" class="published">19 July 2024</time>
+<time datetime="2024-07-20" class="published">20 July 2024</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Experimental</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2025-01-20">20 January 2025</time></dd>
+<dd class="expires"><time datetime="2025-01-21">21 January 2025</time></dd>
 <dt class="label-authors">Author:</dt>
 <dd class="authors">
 <div class="author">
@@ -1068,7 +1069,8 @@ svg :is([fill="white"], [fill^="#fff"]) {
       <h2 id="abstract"><a href="#abstract" class="selfRef">Abstract</a></h2>
 <p id="section-abstract-1">This specification describes a protocol for the COSE encoding of verifiable commitments to data,
 providing immediate verifiability and immediate, safe, replicability of these commitments.
-Using this scheme, any replicated copies are permanently verifiable and are permanently consistent with the complete data set.
+Using this scheme, any replicated copy of the data, or a sub range thereof,
+is permanently verifiable and is permanently consistent with the complete data set.
 The specification allows for historic commitments and the original data, if desired,
 to be pruned without impacting the verifiability of subsequent data or any replicated copies.
 Verifiers and auditors may be off line indefinitely, and yet, once back online,
@@ -1105,7 +1107,7 @@ against any future state they encounter.<a href="#section-abstract-1" class="pil
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 20 January 2025.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 21 January 2025.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1148,6 +1150,9 @@ against any future state they encounter.<a href="#section-abstract-1" class="pil
 <ul class="compact toc ulBare ulEmpty">
 <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.1">
                 <p id="section-toc.1-1.4.2.1.1"><a href="#section-4.1" class="auto internal xref">4.1</a>.  <a href="#name-inclusion_proof_path" class="internal xref">inclusion_proof_path</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.2">
+                <p id="section-toc.1-1.4.2.2.1"><a href="#section-4.2" class="auto internal xref">4.2</a>.  <a href="#name-forward-consistency-of-incl" class="internal xref">Forward consistency of inclusion proofs</a></p>
 </li>
             </ul>
 </li>
@@ -1227,135 +1232,138 @@ against any future state they encounter.<a href="#section-abstract-1" class="pil
             </ul>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.10">
-            <p id="section-toc.1-1.10.1"><a href="#section-10" class="auto internal xref">10</a>. <a href="#name-supplemental-commonly-usefu" class="internal xref">Supplemental, commonly useful, supporting algorithms</a></p>
-<ul class="compact toc ulBare ulEmpty">
-<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.10.2.1">
-                <p id="section-toc.1-1.10.2.1.1"><a href="#section-10.1" class="auto internal xref">10.1</a>.  <a href="#name-leaf_count" class="internal xref">leaf_count</a></p>
-</li>
-              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.10.2.2">
-                <p id="section-toc.1-1.10.2.2.1"><a href="#section-10.2" class="auto internal xref">10.2</a>.  <a href="#name-mmr_index" class="internal xref">mmr_index</a></p>
-</li>
-              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.10.2.3">
-                <p id="section-toc.1-1.10.2.3.1"><a href="#section-10.3" class="auto internal xref">10.3</a>.  <a href="#name-parent" class="internal xref">parent</a></p>
-</li>
-              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.10.2.4">
-                <p id="section-toc.1-1.10.2.4.1"><a href="#section-10.4" class="auto internal xref">10.4</a>.  <a href="#name-complete_mmr" class="internal xref">complete_mmr</a></p>
-</li>
-            </ul>
+            <p id="section-toc.1-1.10.1"><a href="#section-10" class="auto internal xref">10</a>. <a href="#name-security-considerations" class="internal xref">Security Considerations</a></p>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.11">
-            <p id="section-toc.1-1.11.1"><a href="#section-11" class="auto internal xref">11</a>. <a href="#name-assumed-bit-primitives" class="internal xref">Assumed bit primitives</a></p>
+            <p id="section-toc.1-1.11.1"><a href="#section-11" class="auto internal xref">11</a>. <a href="#name-iana-considerations" class="internal xref">IANA Considerations</a></p>
 <ul class="compact toc ulBare ulEmpty">
 <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.11.2.1">
-                <p id="section-toc.1-1.11.2.1.1"><a href="#section-11.1" class="auto internal xref">11.1</a>.  <a href="#name-a-note-on-hardware-sympathy" class="internal xref">A Note On Hardware Sympathy</a></p>
+                <p id="section-toc.1-1.11.2.1.1"><a href="#section-11.1" class="auto internal xref">11.1</a>.  <a href="#name-additions-to-existing-regis" class="internal xref">Additions to Existing Registries</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.11.2.2">
-                <p id="section-toc.1-1.11.2.2.1"><a href="#section-11.2" class="auto internal xref">11.2</a>.  <a href="#name-most_sig_bit" class="internal xref">most_sig_bit</a></p>
-</li>
-              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.11.2.3">
-                <p id="section-toc.1-1.11.2.3.1"><a href="#section-11.3" class="auto internal xref">11.3</a>.  <a href="#name-bit_length" class="internal xref">bit_length</a></p>
-</li>
-              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.11.2.4">
-                <p id="section-toc.1-1.11.2.4.1"><a href="#section-11.4" class="auto internal xref">11.4</a>.  <a href="#name-all_ones" class="internal xref">all_ones</a></p>
-</li>
-              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.11.2.5">
-                <p id="section-toc.1-1.11.2.5.1"><a href="#section-11.5" class="auto internal xref">11.5</a>.  <a href="#name-ones_count" class="internal xref">ones_count</a></p>
-</li>
-              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.11.2.6">
-                <p id="section-toc.1-1.11.2.6.1"><a href="#section-11.6" class="auto internal xref">11.6</a>.  <a href="#name-trailing_zeros" class="internal xref">trailing_zeros</a></p>
+                <p id="section-toc.1-1.11.2.2.1"><a href="#section-11.2" class="auto internal xref">11.2</a>.  <a href="#name-new-registries" class="internal xref">New Registries</a></p>
 </li>
             </ul>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.12">
-            <p id="section-toc.1-1.12.1"><a href="#section-12" class="auto internal xref">12</a>. <a href="#name-security-considerations" class="internal xref">Security Considerations</a></p>
+            <p id="section-toc.1-1.12.1"><a href="#section-12" class="auto internal xref">12</a>. <a href="#name-normative-references" class="internal xref">Normative References</a></p>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.13">
-            <p id="section-toc.1-1.13.1"><a href="#section-13" class="auto internal xref">13</a>. <a href="#name-iana-considerations" class="internal xref">IANA Considerations</a></p>
+            <p id="section-toc.1-1.13.1"><a href="#appendix-A" class="auto internal xref">Appendix A</a>.  <a href="#name-supplemental-commonly-usefu" class="internal xref">Supplemental, commonly useful, supporting algorithms</a></p>
 <ul class="compact toc ulBare ulEmpty">
 <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.13.2.1">
-                <p id="section-toc.1-1.13.2.1.1"><a href="#section-13.1" class="auto internal xref">13.1</a>.  <a href="#name-additions-to-existing-regis" class="internal xref">Additions to Existing Registries</a></p>
+                <p id="section-toc.1-1.13.2.1.1"><a href="#appendix-A.1" class="auto internal xref">A.1</a>.  <a href="#name-leaf_count" class="internal xref">leaf_count</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.13.2.2">
-                <p id="section-toc.1-1.13.2.2.1"><a href="#section-13.2" class="auto internal xref">13.2</a>.  <a href="#name-new-registries" class="internal xref">New Registries</a></p>
+                <p id="section-toc.1-1.13.2.2.1"><a href="#appendix-A.2" class="auto internal xref">A.2</a>.  <a href="#name-mmr_index" class="internal xref">mmr_index</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.13.2.3">
+                <p id="section-toc.1-1.13.2.3.1"><a href="#appendix-A.3" class="auto internal xref">A.3</a>.  <a href="#name-parent" class="internal xref">parent</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.13.2.4">
+                <p id="section-toc.1-1.13.2.4.1"><a href="#appendix-A.4" class="auto internal xref">A.4</a>.  <a href="#name-complete_mmr" class="internal xref">complete_mmr</a></p>
 </li>
             </ul>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.14">
-            <p id="section-toc.1-1.14.1"><a href="#section-14" class="auto internal xref">14</a>. <a href="#name-normative-references" class="internal xref">Normative References</a></p>
+            <p id="section-toc.1-1.14.1"><a href="#appendix-B" class="auto internal xref">Appendix B</a>.  <a href="#name-assumed-bit-primitives" class="internal xref">Assumed bit primitives</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.14.2.1">
+                <p id="section-toc.1-1.14.2.1.1"><a href="#appendix-B.1" class="auto internal xref">B.1</a>.  <a href="#name-a-note-on-hardware-sympathy" class="internal xref">A Note On Hardware Sympathy</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.14.2.2">
+                <p id="section-toc.1-1.14.2.2.1"><a href="#appendix-B.2" class="auto internal xref">B.2</a>.  <a href="#name-log2floor" class="internal xref">log2floor</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.14.2.3">
+                <p id="section-toc.1-1.14.2.3.1"><a href="#appendix-B.3" class="auto internal xref">B.3</a>.  <a href="#name-most_sig_bit" class="internal xref">most_sig_bit</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.14.2.4">
+                <p id="section-toc.1-1.14.2.4.1"><a href="#appendix-B.4" class="auto internal xref">B.4</a>.  <a href="#name-bit_length" class="internal xref">bit_length</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.14.2.5">
+                <p id="section-toc.1-1.14.2.5.1"><a href="#appendix-B.5" class="auto internal xref">B.5</a>.  <a href="#name-all_ones" class="internal xref">all_ones</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.14.2.6">
+                <p id="section-toc.1-1.14.2.6.1"><a href="#appendix-B.6" class="auto internal xref">B.6</a>.  <a href="#name-ones_count" class="internal xref">ones_count</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.14.2.7">
+                <p id="section-toc.1-1.14.2.7.1"><a href="#appendix-B.7" class="auto internal xref">B.7</a>.  <a href="#name-trailing_zeros" class="internal xref">trailing_zeros</a></p>
+</li>
+            </ul>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.15">
-            <p id="section-toc.1-1.15.1"><a href="#appendix-A" class="auto internal xref">Appendix A</a>.  <a href="#name-implementation-status" class="internal xref">Implementation Status</a></p>
+            <p id="section-toc.1-1.15.1"><a href="#appendix-C" class="auto internal xref">Appendix C</a>.  <a href="#name-implementation-status" class="internal xref">Implementation Status</a></p>
 <ul class="compact toc ulBare ulEmpty">
 <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.15.2.1">
-                <p id="section-toc.1-1.15.2.1.1"><a href="#appendix-A.1" class="auto internal xref">A.1</a>.  <a href="#name-implementers" class="internal xref">Implementers</a></p>
+                <p id="section-toc.1-1.15.2.1.1"><a href="#appendix-C.1" class="auto internal xref">C.1</a>.  <a href="#name-implementers" class="internal xref">Implementers</a></p>
 <ul class="compact toc ulBare ulEmpty">
 <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.15.2.1.2.1">
-                    <p id="section-toc.1-1.15.2.1.2.1.1"><a href="#appendix-A.1.1" class="auto internal xref">A.1.1</a>.  <a href="#name-datatrails" class="internal xref">DataTrails</a></p>
+                    <p id="section-toc.1-1.15.2.1.2.1.1"><a href="#appendix-C.1.1" class="auto internal xref">C.1.1</a>.  <a href="#name-datatrails" class="internal xref">DataTrails</a></p>
 </li>
                   <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.15.2.1.2.2">
-                    <p id="section-toc.1-1.15.2.1.2.2.1"><a href="#appendix-A.1.2" class="auto internal xref">A.1.2</a>.  <a href="#name-peter-todd" class="internal xref">Peter Todd</a></p>
+                    <p id="section-toc.1-1.15.2.1.2.2.1"><a href="#appendix-C.1.2" class="auto internal xref">C.1.2</a>.  <a href="#name-peter-todd" class="internal xref">Peter Todd</a></p>
 </li>
                   <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.15.2.1.2.3">
-                    <p id="section-toc.1-1.15.2.1.2.3.1"><a href="#appendix-A.1.3" class="auto internal xref">A.1.3</a>.  <a href="#name-robin-bryce" class="internal xref">Robin Bryce</a></p>
+                    <p id="section-toc.1-1.15.2.1.2.3.1"><a href="#appendix-C.1.3" class="auto internal xref">C.1.3</a>.  <a href="#name-robin-bryce" class="internal xref">Robin Bryce</a></p>
 </li>
                   <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.15.2.1.2.4">
-                    <p id="section-toc.1-1.15.2.1.2.4.1"><a href="#appendix-A.1.4" class="auto internal xref">A.1.4</a>.  <a href="#name-mimblewimble" class="internal xref">Mimblewimble ?</a></p>
+                    <p id="section-toc.1-1.15.2.1.2.4.1"><a href="#appendix-C.1.4" class="auto internal xref">C.1.4</a>.  <a href="#name-mimblewimble" class="internal xref">Mimblewimble ?</a></p>
 </li>
                   <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.15.2.1.2.5">
-                    <p id="section-toc.1-1.15.2.1.2.5.1"><a href="#appendix-A.1.5" class="auto internal xref">A.1.5</a>.  <a href="#name-zcash" class="internal xref">ZCash ?</a></p>
+                    <p id="section-toc.1-1.15.2.1.2.5.1"><a href="#appendix-C.1.5" class="auto internal xref">C.1.5</a>.  <a href="#name-zcash" class="internal xref">ZCash ?</a></p>
 </li>
                   <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.15.2.1.2.6">
-                    <p id="section-toc.1-1.15.2.1.2.6.1"><a href="#appendix-A.1.6" class="auto internal xref">A.1.6</a>.  <a href="#name-herodotus" class="internal xref">Herodotus</a></p>
+                    <p id="section-toc.1-1.15.2.1.2.6.1"><a href="#appendix-C.1.6" class="auto internal xref">C.1.6</a>.  <a href="#name-herodotus" class="internal xref">Herodotus</a></p>
 </li>
                   <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.15.2.1.2.7">
-                    <p id="section-toc.1-1.15.2.1.2.7.1"><a href="#appendix-A.1.7" class="auto internal xref">A.1.7</a>.  <a href="#name-tari-project" class="internal xref">Tari-Project</a></p>
+                    <p id="section-toc.1-1.15.2.1.2.7.1"><a href="#appendix-C.1.7" class="auto internal xref">C.1.7</a>.  <a href="#name-tari-project" class="internal xref">Tari-Project</a></p>
 </li>
                 </ul>
 </li>
             </ul>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.16">
-            <p id="section-toc.1-1.16.1"><a href="#appendix-B" class="auto internal xref">Appendix B</a>.  <a href="#name-algorithm-test-vectors" class="internal xref">Algorithm Test Vectors</a></p>
+            <p id="section-toc.1-1.16.1"><a href="#appendix-D" class="auto internal xref">Appendix D</a>.  <a href="#name-algorithm-test-vectors" class="internal xref">Algorithm Test Vectors</a></p>
 <ul class="compact toc ulBare ulEmpty">
 <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.16.2.1">
-                <p id="section-toc.1-1.16.2.1.1"><a href="#appendix-B.1" class="auto internal xref">B.1</a>.  <a href="#name-mmr39" class="internal xref">MMR(39)</a></p>
+                <p id="section-toc.1-1.16.2.1.1"><a href="#appendix-D.1" class="auto internal xref">D.1</a>.  <a href="#name-mmr39" class="internal xref">MMR(39)</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.16.2.2">
-                <p id="section-toc.1-1.16.2.2.1"><a href="#appendix-B.2" class="auto internal xref">B.2</a>.  <a href="#name-mmr39-leaf-values-excluding" class="internal xref">MMR(39) leaf values (excluding interior nodes)</a></p>
+                <p id="section-toc.1-1.16.2.2.1"><a href="#appendix-D.2" class="auto internal xref">D.2</a>.  <a href="#name-mmr39-leaf-values-excluding" class="internal xref">MMR(39) leaf values (excluding interior nodes)</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.16.2.3">
-                <p id="section-toc.1-1.16.2.3.1"><a href="#appendix-B.3" class="auto internal xref">B.3</a>.  <a href="#name-mmr39-node-values-including" class="internal xref">MMR(39) node values (including leaves)</a></p>
+                <p id="section-toc.1-1.16.2.3.1"><a href="#appendix-D.3" class="auto internal xref">D.3</a>.  <a href="#name-mmr39-node-values-including" class="internal xref">MMR(39) node values (including leaves)</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.16.2.4">
-                <p id="section-toc.1-1.16.2.4.1"><a href="#appendix-B.4" class="auto internal xref">B.4</a>.  <a href="#name-peak-accumulator-indices-an" class="internal xref">Peak (accumulator) indices and values for all MMR's to MMR(39)</a></p>
+                <p id="section-toc.1-1.16.2.4.1"><a href="#appendix-D.4" class="auto internal xref">D.4</a>.  <a href="#name-peak-accumulator-indices-an" class="internal xref">Peak (accumulator) indices and values for all MMR's to MMR(39)</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.16.2.5">
-                <p id="section-toc.1-1.16.2.5.1"><a href="#appendix-B.5" class="auto internal xref">B.5</a>.  <a href="#name-node-height-leaf-count-and-" class="internal xref">node height, leaf count and peak mask</a></p>
+                <p id="section-toc.1-1.16.2.5.1"><a href="#appendix-D.5" class="auto internal xref">D.5</a>.  <a href="#name-node-height-leaf-count-and-" class="internal xref">node height, leaf count and peak mask</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.16.2.6">
-                <p id="section-toc.1-1.16.2.6.1"><a href="#appendix-B.6" class="auto internal xref">B.6</a>.  <a href="#name-inclusion-proof-paths-and-t" class="internal xref">Inclusion proof paths and the associated accumulator states</a></p>
+                <p id="section-toc.1-1.16.2.6.1"><a href="#appendix-D.6" class="auto internal xref">D.6</a>.  <a href="#name-inclusion-proof-paths-and-t" class="internal xref">Inclusion proof paths and the associated accumulator states</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.16.2.7">
-                <p id="section-toc.1-1.16.2.7.1"><a href="#appendix-B.7" class="auto internal xref">B.7</a>.  <a href="#name-accumulator-peak-hashes" class="internal xref">Accumulator peak hashes</a></p>
+                <p id="section-toc.1-1.16.2.7.1"><a href="#appendix-D.7" class="auto internal xref">D.7</a>.  <a href="#name-accumulator-peak-hashes" class="internal xref">Accumulator peak hashes</a></p>
 </li>
             </ul>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.17">
-            <p id="section-toc.1-1.17.1"><a href="#appendix-C" class="auto internal xref">Appendix C</a>.  <a href="#name-references" class="internal xref">References</a></p>
+            <p id="section-toc.1-1.17.1"><a href="#appendix-E" class="auto internal xref">Appendix E</a>.  <a href="#name-references" class="internal xref">References</a></p>
 <ul class="compact toc ulBare ulEmpty">
 <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.17.2.1">
-                <p id="section-toc.1-1.17.2.1.1"><a href="#appendix-C.1" class="auto internal xref">C.1</a>.  <a href="#name-normative-references-2" class="internal xref">Normative References</a></p>
+                <p id="section-toc.1-1.17.2.1.1"><a href="#appendix-E.1" class="auto internal xref">E.1</a>.  <a href="#name-normative-references-2" class="internal xref">Normative References</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.17.2.2">
-                <p id="section-toc.1-1.17.2.2.1"><a href="#appendix-C.2" class="auto internal xref">C.2</a>.  <a href="#name-informative-references" class="internal xref">Informative References</a></p>
+                <p id="section-toc.1-1.17.2.2.1"><a href="#appendix-E.2" class="auto internal xref">E.2</a>.  <a href="#name-informative-references" class="internal xref">Informative References</a></p>
 </li>
             </ul>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.18">
-            <p id="section-toc.1-1.18.1"><a href="#appendix-D" class="auto internal xref"></a><a href="#name-acknowledgments" class="internal xref">Acknowledgments</a></p>
+            <p id="section-toc.1-1.18.1"><a href="#appendix-F" class="auto internal xref"></a><a href="#name-acknowledgments" class="internal xref">Acknowledgments</a></p>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.19">
-            <p id="section-toc.1-1.19.1"><a href="#appendix-E" class="auto internal xref"></a><a href="#name-authors-address" class="internal xref">Author's Address</a></p>
+            <p id="section-toc.1-1.19.1"><a href="#appendix-G" class="auto internal xref"></a><a href="#name-authors-address" class="internal xref">Author's Address</a></p>
 </li>
         </ul>
 </nav>
@@ -1368,66 +1376,78 @@ against any future state they encounter.<a href="#section-abstract-1" class="pil
       </h2>
 <p id="section-1-1">The term "Merkle Mountain Range" is due to <a href="https://lists.linuxfoundation.org/pipermail/bitcoin-dev/2016-May/012715.html">PeterTodd</a> and has wide acceptance as the identifier for the approach to managing Merkle trees described by this specification.
 This is typically abbreviated as MMR.<a href="#section-1-1" class="pilcrow">¶</a></p>
-<p id="section-1-2">The MMR can also be seen as the node visitation order obtained by the post-order traversal of a series of complete binary trees.<a href="#section-1-2" class="pilcrow">¶</a></p>
-<p id="section-1-3">This specification defines the how to produce and consume the proof types for inclusion and consistency,
-in CBOR, for a Verifiable Data Structure based on the MMR construction.
-It additionally defines a small number of primitive operations commonly useful in the context of MMR's.<a href="#section-1-3" class="pilcrow">¶</a></p>
-<p id="section-1-4">Proving and verifying is defined in terms of the cryptographic, asynchronous, accumulator described by <a href="https://eprint.iacr.org/2015/718.pdf">ReyzinYakoubov</a><a href="#section-1-4" class="pilcrow">¶</a></p>
-<p id="section-1-5">The format of the underlying storage is outside the scope of this document, however some minimal requirements are established for interfacing with it.<a href="#section-1-5" class="pilcrow">¶</a></p>
-<p id="section-1-6">There are distinct advantages for maintainers of verifiable data and for parties relying on the verifiability of that data when using this approach:<a href="#section-1-6" class="pilcrow">¶</a></p>
-<ul class="normal">
-<li class="normal" id="section-1-7.1">
-          <p id="section-1-7.1.1">Updates to the persistent tree data are co-ordination free. Competing writers
-can safely use <a href="https://en.wikipedia.org/wiki/Optimistic_concurrency_control">Optimistic Concurrency Control</a><a href="#section-1-7.1.1" class="pilcrow">¶</a></p>
-</li>
-        <li class="normal" id="section-1-7.2">
-          <p id="section-1-7.2.1">Tree data does not change once written.
-This makes additions immediately available for replication and caching with mechanisms such as <a href="https://en.wikipedia.org/wiki/HTTP_ETag">HTTP_ETag</a><a href="#section-1-7.2.1" class="pilcrow">¶</a></p>
-</li>
-        <li class="normal" id="section-1-7.3">
-          <p id="section-1-7.3.1">Proofs of inclusion for a specific element are permanently consistent with all future states of the tree.
-And, a tree state which fails this property is provably inconsistent.<a href="#section-1-7.3.1" class="pilcrow">¶</a></p>
-</li>
-        <li class="normal" id="section-1-7.4">
-          <p id="section-1-7.4.1">A proof of inclusion can be verified against any historic accumulator,
-provided the element being verified was included in the tree at the time the accumulator was obtained.<a href="#section-1-7.4.1" class="pilcrow">¶</a></p>
-</li>
-        <li class="normal" id="section-1-7.5">
-          <p id="section-1-7.5.1">For a previously saved inclusion proof,
-there are at most log 2 (n) future accumulator states required to show its validity against any future tree.
-Where n is the count of additions made after the entry was added.<a href="#section-1-7.5.1" class="pilcrow">¶</a></p>
-</li>
-        <li class="normal" id="section-1-7.6">
-          <p id="section-1-7.6.1">MMR's can be pruned without breaking these properties of inclusion and consistency.<a href="#section-1-7.6.1" class="pilcrow">¶</a></p>
-</li>
-        <li class="normal" id="section-1-7.7">
-          <p id="section-1-7.7.1">The accumulator states naturally emerge from the MMR and are also permanently consistent with future states of the tree.<a href="#section-1-7.7.1" class="pilcrow">¶</a></p>
-</li>
-        <li class="normal" id="section-1-7.8">
-          <p id="section-1-7.8.1">Any MMR state which fails to satisfy these properties is provably inconsistent.<a href="#section-1-7.8.1" class="pilcrow">¶</a></p>
-</li>
-        <li class="normal" id="section-1-7.9">
-          <p id="section-1-7.9.1">For both proofs of inclusion and proofs of consistency,
-the verification paths are strict prefixes of all future verification paths for those same items.<a href="#section-1-7.9.1" class="pilcrow">¶</a></p>
-</li>
-      </ul>
-<p id="section-1-8">The above advantages mostly follow from:<a href="#section-1-8" class="pilcrow">¶</a></p>
+<p id="section-1-2">An MMR is the unique series of perfect binary merkle trees required to commit its leaves.
+The nodes, including the leaves are stored linearly.<a href="#section-1-2" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-1-3">
+<pre>
+   6
+ 2   5
+0 1 3 4 7
+</pre><a href="#section-1-3" class="pilcrow">¶</a>
+</div>
+<p id="section-1-4">This illustrates <code>MMR(8)</code>, which is comprised of two perfect trees.
+The first is rooted at 6, and the second is the single leaf element 7.
+As leaves are added to an MMR, additional nodes are appended to "merge" with the
+preceding tree if the height of the new node matches the height of that tree.
+This process repeats as the interior nodes are added until all trees are complete and are of different heights.<a href="#section-1-4" class="pilcrow">¶</a></p>
+<p id="section-1-5">Nodes in an MMR are organized linearly in storage, and are strictly write once and append only.
+The MMR can also be seen as the node visitation order obtained by the post-order traversal of a series of complete binary trees.
+This specification defines how to create, verify and encode proofs of inclusion and consistency for MMR's in CBOR.<a href="#section-1-5" class="pilcrow">¶</a></p>
+<p id="section-1-6">Proving and verifying is defined in terms of the cryptographic, asynchronous, accumulator described by <a href="https://eprint.iacr.org/2015/718.pdf">ReyzinYakoubov</a><a href="#section-1-6" class="pilcrow">¶</a></p>
+<p id="section-1-7">Algorithms for leaf addition and for proving and verifying inclusion and consistency are defined.
+Additionally a small number of primitive operations commonly useful in the context of MMR's are provided.
+The format of the underlying storage is outside the scope of this document, however some minimal requirements are established for interfacing with it.<a href="#section-1-7" class="pilcrow">¶</a></p>
+<p id="section-1-8">There are distinct advantages for maintainers of verifiable data and for parties relying on the verifiability of that data when using this approach:<a href="#section-1-8" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-1-9.1">
-          <p id="section-1-9.1.1">A post order traversal of a binary tree results in a naturally linear storage organization. As observed  in <a href="https://static.usenix.org/event/sec09/tech/full_papers/crosby.pdf">CrosbySecondaryStorage</a>.<a href="#section-1-9.1.1" class="pilcrow">¶</a></p>
+          <p id="section-1-9.1.1">Updates to the persistent MMR data can be co-ordination free. Competing writers
+can safely use <a href="https://en.wikipedia.org/wiki/Optimistic_concurrency_control">Optimistic Concurrency Control</a><a href="#section-1-9.1.1" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="section-1-9.2">
-          <p id="section-1-9.2.1">An asynchronous cryptographic accumulator naturally emerges when maintaining a tree in this way.
-<a href="https://eprint.iacr.org/2015/718.pdf">ReyzinYakoubov</a> defines the properties of these, which are particularly relevant here, as "Low update frequency" and "Old-Accumulator Compatibility".<a href="#section-1-9.2.1" class="pilcrow">¶</a></p>
+          <p id="section-1-9.2.1">MMR data does not change once written.
+This makes additions immediately available for replication and caching with mechanisms such as <a href="https://en.wikipedia.org/wiki/HTTP_ETag">HTTP_ETag</a><a href="#section-1-9.2.1" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="section-1-9.3">
-          <p id="section-1-9.3.1">As the post order traversal index is permanently identifying for any elements siblings and parents,
-the authentication path element indices is known and permanent.
-It can be easily computed without needing to materialize the tree in whole or in part.<a href="#section-1-9.3.1" class="pilcrow">¶</a></p>
+          <p id="section-1-9.3.1">Proofs of inclusion for a specific element are permanently consistent with all future states of the MMR.
+And, an MMR state which fails this property is provably inconsistent.<a href="#section-1-9.3.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="section-1-9.4">
+          <p id="section-1-9.4.1">A proof of inclusion can be verified against any historic accumulator,
+provided the element being verified was included in the MMR at the time the accumulator was obtained.<a href="#section-1-9.4.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="section-1-9.5">
+          <p id="section-1-9.5.1">Proof of consistency can be defined as the proof of inclusion for each old accumulator entry, and so inherit all the properties of the inclusion proofs.<a href="#section-1-9.5.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="section-1-9.6">
+          <p id="section-1-9.6.1">For a previously saved inclusion proof,
+there are at most log 2 (n) future accumulator states required to show its validity against any future MMR.
+Where n is the count of additions made after the entry was added.<a href="#section-1-9.6.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="section-1-9.7">
+          <p id="section-1-9.7.1">MMR's can be pruned without breaking these properties of inclusion and consistency.<a href="#section-1-9.7.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="section-1-9.8">
+          <p id="section-1-9.8.1">The accumulator states naturally emerge from the MMR and are also permanently consistent with future states of the MMR.<a href="#section-1-9.8.1" class="pilcrow">¶</a></p>
 </li>
       </ul>
-<p id="section-1-10">Further work in <a href="https://eprint.iacr.org/2021/038.pdf">BNT</a> defines additional advantages for contexts in which "stream" processing of verifiable data is desirable.
-Post-order, Pre-order and in-order tree traversal are defined by <a href="https://www-cs-faculty.stanford.edu/~knuth/taocp.html">KnuthTBT</a><a href="#section-1-10" class="pilcrow">¶</a></p>
+<p id="section-1-10">The above advantages mostly follow from:<a href="#section-1-10" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-1-11.1">
+          <p id="section-1-11.1.1">A post order traversal of a binary tree results in a naturally linear storage organization. As observed  in <a href="https://static.usenix.org/event/sec09/tech/full_papers/crosby.pdf">CrosbySecondaryStorage</a>.<a href="#section-1-11.1.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="section-1-11.2">
+          <p id="section-1-11.2.1">An asynchronous cryptographic accumulator naturally emerges when maintaining an MMR in this way.
+<a href="https://eprint.iacr.org/2015/718.pdf">ReyzinYakoubov</a> defines the properties of these,
+which are particularly relevant here, as "Low update frequency" and "Old-Accumulator Compatibility".<a href="#section-1-11.2.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="section-1-11.3">
+          <p id="section-1-11.3.1">As the post order traversal index is permanently identifying for any elements siblings and parents,
+the verification path element indices is known and permanent.
+It can be easily computed without needing to materialize the MMR in whole or in part.<a href="#section-1-11.3.1" class="pilcrow">¶</a></p>
+</li>
+      </ul>
+<p id="section-1-12">Further work in <a href="https://eprint.iacr.org/2021/038.pdf">BNT</a> defines additional advantages for contexts in which "stream" processing of verifiable data is desirable.
+Post-order, Pre-order and in-order tree traversal are defined by <a href="https://www-cs-faculty.stanford.edu/~knuth/taocp.html">KnuthTBT</a><a href="#section-1-12" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="conventions-and-definitions">
@@ -1441,13 +1461,13 @@ described in BCP 14 <span>[<a href="#RFC2119" class="cite xref">RFC2119</a>]</s
 appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-2-2.1">
-          <p id="section-2-2.1.1"><code>i</code> shall be the index of a node in the MMR<a href="#section-2-2.1.1" class="pilcrow">¶</a></p>
+          <p id="section-2-2.1.1"><code>i</code> shall be the index of any node, including leaf nodes, in the MMR<a href="#section-2-2.1.1" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="section-2-2.2">
-          <p id="section-2-2.2.1"><code>pos</code> shall be <code>i+1</code><a href="#section-2-2.2.1" class="pilcrow">¶</a></p>
+          <p id="section-2-2.2.1"><code>pos</code> shall be <code>i+1</code> and is important only in the implementation of some algorithms.<a href="#section-2-2.2.1" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="section-2-2.3">
-          <p id="section-2-2.3.1"><code>e</code> shall be the zero based index of leaf entry in the MMR<a href="#section-2-2.3.1" class="pilcrow">¶</a></p>
+          <p id="section-2-2.3.1"><code>e</code> shall be the zero based index of leaf entry in the MMR (where only leaves are considered, and interiors are excluded)<a href="#section-2-2.3.1" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="section-2-2.4">
           <p id="section-2-2.4.1"><code>f</code> shall be a leaf value, which is <code>H(x)</code><a href="#section-2-2.4.1" class="pilcrow">¶</a></p>
@@ -1456,7 +1476,7 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
           <p id="section-2-2.5.1"><code>h</code> shall be the 1 based tree height<a href="#section-2-2.5.1" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="section-2-2.6">
-          <p id="section-2-2.6.1"><code>g</code> shall be the 0 based height, <code>h-1</code><a href="#section-2-2.6.1" class="pilcrow">¶</a></p>
+          <p id="section-2-2.6.1"><code>g</code> shall be the 0 based tree height, <code>h-1</code><a href="#section-2-2.6.1" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="section-2-2.7">
           <p id="section-2-2.7.1"><code>v</code> shall be any node, including a leaf node value, which will be the result of <code>H(x)</code>.<a href="#section-2-2.7.1" class="pilcrow">¶</a></p>
@@ -1479,7 +1499,14 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
         <li class="normal" id="section-2-2.13">
           <p id="section-2-2.13.1"><code>||</code> shall mean concatenation of raw byte representations of the referenced values.<a href="#section-2-2.13.1" class="pilcrow">¶</a></p>
 </li>
+        <li class="normal" id="section-2-2.14">
+          <p id="section-2-2.14.1"><code>D</code> shall mean the linear array storing all node in the MMR.<a href="#section-2-2.14.1" class="pilcrow">¶</a></p>
+</li>
       </ul>
+<p id="section-2-3">In this specification, all numbers are unsigned 64 bit integers. The maximum height of a single tree is 64 (which will have <code>g=63</code> for its peak).<a href="#section-2-3" class="pilcrow">¶</a></p>
+<p id="section-2-4">Were an MMR to accept a new addition once every 10 milliseconds, it would take roughly 4.6 million millennia to over flow.<a href="#section-2-4" class="pilcrow">¶</a></p>
+<p id="section-2-5">Should a system exist that can extend an MMR fast enough for this to be a limitation,
+the same advantages that make MMR's convenient to work with also accrue to combinations of MMR's.<a href="#section-2-5" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="accumulator-structure">
@@ -1487,120 +1514,123 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
       <h2 id="name-accumulator-structure">
 <a href="#section-3" class="section-number selfRef">3. </a><a href="#name-accumulator-structure" class="section-name selfRef">Accumulator Structure</a>
       </h2>
-<p id="section-3-1">In this section we describe and define the asynchronous cryptographic accumulator naturally available in an MMR,
+<p id="section-3-1">In this section we introduce the asynchronous cryptographic accumulator naturally available in an MMR,
 and which is crucial to to a number of the benefits of this approach.<a href="#section-3-1" class="pilcrow">¶</a></p>
-<p id="section-3-2">An MMR is a series of binary trees maintained logically in descending order of height.
-Only the last tree may be incomplete.
-The roots of each complete tree are described as peaks.<a href="#section-3-2" class="pilcrow">¶</a></p>
-<p id="section-3-3">Given only the preceding peaks, and the leaf nodes of the last tree,
-it is always possible to complete the last tree.<a href="#section-3-3" class="pilcrow">¶</a></p>
+<p id="section-3-2">The set of peaks for an MMR of any size is a naturally forming cryptographic accumulator.
+This uniquely and succinctly commits the complete history of the MMR. For its formal definition see <a href="https://eprint.iacr.org/2015/718.pdf">ReyzinYakoubov</a><a href="#section-3-2" class="pilcrow">¶</a></p>
+<p id="section-3-3">As discussed above, an MMR is a series of binary trees maintained logically in descending order of height.
+Given only the preceding peaks, and the leaf nodes of the last tree,
+it is always possible to complete the last tree.
+By fully exploiting this property in the organization of persistent storage,
+new entries can be appended without co-ordination between competing writers.<a href="#section-3-3" class="pilcrow">¶</a></p>
 <p id="section-3-4">An algorithm to add a single leaf to an MMR is given in <span><a href="#addleafhash" class="internal xref">add_leaf_hash</a> (<a href="#addleafhash" class="auto internal xref">Section 8.1.1</a>)</span><a href="#section-3-4" class="pilcrow">¶</a></p>
-<p id="section-3-5">For every even numbered node addition, this process will always "burry" at least one preceding peak,
-by absorbing the newly complete peak under its predecessor.
-This process proceeds until there are no more "completable" predecessors,
-needing only the previous peak at each step.<a href="#section-3-5" class="pilcrow">¶</a></p>
-<p id="section-3-6">The set of peaks for an MMR of any size is a naturally forming cryptographic accumulator (see <a href="https://eprint.iacr.org/2015/718.pdf">ReyzinYakoubov</a>).
-And this uniquely and succinctly commits the complete history of the MMR.<a href="#section-3-6" class="pilcrow">¶</a></p>
-<p id="section-3-7">The notable distinction from more traditional "mono" roots approach to merkle tree proofs is that, as the tree grows,
+<p id="section-3-5">The notable distinction from more traditional "mono" roots approach to merkle tree proofs is that, as the MMR grows,
 elements in the accumulator change with low frequency, while a mono root is unique for each individual addition.
-This frequency is defined as <span class="contact-name">łog_2(n)</span> in the number of subsequent leaf additions after the element in question.<a href="#section-3-7" class="pilcrow">¶</a></p>
-<p id="section-3-8">It is important to note that while the accumulator state evolves, all nodes in the tree are write once.
-The accumulator simply comprises the nodes at the "peaks" for the current MMR state.
-All paths for proofs of inclusion lead to an accumulator peak, rather than a single "mono" root.<a href="#section-3-8" class="pilcrow">¶</a></p>
-<p id="section-3-9">Therefore many proofs of inclusion are committed by a single entry in an accumulator state.<a href="#section-3-9" class="pilcrow">¶</a></p>
-<p id="section-3-10">Because of this, the inclusion path for any element is strictly append only,
+This frequency is defined as <span class="contact-name">łog_2(n)</span> in the number of subsequent leaf additions after the element in question.<a href="#section-3-5" class="pilcrow">¶</a></p>
+<p id="section-3-6">It is important to note that while the accumulator state evolves, all nodes in the MMR are write once.
+The accumulator simply comprises the nodes at the peaks for the current MMR state.
+All paths for proofs of inclusion lead to an accumulator peak, rather than a single "mono" root.<a href="#section-3-6" class="pilcrow">¶</a></p>
+<p id="section-3-7">This means many proofs of inclusion are committed by a single entry in an accumulator state, and so share the same root.<a href="#section-3-7" class="pilcrow">¶</a></p>
+<p id="section-3-8">The inclusion path for any element is strictly append only,
 in addition to the data structure itself being append only.
-Consistency proofs <em>are</em> the inclusion proofs for the old-accumulator peaks against the accumulator for the future tree state consistency is being shown for.
-An accumulator is at most tree height long, which is also the maximum length of any single proof of inclusion + 1.<a href="#section-3-10" class="pilcrow">¶</a></p>
-<p id="section-3-11">For illustration, consider <code>MMR(8)</code> which is a complete MMR with two peaks at node indices 6 and 7.<a href="#section-3-11" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="section-3-12">
+Consistency proofs <em>are</em> the inclusion proofs for the old-accumulator peaks against the accumulator for the future MMR state consistency is being shown for.
+An accumulator is at most MMR height long, which is also the maximum length of any single proof of inclusion + 1.<a href="#section-3-8" class="pilcrow">¶</a></p>
+<p id="section-3-9">For illustration, consider <code>MMR(8)</code> which is a complete MMR with two peaks at node indices 6 and 7.<a href="#section-3-9" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-3-10">
 <pre>
    6
  2   5
 0 1 3 4 7
-</pre><a href="#section-3-12" class="pilcrow">¶</a>
+</pre><a href="#section-3-10" class="pilcrow">¶</a>
 </div>
-<p id="section-3-13">The node indices match their location in storage.
-When constructing the tree, addition of nodes is strictly append only.<a href="#section-3-13" class="pilcrow">¶</a></p>
-<p id="section-3-14">MMR's are identified uniquely by their size. Above we have <code>MMR(8)</code>, because there are 8 nodes.<a href="#section-3-14" class="pilcrow">¶</a></p>
-<p id="section-3-15">An incomplete MMR may still be identified. Here we have <code>MMR(9)</code>.<a href="#section-3-15" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="section-3-16">
+<p id="section-3-11">The node indices match their location in storage.<a href="#section-3-11" class="pilcrow">¶</a></p>
+<p id="section-3-12">MMR's are identified uniquely by their size. Above we have <code>MMR(8)</code>, because there are 8 nodes.<a href="#section-3-12" class="pilcrow">¶</a></p>
+<p id="section-3-13">An incomplete MMR may still be identified. Here we have <code>MMR(9)</code>.<a href="#section-3-13" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-3-14">
 <pre>
    6
  2   5
 0 1 3 4 7 8
-</pre><a href="#section-3-16" class="pilcrow">¶</a>
+</pre><a href="#section-3-14" class="pilcrow">¶</a>
 </div>
-<p id="section-3-17">An MMR is said to be "complete" when all possible ancestors have been "filled in".
-The value for node 9 is <code>H(7 || 8)</code>, and adding that node completes the previous MMR.<a href="#section-3-17" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="section-3-18">
+<p id="section-3-15">However, its accumulator is that of the most recent complete MMR.<a href="#section-3-15" class="pilcrow">¶</a></p>
+<p id="section-3-16">An MMR is said to be complete when all peaks have a distinct height.
+The value for node 9 is <code>H(7 || 8)</code>,
+and adding 8 merges the two, single element, binary trees represented by 7 and 8..<a href="#section-3-16" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-3-17">
 <pre>
    6
  2   5   9
 0 1 3 4 7 8
-</pre><a href="#section-3-18" class="pilcrow">¶</a>
+</pre><a href="#section-3-17" class="pilcrow">¶</a>
 </div>
-<p id="section-3-19">The accumulator, described by <a href="https://eprint.iacr.org/2015/718.pdf">ReyzinYakoubov</a> is the set of peaks, with "gaps" reserved for the missing peaks.
-MMR(8), where a gap is indicated by _ would be:<a href="#section-3-19" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="section-3-20">
+<p id="section-3-18">The accumulator, described by <a href="https://eprint.iacr.org/2015/718.pdf">ReyzinYakoubov</a> is the set of peaks, with gaps reserved for the missing peaks.
+MMR(8), where a gap is indicated by _ would be:<a href="#section-3-18" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-3-19">
 <pre>
 [6, _, 7]
-</pre><a href="#section-3-20" class="pilcrow">¶</a>
+</pre><a href="#section-3-19" class="pilcrow">¶</a>
 </div>
-<p id="section-3-21">The packed form would be:<a href="#section-3-21" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="section-3-22">
+<p id="section-3-20">The packed form would be:<a href="#section-3-20" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-3-21">
 <pre>
 [6, 7]
-</pre><a href="#section-3-22" class="pilcrow">¶</a>
+</pre><a href="#section-3-21" class="pilcrow">¶</a>
 </div>
-<p id="section-3-23">The accumulator, packed or padded, lists the peaks strictly descending order of height.
+<p id="section-3-22">The accumulator for <code>MMR(10)</code> is:<a href="#section-3-22" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-3-23">
+<pre>
+[6, 9, _]
+</pre><a href="#section-3-23" class="pilcrow">¶</a>
+</div>
+<p id="section-3-24">The accumulator, packed or padded, lists the peaks strictly descending order of height.
 Given this fact, straight forward primitives for selecting the desired peak can be derived from both packed and un-packed form.
-The algorithms in this document work with the packed form exclusively.<a href="#section-3-23" class="pilcrow">¶</a></p>
-<p id="section-3-24">Given any index <code>i</code> in the tree, the accumulator for the previous <code>D[0:i)</code> nodes
-satisfies the sibling dependencies of the inclusion paths of all subsequent <code>D[i:n]</code> nodes.<a href="#section-3-24" class="pilcrow">¶</a></p>
-<p id="section-3-25">And the accumulator is itself only dependent, for proof of inclusion or consistency, on nodes in <code>D[i:n]</code><a href="#section-3-25" class="pilcrow">¶</a></p>
-<p id="section-3-26">This feature of MMR's allows for historic, no longer interesting,
-log data to be cleanly purged without impacting the verifiability of the retained log.<a href="#section-3-26" class="pilcrow">¶</a></p>
-<p id="section-3-27">It also lends itself to replicability. The linear, self contained,
-nature of the organization makes replication of verifiable sub sections of the log extremely convenient.<a href="#section-3-27" class="pilcrow">¶</a></p>
-<p id="section-3-28">The progression of the packed accumulator for MMR sizes 1, 3, 4, 7, 8 is then:<a href="#section-3-28" class="pilcrow">¶</a></p>
-<p id="section-3-29"><code>MMR(1): [0]</code><a href="#section-3-29" class="pilcrow">¶</a></p>
-<p id="section-3-30"><code>MMR(3): [2]</code><a href="#section-3-30" class="pilcrow">¶</a></p>
-<p id="section-3-31"><code>MMR(4): [2, 3]</code><a href="#section-3-31" class="pilcrow">¶</a></p>
-<p id="section-3-32"><code>MMR(7): [6]</code><a href="#section-3-32" class="pilcrow">¶</a></p>
-<p id="section-3-33"><code>MMR(8): [6, 7]</code><a href="#section-3-33" class="pilcrow">¶</a></p>
-<p id="section-3-34"><code>MMR(10): [6, 9]</code><a href="#section-3-34" class="pilcrow">¶</a></p>
-<p id="section-3-35">The verification path for node <code>1</code> in <code>MMR(3)</code> is <code>[0]</code>, because <code>H(0, 1)</code> is the value at <code>2</code>.<a href="#section-3-35" class="pilcrow">¶</a></p>
-<p id="section-3-36">The path for node <code>1</code> in <code>MMR(4)</code> remains un changed.<a href="#section-3-36" class="pilcrow">¶</a></p>
-<p id="section-3-37">The path for node <code>1</code> in <code>MMR(7)</code> becomes <code>[0, 5]</code>, because <code>H(0, 1)</code> is the value at <code>2</code>, and <code>H(H(0, 1), 5)</code> is the value at <code>6</code>.<a href="#section-3-37" class="pilcrow">¶</a></p>
-<p id="section-3-38">The path for node <code>1</code> in <code>MMR(8)</code> and <code>MMR(10)</code> remains unchanged.<a href="#section-3-38" class="pilcrow">¶</a></p>
-<p id="section-3-39">It can be seen that the older the tree item is,
-the less frequently its verification path will be extended to reach a new accumulator entry.<a href="#section-3-39" class="pilcrow">¶</a></p>
-<p id="section-3-40">An algorithm to produce the verifying path for any node <code>i</code> is given in <span><a href="#inclusionproofpath" class="internal xref">inclusion_proof_path</a> (<a href="#inclusionproofpath" class="auto internal xref">Section 4.1</a>)</span><a href="#section-3-40" class="pilcrow">¶</a></p>
-<p id="section-3-41">In general, given the height <code>g</code> of the accumulator peak currently authenticating a node <code>i</code>,
-the verification path for <code>i</code> will not change until the count of tree leaves reaches <span class="contact-name">2^{g+1}</span><a href="#section-3-41" class="pilcrow">¶</a></p>
-<p id="section-3-42">The old inclusion path will be a strict prefix of the new inclusion path.<a href="#section-3-42" class="pilcrow">¶</a></p>
-<p id="section-3-43">An algorithm defining the packed accumulator for any MMR size <code>S</code> is given by <a href="#peaks" class="auto internal xref">Section 9.2</a><a href="#section-3-43" class="pilcrow">¶</a></p>
-<p id="section-3-44">An algorithm which sets a bit for each present accumulator peaks in an MMR of size <code>S</code> is given by <span><a href="#leafcount" class="internal xref">leaf_count</a> (<a href="#leafcount" class="auto internal xref">Section 10.1</a>)</span>,
-the produced value is also the count of leaves present in that MMR.<a href="#section-3-44" class="pilcrow">¶</a></p>
-<p id="section-3-45">Lastly, many primitives for working with MMR's rely on a property of the <em>position</em> tree form of an MMR.<a href="#section-3-45" class="pilcrow">¶</a></p>
-<p id="section-3-46">The position tree for the complete MMR with size 8 MMR(8) is<a href="#section-3-46" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="section-3-47">
+The algorithms in this document work with the packed form exclusively.<a href="#section-3-24" class="pilcrow">¶</a></p>
+<p id="section-3-25">Given any index <code>i</code> in the MMR, the accumulator for the previous <code>D[0:i)</code> nodes
+satisfies the sibling dependencies of the inclusion paths of all subsequent <code>D[i:n]</code> nodes.<a href="#section-3-25" class="pilcrow">¶</a></p>
+<p id="section-3-26">And the accumulator is itself only dependent, for proof of inclusion or consistency, on nodes in <code>D[i:n]</code><a href="#section-3-26" class="pilcrow">¶</a></p>
+<p id="section-3-27">This feature of MMR's allows for historic, no longer interesting,
+log data to be cleanly purged without impacting the verifiability of the retained log.<a href="#section-3-27" class="pilcrow">¶</a></p>
+<p id="section-3-28">It also lends itself to replicability. The linear, self contained,
+nature of the organization makes replication of verifiable sub sections of the log extremely convenient.<a href="#section-3-28" class="pilcrow">¶</a></p>
+<p id="section-3-29">The progression of the packed accumulator for MMR sizes 1, 3, 4, 7, 8 is then:<a href="#section-3-29" class="pilcrow">¶</a></p>
+<p id="section-3-30"><code>MMR(1): [0]</code><a href="#section-3-30" class="pilcrow">¶</a></p>
+<p id="section-3-31"><code>MMR(3): [2]</code><a href="#section-3-31" class="pilcrow">¶</a></p>
+<p id="section-3-32"><code>MMR(4): [2, 3]</code><a href="#section-3-32" class="pilcrow">¶</a></p>
+<p id="section-3-33"><code>MMR(7): [6]</code><a href="#section-3-33" class="pilcrow">¶</a></p>
+<p id="section-3-34"><code>MMR(8): [6, 7]</code><a href="#section-3-34" class="pilcrow">¶</a></p>
+<p id="section-3-35"><code>MMR(10): [6, 9]</code><a href="#section-3-35" class="pilcrow">¶</a></p>
+<p id="section-3-36">The verification path for node <code>1</code> in <code>MMR(3)</code> is <code>[0]</code>, because <code>H(0, 1)</code> is the value at <code>2</code>.<a href="#section-3-36" class="pilcrow">¶</a></p>
+<p id="section-3-37">The path for node <code>1</code> in <code>MMR(4)</code> remains un changed.<a href="#section-3-37" class="pilcrow">¶</a></p>
+<p id="section-3-38">The path for node <code>1</code> in <code>MMR(7)</code> becomes <code>[0, 5]</code>, because <code>H(0, 1)</code> is the value at <code>2</code>, and <code>H(H(0, 1), 5)</code> is the value at <code>6</code>.<a href="#section-3-38" class="pilcrow">¶</a></p>
+<p id="section-3-39">The path for node <code>1</code> in <code>MMR(8)</code> and <code>MMR(10)</code> remains unchanged.<a href="#section-3-39" class="pilcrow">¶</a></p>
+<p id="section-3-40">It can be seen that the older the MMR node is,
+the less frequently its verification path will be extended to reach a new accumulator entry.<a href="#section-3-40" class="pilcrow">¶</a></p>
+<p id="section-3-41">An algorithm to produce the verifying path for any node <code>i</code> is given in <span><a href="#inclusionproofpath" class="internal xref">inclusion_proof_path</a> (<a href="#inclusionproofpath" class="auto internal xref">Section 4.1</a>)</span><a href="#section-3-41" class="pilcrow">¶</a></p>
+<p id="section-3-42">In general, given the height <code>g</code> of the accumulator peak currently authenticating a node <code>i</code>,
+the verification path for <code>i</code> will not change until the count of MMR leaves reaches <span class="contact-name">2^{g+1}</span><a href="#section-3-42" class="pilcrow">¶</a></p>
+<p id="section-3-43">The old inclusion path will be a strict prefix of the new inclusion path.<a href="#section-3-43" class="pilcrow">¶</a></p>
+<p id="section-3-44">An algorithm defining the packed accumulator for any MMR size <code>S</code> is given by <span><a href="#peaks" class="internal xref">peaks</a> (<a href="#peaks" class="auto internal xref">Section 9.2</a>)</span><a href="#section-3-44" class="pilcrow">¶</a></p>
+<p id="section-3-45">An algorithm which sets a bit for each present accumulator peaks in an MMR of size <code>S</code> is given by <span><a href="#leafcount" class="internal xref">leaf_count</a> (<a href="#leafcount" class="auto internal xref">Appendix A.1</a>)</span>,
+the produced value is also the count of leaves present in that MMR.<a href="#section-3-45" class="pilcrow">¶</a></p>
+<p id="section-3-46">Lastly, many primitives for working with MMR's rely on a property of the <em>position</em> form of an MMR.<a href="#section-3-46" class="pilcrow">¶</a></p>
+<p id="section-3-47">The position form for the complete MMR with size 8 MMR(8) is<a href="#section-3-47" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-3-48">
 <pre>
    7
  3   6
 1 2 4 5 8
-</pre><a href="#section-3-47" class="pilcrow">¶</a>
+</pre><a href="#section-3-48" class="pilcrow">¶</a>
 </div>
-<p id="section-3-48">Expressing this in binary notation reveals the property that MMR's make extensive use of:<a href="#section-3-48" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="section-3-49">
+<p id="section-3-49">Expressing this in binary notation reveals the property that MMR's make extensive use of:<a href="#section-3-49" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-3-50">
 <pre>
     111
  11     110
 1 10 100  101 1000
-</pre><a href="#section-3-49" class="pilcrow">¶</a>
+</pre><a href="#section-3-50" class="pilcrow">¶</a>
 </div>
-<p id="section-3-50">The left most node at any height is always "all ones".<a href="#section-3-50" class="pilcrow">¶</a></p>
+<p id="section-3-51">The left most node at any height is always "all ones".<a href="#section-3-51" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="inclusion-proof">
@@ -1613,10 +1643,10 @@ the produced value is also the count of leaves present in that MMR.<a href="#sec
 <pre>
     inclusion-proof = bstr .cbor [
 
-        ; zero based index of any node in the tree
+        ; zero based index of any node in the MMR
         index: uint
 
-        ; path from the node to its accumulator peak in MMR(tree-size)
+        ; path from the node to its accumulator peak in MMR(mmr-size)
         inclusion-path: [ + bstr ]
     ]
 </pre><a href="#section-4-2" class="pilcrow">¶</a>
@@ -1629,22 +1659,33 @@ the produced value is also the count of leaves present in that MMR.<a href="#sec
 <p id="section-4.1-1"><code>inclusion_proof_path(i, C)</code> is used to produce the verification paths for inclusion proofs and consistency proofs.<a href="#section-4.1-1" class="pilcrow">¶</a></p>
 <p id="section-4.1-2">When a path is produced for the purposes of verifying or creating proofs, including the <code>inclusion-path</code> referenced above,
 the path elements <span class="bcp14">MUST</span> be resolved to the referenced node values.<a href="#section-4.1-2" class="pilcrow">¶</a></p>
-<p id="section-4.1-3">The <span><a href="#addleafhash" class="internal xref">add_leaf_hash</a> (<a href="#addleafhash" class="auto internal xref">Section 8.1.1</a>)</span> algorithm illustrates the use of the<a href="#section-4.1-3" class="pilcrow">¶</a></p>
-<p id="section-4.1-4">Implementation defined storage methods<a href="#section-4.1-4" class="pilcrow">¶</a></p>
-<p id="section-4.1-5"><code>Get</code> to accomplish this.
+<p id="section-4.1-3">The <span><a href="#addleafhash" class="internal xref">add_leaf_hash</a> (<a href="#addleafhash" class="auto internal xref">Section 8.1.1</a>)</span> algorithm illustrates the use of the implementation define storage
+method <span><a href="#get" class="internal xref">get</a> (<a href="#get" class="auto internal xref">Section 8.2.1</a>)</span> to accomplish this.
 For a pruned MMR, the referenced nodes are either present directly or are present in the accumulator.
-Managing the availability of the accumulator is the callers responsibility, and <span class="bcp14">SHOULD</span> typically be accomplished in the implementation specific <code>Get</code> method.<a href="#section-4.1-5" class="pilcrow">¶</a></p>
-<p id="section-4.1-6">Given<a href="#section-4.1-6" class="pilcrow">¶</a></p>
+Managing the availability of the accumulator is the callers responsibility, and <span class="bcp14">SHOULD</span> typically be accomplished in the implementation specific <span><a href="#get" class="internal xref">get</a> (<a href="#get" class="auto internal xref">Section 8.2.1</a>)</span> method.<a href="#section-4.1-3" class="pilcrow">¶</a></p>
+<p id="section-4.1-4">Given:<a href="#section-4.1-4" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-4.1-7.1">
-            <p id="section-4.1-7.1.1"><code>C</code> the index of the last node in any complete MMR which contains <code>i</code>.<a href="#section-4.1-7.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-4.1-5.1">
+            <p id="section-4.1-5.1.1"><code>C</code> the index of the last node in any complete MMR which contains <code>i</code>.<a href="#section-4.1-5.1.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="normal" id="section-4.1-7.2">
-            <p id="section-4.1-7.2.1"><code>i</code> the index of the mmr node whose verification path is required.<a href="#section-4.1-7.2.1" class="pilcrow">¶</a></p>
+          <li class="normal" id="section-4.1-5.2">
+            <p id="section-4.1-5.2.1"><code>i</code> the index of the mmr node whose verification path is required.<a href="#section-4.1-5.2.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
-<p id="section-4.1-8">The pseudo code describing the algorithm relies on the supporting algorithm <span><a href="#indexheight" class="internal xref">index_height</a> (<a href="#indexheight" class="auto internal xref">Section 9.1</a>)</span><a href="#section-4.1-8" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="section-4.1-9">
+<p id="section-4.1-6">And the methods:<a href="#section-4.1-6" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-4.1-7.1">
+            <p id="section-4.1-7.1.1"><span><a href="#indexheight" class="internal xref">index_height</a> (<a href="#indexheight" class="auto internal xref">Section 9.1</a>)</span> which obtains the zero based height <code>g</code> of any node.<a href="#section-4.1-7.1.1" class="pilcrow">¶</a></p>
+</li>
+        </ul>
+<p id="section-4.1-8">And the constraints:<a href="#section-4.1-8" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-4.1-9.1">
+            <p id="section-4.1-9.1.1"><code>i &lt;= C</code><a href="#section-4.1-9.1.1" class="pilcrow">¶</a></p>
+</li>
+        </ul>
+<p id="section-4.1-10">We define <code>inclusion_proof_path</code> as:<a href="#section-4.1-10" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-4.1-11">
 <pre>
 def inclusion_proof_path(i, c):
 
@@ -1658,13 +1699,14 @@ def inclusion_proof_path(i, c):
         siblingoffset = (2 &lt;&lt; g)
 
         # If the index after i is higher, it is the left parent,
-        # and i is the right sibling.
+        # and i is the right sibling
         if index_height(i+1) &gt; g:
 
             # The witness to the right sibling is offset behind i
             isibling = i - siblingoffset + 1
 
-            # The parent of a right sibling is stored immediately after.
+            # The parent of a right sibling is stored immediately
+            # after
             i += 1
         else:
 
@@ -1672,11 +1714,11 @@ def inclusion_proof_path(i, c):
             isibling = i + siblingoffset - 1
 
             # The parent of a left sibling is stored immediately after
-            # its right sibling.
+            # its right sibling
             i += siblingoffset
 
-        # When the computed sibling exceedes the range of MMR(C+1), we have
-        # completed the path.
+        # When the computed sibling exceedes the range of MMR(C+1),
+        # we have completed the path
         if isibling &gt; c:
             return path
 
@@ -1684,21 +1726,42 @@ def inclusion_proof_path(i, c):
 
         # Set g to the height of the next item in the path.
         g += 1
-</pre><a href="#section-4.1-9" class="pilcrow">¶</a>
+</pre><a href="#section-4.1-11" class="pilcrow">¶</a>
 </div>
-<p id="section-4.1-10">The proof can be verified against any tree size which includes <code>index</code>,
-as it is a prefix of any future proof produced by a consistent future log state.<a href="#section-4.1-10" class="pilcrow">¶</a></p>
-<p id="section-4.1-11">Specifically, where <code>i &lt; c0</code>; <code>c0 &lt; c1</code>; and where <a href="#parent" class="auto internal xref">Section 10.3</a> obtains the parent node index of any node,
-the following hold for all MMR's <code>&gt;= MMR(c1+1)</code>:<a href="#section-4.1-11" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="section-4.1-12">
+</section>
+</div>
+<div id="forward-consistency-of-inclusion-proofs">
+<section id="section-4.2">
+        <h3 id="name-forward-consistency-of-incl">
+<a href="#section-4.2" class="section-number selfRef">4.2. </a><a href="#name-forward-consistency-of-incl" class="section-name selfRef">Forward consistency of inclusion proofs</a>
+        </h3>
+<p id="section-4.2-1">The proof obtained by <span><a href="#inclusionproofpath" class="internal xref">inclusion_proof_path</a> (<a href="#inclusionproofpath" class="auto internal xref">Section 4.1</a>)</span> can be verified against any MMR size which includes <code>i</code>,
+as it is a prefix of any proof produced by a consistent future log state.<a href="#section-4.2-1" class="pilcrow">¶</a></p>
+<p id="section-4.2-2">Assuming the constraints:<a href="#section-4.2-2" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-4.2-3.1">
+            <p id="section-4.2-3.1.1"><code>i &lt; c0</code><a href="#section-4.2-3.1.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-4.2-3.2">
+            <p id="section-4.2-3.2.1"><code>c0 &lt; c1</code><a href="#section-4.2-3.2.1" class="pilcrow">¶</a></p>
+</li>
+        </ul>
+<p id="section-4.2-4">And the methods:<a href="#section-4.2-4" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-4.2-5.1">
+            <p id="section-4.2-5.1.1"><span><a href="#parent" class="internal xref">parent</a> (<a href="#parent" class="auto internal xref">Appendix A.3</a>)</span> which obtains the parent node index of any node<a href="#section-4.2-5.1.1" class="pilcrow">¶</a></p>
+</li>
+        </ul>
+<p id="section-4.2-6">The following hold for all MMR(c0) and MMR(c1):<a href="#section-4.2-6" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-4.2-7">
 <pre>
 path_c0 = inclusion_proof_path(i, c0)
 path_c1 = inclusion_proof_path(parent(path_c0[-1]), c1)
 path = inclusion_proof_path(i, c1) == path_c0 + path_c1
-</pre><a href="#section-4.1-12" class="pilcrow">¶</a>
+</pre><a href="#section-4.2-7" class="pilcrow">¶</a>
 </div>
-<p id="section-4.1-13">This is the basis on which consistent inclusion, or otherwise, can be show for any individually proven node <code>i</code>.<a href="#section-4.1-13" class="pilcrow">¶</a></p>
-<p id="section-4.1-14">Note: the python specific list access syntax <code>path_c0[-1]</code> obtains the last element of the array <code>path_c0</code>.<a href="#section-4.1-14" class="pilcrow">¶</a></p>
+<p id="section-4.2-8">Note: the python specific list access syntax <code>path_c0[-1]</code> obtains the last element of the array <code>path_c0</code>.<a href="#section-4.2-8" class="pilcrow">¶</a></p>
+<p id="section-4.2-9">This is the basis on which consistent inclusion, or otherwise, can be show for any individually proven node <code>i</code>.<a href="#section-4.2-9" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
@@ -1741,10 +1804,13 @@ unprotected-header-map = {
 }
 </pre><a href="#section-5-5" class="pilcrow">¶</a>
 </div>
-<p id="section-5-6">The payload of an MMRIVER inclusion proof signature is the accumulator peak committing to the nodes inclusion, or the node itself where the proof path is empty. When the path is non-empty, the parent of the last witness node in the proof is also the accumulator peak.<a href="#section-5-6" class="pilcrow">¶</a></p>
+<p id="section-5-6">The payload of an MMRIVER inclusion proof signature is the accumulator peak committing to the nodes inclusion,
+or the node itself where the proof path is empty. When the path is non-empty,
+the parent of the last witness node in the proof is also the accumulator peak.
+The algorithm <span><a href="#includedroot" class="internal xref">included_root</a> (<a href="#includedroot" class="auto internal xref">Section 5.2</a>)</span> obtains this value.<a href="#section-5-6" class="pilcrow">¶</a></p>
 <p id="section-5-7">The payload <span class="bcp14">MUST</span> be detached.
-Detaching the payload forces verifiers to recompute the root from the inclusion proof signature, this protects against implementation errors where the signature is verified but the merkle root does not match the inclusion proof.
-The EDN for a Receipt containing an inclusion proof for RFC9162_SHA256 is:<a href="#section-5-7" class="pilcrow">¶</a></p>
+Detaching the payload forces verifiers to recompute the root from the inclusion proof signature,
+this protects against implementation errors where the signature is verified but the merkle root does not match the inclusion proof.<a href="#section-5-7" class="pilcrow">¶</a></p>
 <div id="verifying-the-receipt-of-inclusion">
 <section id="section-5.1">
         <h3 id="name-verifying-the-receipt-of-in">
@@ -1753,7 +1819,9 @@ The EDN for a Receipt containing an inclusion proof for RFC9162_SHA256 is:<a hre
 <ol start="1" type="1" class="normal type-1" id="section-5.1-1">
 <li id="section-5.1-1.1">
             <p id="section-5.1-1.1.1">Recompute the root from the path and the element for which inclusion is being shown using <span><a href="#includedroot" class="internal xref">included_root</a> (<a href="#includedroot" class="auto internal xref">Section 5.2</a>)</span>.
-For a leaf node, this is obtained via <code>H(x)</code> as defined by the application. For an interior node, this is read directly from the log using <code>Get</code>.<a href="#section-5.1-1.1.1" class="pilcrow">¶</a></p>
+For a leaf node, this is obtained via <code>H(x)</code> as defined by the application.
+For an interior node, this is read directly from the log, or a replicated portion of it,
+using the implementation define storage method <span><a href="#get" class="internal xref">get</a> (<a href="#get" class="auto internal xref">Section 8.2.1</a>)</span>.<a href="#section-5.1-1.1.1" class="pilcrow">¶</a></p>
 </li>
           <li id="section-5.1-1.2">
             <p id="section-5.1-1.2.1">Verify the signature using the obtained root as the detached payload.<a href="#section-5.1-1.2.1" class="pilcrow">¶</a></p>
@@ -1768,7 +1836,7 @@ For a leaf node, this is obtained via <code>H(x)</code> as defined by the applic
         </h3>
 <p id="section-5.2-1">The algorithm <code>included_root</code> calculates the accumulator peak for the provided proof and node value.
 Note that both interior and leaf nodes are handled identically.<a href="#section-5.2-1" class="pilcrow">¶</a></p>
-<p id="section-5.2-2">Given<a href="#section-5.2-2" class="pilcrow">¶</a></p>
+<p id="section-5.2-2">Given:<a href="#section-5.2-2" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-5.2-3.1">
             <p id="section-5.2-3.1.1"><code>i</code> is the index the <code>nodeHash</code> is to be shown at<a href="#section-5.2-3.1.1" class="pilcrow">¶</a></p>
@@ -1781,8 +1849,17 @@ Note that both interior and leaf nodes are handled identically.<a href="#section
 accumulator peak that committed i to the MMR state from which the proof was produced.<a href="#section-5.2-3.3.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
-<p id="section-5.2-4">Note: It is a property of the accumulator that the committing peak changes with low frequency. Each time it changes for any element i, the number of leaves that can be added without it changing again doubles.<a href="#section-5.2-4" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="section-5.2-5">
+<p id="section-5.2-4">And the methods:<a href="#section-5.2-4" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-5.2-5.1">
+            <p id="section-5.2-5.1.1"><span><a href="#indexheight" class="internal xref">index_height</a> (<a href="#indexheight" class="auto internal xref">Section 9.1</a>)</span> which obtains the zero based height <code>g</code> of any node.<a href="#section-5.2-5.1.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-5.2-5.2">
+            <p id="section-5.2-5.2.1"><span><a href="#hashpospair64" class="internal xref">hash_pospair64</a> (<a href="#hashpospair64" class="auto internal xref">Section 8.3.1</a>)</span> which applies <code>H</code> to the new node position and its children.<a href="#section-5.2-5.2.1" class="pilcrow">¶</a></p>
+</li>
+        </ul>
+<p id="section-5.2-6">We define <code>included_root</code> as:<a href="#section-5.2-6" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-5.2-7">
 <pre>
 def included_root(i, nodehash, proof):
 
@@ -1793,11 +1870,11 @@ def included_root(i, nodehash, proof):
     for sibling in proof:
 
         # If the index after i is higher, it is the left parent,
-        # and i is the right sibling.
+        # and i is the right sibling
 
         if index_height(i + 1) &gt; g:
 
-            # The parent of a right sibling is stored immediately after.
+            # The parent of a right sibling is stored immediately after
 
             i = i + 1
 
@@ -1818,7 +1895,7 @@ def included_root(i, nodehash, proof):
 
     # If the path length was zero, the original nodehash is returned
     return root
-</pre><a href="#section-5.2-5" class="pilcrow">¶</a>
+</pre><a href="#section-5.2-7" class="pilcrow">¶</a>
 </div>
 </section>
 </div>
@@ -1829,19 +1906,22 @@ def included_root(i, nodehash, proof):
       <h2 id="name-consistency-proof">
 <a href="#section-6" class="section-number selfRef">6. </a><a href="#name-consistency-proof" class="section-name selfRef">Consistency Proof</a>
       </h2>
-<p id="section-6-1">The cbor representation of a consistency proof for MMRIVER_SHA256 is:<a href="#section-6-1" class="pilcrow">¶</a></p>
+<p id="section-6-1">The cbor representation of a consistency proof for MMRIVER is:<a href="#section-6-1" class="pilcrow">¶</a></p>
 <div class="lang-cddl sourcecode" id="section-6-2">
 <pre>
+consistency-path = [ * bstr ]
+
 consistency-proof =  bstr .cbor [
 
-    ; previous merkle root tree size
-    tree-size-1: uint
+    ; previous MMR size
+    mmr-size-1: uint
 
-    ; latest merkle root tree size
-    tree-size-2: uint
+    ; latest MMR size
+    mmr-size-2: uint
 
-    ; the inclusion path from each accumulator peak in MMR(tree-size-1) to its new accumulator peak in MMR(tree-size-2).
-    consistency-path: [+ [ + bstr ] ]
+    ; the inclusion path from each accumulator peak in MMR(mmr-size-1)
+    ; to its new accumulator peak in MMR(mmr-size-2).
+    consistency-paths: [ + consistency-path ]
 ]
 </pre><a href="#section-6-2" class="pilcrow">¶</a>
 </div>
@@ -1852,18 +1932,38 @@ consistency-proof =  bstr .cbor [
         </h3>
 <p id="section-6.1-1">Creates a proof of consistency between the identified MMR's.<a href="#section-6.1-1" class="pilcrow">¶</a></p>
 <p id="section-6.1-2">The returned value is a list containing a single proof of inclusion for each peak
-defining the first MMR state in the second MMR state.<a href="#section-6.1-2" class="pilcrow">¶</a></p>
+from the first MMR state in the second MMR state.<a href="#section-6.1-2" class="pilcrow">¶</a></p>
 <p id="section-6.1-3">When a path is produced for the purposes of verifying or creating proofs,
 including the <code>inclusion-path</code> referenced above,
 the path elements <span class="bcp14">MUST</span> be resolved to the referenced node values.<a href="#section-6.1-3" class="pilcrow">¶</a></p>
-<p id="section-6.1-4"><span><a href="#inclusionproofpath" class="internal xref">inclusion_proof_path</a> (<a href="#inclusionproofpath" class="auto internal xref">Section 4.1</a>)</span> describes how this can be accomplished.<a href="#section-6.1-4" class="pilcrow">¶</a></p>
-<p id="section-6.1-5">Given,
-- <code>ifrom</code> is the last node of the complete <code>MMR(ifrom + 1)</code>
-- <code>ito</code> is the last node of the complete <code>MMR(ito + 1)</code><a href="#section-6.1-5" class="pilcrow">¶</a></p>
-<p id="section-6.1-6">And <code>ito &gt;= ifrom</code><a href="#section-6.1-6" class="pilcrow">¶</a></p>
-<p id="section-6.1-7">The pseudo code relies on <span><a href="#inclusionproofpath" class="internal xref">inclusion_proof_path</a> (<a href="#inclusionproofpath" class="auto internal xref">Section 4.1</a>)</span>
-and the supporting algorithm <a href="#peaks" class="auto internal xref">Section 9.2</a><a href="#section-6.1-7" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="section-6.1-8">
+<p id="section-6.1-4">The <span><a href="#addleafhash" class="internal xref">add_leaf_hash</a> (<a href="#addleafhash" class="auto internal xref">Section 8.1.1</a>)</span> algorithm illustrates the use of the implementation define
+storage method <span><a href="#get" class="internal xref">get</a> (<a href="#get" class="auto internal xref">Section 8.2.1</a>)</span> to accomplish this.<a href="#section-6.1-4" class="pilcrow">¶</a></p>
+<p id="section-6.1-5">Given:<a href="#section-6.1-5" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-6.1-6.1">
+            <p id="section-6.1-6.1.1"><code>ifrom</code> is the last node of the complete <code>MMR(ifrom + 1)</code><a href="#section-6.1-6.1.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-6.1-6.2">
+            <p id="section-6.1-6.2.1"><code>ito</code> is the last node of the complete <code>MMR(ito + 1)</code><a href="#section-6.1-6.2.1" class="pilcrow">¶</a></p>
+</li>
+        </ul>
+<p id="section-6.1-7">And the methods:<a href="#section-6.1-7" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-6.1-8.1">
+            <p id="section-6.1-8.1.1"><span><a href="#inclusionproofpath" class="internal xref">inclusion_proof_path</a> (<a href="#inclusionproofpath" class="auto internal xref">Section 4.1</a>)</span><a href="#section-6.1-8.1.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-6.1-8.2">
+            <p id="section-6.1-8.2.1"><span><a href="#peaks" class="internal xref">peaks</a> (<a href="#peaks" class="auto internal xref">Section 9.2</a>)</span><a href="#section-6.1-8.2.1" class="pilcrow">¶</a></p>
+</li>
+        </ul>
+<p id="section-6.1-9">And the constraints:<a href="#section-6.1-9" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-6.1-10.1">
+            <p id="section-6.1-10.1.1"><code>ifrom &lt;= ito</code><a href="#section-6.1-10.1.1" class="pilcrow">¶</a></p>
+</li>
+        </ul>
+<p id="section-6.1-11">We define <code>consistency_proof_paths</code> as:<a href="#section-6.1-11" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-6.1-12">
 <pre>
 def consistency_proof_paths(ifrom, ito):
 
@@ -1873,7 +1973,7 @@ def consistency_proof_paths(ifrom, ito):
         proof.append(inclusion_proof_path(i, ito))
 
     return proof
-</pre><a href="#section-6.1-8" class="pilcrow">¶</a>
+</pre><a href="#section-6.1-12" class="pilcrow">¶</a>
 </div>
 </section>
 </div>
@@ -1926,7 +2026,7 @@ This protects against implementation errors where the signature is verified but 
         </h3>
 <ol start="1" type="1" class="normal type-1" id="section-7.1-1">
 <li id="section-7.1-1.1">
-            <p id="section-7.1-1.1.1">Recompute the prefix of the accumulator for <code>MMR(tree-size-2)</code> from the proofs in the receipt
+            <p id="section-7.1-1.1.1">Recompute the prefix of the accumulator for <code>MMR(mmr-size-2)</code> from the proofs in the receipt
 using the algorithm <span><a href="#consistentroots" class="internal xref">consistent_roots</a> (<a href="#consistentroots" class="auto internal xref">Section 7.1.1</a>)</span><a href="#section-7.1-1.1.1" class="pilcrow">¶</a></p>
 </li>
           <li id="section-7.1-1.2">
@@ -1938,43 +2038,59 @@ using the algorithm <span><a href="#consistentroots" class="internal xref">consi
           <h4 id="name-consistent_roots">
 <a href="#section-7.1.1" class="section-number selfRef">7.1.1. </a><a href="#name-consistent_roots" class="section-name selfRef">consistent_roots</a>
           </h4>
-<p id="section-7.1.1-1">The prefix may be the full list of peaks in the accumulator for <code>MMR(tree-size-2)</code>.
-The order of the roots returned by <code>consistent_roots</code> matches the order of the nodes in the accumulator.<a href="#section-7.1.1-1" class="pilcrow">¶</a></p>
-<p id="section-7.1.1-2">The pseudo code describing the algorithm relies on the algorithm <span><a href="#includedroot" class="internal xref">included_root</a> (<a href="#includedroot" class="auto internal xref">Section 5.2</a>)</span>, which is also used when verifying receipts of inclusion, and the supporting algorithm <a href="#peaks" class="auto internal xref">Section 9.2</a><a href="#section-7.1.1-2" class="pilcrow">¶</a></p>
-<p id="section-7.1.1-3">Given,<a href="#section-7.1.1-3" class="pilcrow">¶</a></p>
+<p id="section-7.1.1-1"><code>consistent_roots</code> is supplied with the accumulator from which consistency is being shown,
+and an inclusion proof for each accumulator entry in a future MMR state.
+The algorithm recovers the necessary prefix (peaks) of the future accumulator against which the proofs were obtained.<a href="#section-7.1.1-1" class="pilcrow">¶</a></p>
+<p id="section-7.1.1-2">It is typical that many nodes in the original accumulator share the same peak in the new accumulator.<a href="#section-7.1.1-2" class="pilcrow">¶</a></p>
+<p id="section-7.1.1-3">The returned list will be a descending height ordered list of elements from the accumulator
+for the consistent future state.
+It may be <em>exactly</em> the future accumulator or it may be a prefix of it.
+The order of the roots returned by <code>consistent_roots</code> matches the order of the nodes in the accumulator.<a href="#section-7.1.1-3" class="pilcrow">¶</a></p>
+<p id="section-7.1.1-4">Implementations <span class="bcp14">MUST</span> require that the number of peaks returned by <span><a href="#peaks" class="internal xref">peaks</a> (<a href="#peaks" class="auto internal xref">Section 9.2</a>)</span><code>(ifrom)</code> equals the number of entries in <code>accumulatorfrom</code>.<a href="#section-7.1.1-4" class="pilcrow">¶</a></p>
+<p id="section-7.1.1-5">Given:<a href="#section-7.1.1-5" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-7.1.1-4.1">
-              <p id="section-7.1.1-4.1.1"><code>ifrom</code> the last node index in the complete MMR from which consistency was proven.<a href="#section-7.1.1-4.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-7.1.1-6.1">
+              <p id="section-7.1.1-6.1.1"><code>ifrom</code> the last node index in the complete MMR from which consistency was proven.<a href="#section-7.1.1-6.1.1" class="pilcrow">¶</a></p>
 </li>
-            <li class="normal" id="section-7.1.1-4.2">
-              <p id="section-7.1.1-4.2.1"><code>accumulatorfrom</code> the node values correponding to the peaks of the accumulator at <code>MMR(tree-size-1 - 1)</code><a href="#section-7.1.1-4.2.1" class="pilcrow">¶</a></p>
+            <li class="normal" id="section-7.1.1-6.2">
+              <p id="section-7.1.1-6.2.1"><code>accumulatorfrom</code> the node values correponding to the peaks of the accumulator at <code>MMR(mmr-size-1)</code><a href="#section-7.1.1-6.2.1" class="pilcrow">¶</a></p>
 </li>
-            <li class="normal" id="section-7.1.1-4.3">
-              <p id="section-7.1.1-4.3.1"><code>proofs</code> the inclusion proofs for each node in <code>accumulatorfrom</code> in <code>MMR(tree-size-1 - 1)</code><a href="#section-7.1.1-4.3.1" class="pilcrow">¶</a></p>
+            <li class="normal" id="section-7.1.1-6.3">
+              <p id="section-7.1.1-6.3.1"><code>proofs</code> the inclusion proofs for each node in <code>accumulatorfrom</code> in <code>MMR(mmr-size-2)</code><a href="#section-7.1.1-6.3.1" class="pilcrow">¶</a></p>
 </li>
           </ul>
-<p id="section-7.1.1-5">The returned list will be a descending height ordered list of elements from the accumulator
-for the consistent future state.
-It may be <em>exactly</em> the future accumulator or it may be a prefix of it.<a href="#section-7.1.1-5" class="pilcrow">¶</a></p>
-<p id="section-7.1.1-6">Implementations <span class="bcp14">MUST</span> require that the number of peaks returned by <a href="#peaks" class="auto internal xref">Section 9.2</a><code>(ifrom)</code> equals the number of entries in <code>accumulatorfrom</code>.<a href="#section-7.1.1-6" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="section-7.1.1-7">
+<p id="section-7.1.1-7">And the methods:<a href="#section-7.1.1-7" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-7.1.1-8.1">
+              <p id="section-7.1.1-8.1.1"><span><a href="#includedroot" class="internal xref">included_root</a> (<a href="#includedroot" class="auto internal xref">Section 5.2</a>)</span><a href="#section-7.1.1-8.1.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-7.1.1-8.2">
+              <p id="section-7.1.1-8.2.1"><span><a href="#peaks" class="internal xref">peaks</a> (<a href="#peaks" class="auto internal xref">Section 9.2</a>)</span><a href="#section-7.1.1-8.2.1" class="pilcrow">¶</a></p>
+</li>
+          </ul>
+<p id="section-7.1.1-9">We define <code>consistent_roots</code> as:<a href="#section-7.1.1-9" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-7.1.1-10">
 <pre>
 def consistent_roots(ifrom, accumulatorfrom, proofs):
 
     frompeaks = peaks(ifrom)
 
+    # if length(frompeaks) != length(proofs) -&gt; ERROR
+
     roots = []
     for i in range(len(accumulatorfrom)):
-        root = included_root(frompeaks[i], accumulatorfrom[i], proofs[i])
+        root = included_root(
+            frompeaks[i], accumulatorfrom[i], proofs[i])
 
         # The nature of MMR's is that many nodes are committed by the
-        # same accumulator peak, and that peak changes with low frequency.
+        # same accumulator peak, and that peak changes with
+        # low frequency.
         if roots and roots[-1] == root:
             continue
         roots.append(root)
 
     return roots
-</pre><a href="#section-7.1.1-7" class="pilcrow">¶</a>
+</pre><a href="#section-7.1.1-10" class="pilcrow">¶</a>
 </div>
 </section>
 </div>
@@ -1992,29 +2108,43 @@ def consistent_roots(ifrom, accumulatorfrom, proofs):
         <h3 id="name-leaf-node-addition">
 <a href="#section-8.1" class="section-number selfRef">8.1. </a><a href="#name-leaf-node-addition" class="section-name selfRef">Leaf Node Addition</a>
         </h3>
-<p id="section-8.1-1">All numbers are unsigned 64 bit integers. The maximum height of a single tree is 64.<a href="#section-8.1-1" class="pilcrow">¶</a></p>
-<p id="section-8.1-2">Were a tree to accept a new addition once every 10 milliseconds, it would take roughly 4.6 million milenia to over flow.<a href="#section-8.1-2" class="pilcrow">¶</a></p>
-<p id="section-8.1-3">Should a system exist that can extend a tree fast enough for this to be a limitation,
-the same advantages that make MMR's convenient to work with also accrue to combinations of trees.<a href="#section-8.1-3" class="pilcrow">¶</a></p>
-<p id="section-8.1-4">The algorithms are offered in both a python like informal pseudo code, and structured english.<a href="#section-8.1-4" class="pilcrow">¶</a></p>
+<p id="section-8.1-1">When a new node is appended, if its height matches the height of its immediate predecessor,
+then we can complete a larger tree by merging the adjacent peaks,
+which we do by appending a new node which takes the adjacent peaks as its left and right children.
+This process proceeds until there are no more completable sub trees,
+needing only the previous peak at each step.
+For every even numbered node addition, adding a new leaf will always merge at least one preceding peak.<a href="#section-8.1-1" class="pilcrow">¶</a></p>
 <div id="addleafhash">
 <section id="section-8.1.1">
           <h4 id="name-add_leaf_hash">
 <a href="#section-8.1.1" class="section-number selfRef">8.1.1. </a><a href="#name-add_leaf_hash" class="section-name selfRef">add_leaf_hash</a>
           </h4>
-<p id="section-8.1.1-1"><code>add_leaf_hash(f)</code> Adds the leaf hash value f to the MMR. The resulting MMR is always complete.<a href="#section-8.1.1-1" class="pilcrow">¶</a></p>
-<p id="section-8.1.1-2">Note: it is assumed that the algorithm terminates and returns on any transient error.<a href="#section-8.1.1-2" class="pilcrow">¶</a></p>
-<p id="section-8.1.1-3">Given,<a href="#section-8.1.1-3" class="pilcrow">¶</a></p>
-<p id="section-8.1.1-4"><code>f</code> the leaf value resulting from <code>H(x)</code> for the caller defined leaf value <code>x</code><a href="#section-8.1.1-4" class="pilcrow">¶</a></p>
-<p id="section-8.1.1-5">The caller <span class="bcp14">MUST</span> account for 2nd pre-image attacks on the MMR.<a href="#section-8.1.1-5" class="pilcrow">¶</a></p>
-<p id="section-8.1.1-6">The caller <span class="bcp14">SHOULD</span> take into account the defined <span><a href="#node-values" class="internal xref">Node values</a> (<a href="#node-values" class="auto internal xref">Section 8.3</a>)</span> scheme when satisfying this requirement.<a href="#section-8.1.1-6" class="pilcrow">¶</a></p>
-<p id="section-8.1.1-7">Because the interior nodes commit the position of their children, including the case where the child is a leaf,
-no special steps are required of the application or implementation to account for duplicate values of <code>x</code>.<a href="#section-8.1.1-7" class="pilcrow">¶</a></p>
-<p id="section-8.1.1-8">In the following pseudo code <code>db</code> is an interface supporting the <code>Append</code> and <code>Get</code>
-methods described in<a href="#section-8.1.1-8" class="pilcrow">¶</a></p>
-<p id="section-8.1.1-9">Implementation defined storage methods<a href="#section-8.1.1-9" class="pilcrow">¶</a></p>
-<p id="section-8.1.1-10">The example relies on the supporting algorithms <span><a href="#indexheight" class="internal xref">index_height</a> (<a href="#indexheight" class="auto internal xref">Section 9.1</a>)</span> and <a href="#hashpospair64" class="auto internal xref">Section 8.3.1</a><a href="#section-8.1.1-10" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="section-8.1.1-11">
+<p id="section-8.1.1-1"><code>add_leaf_hash(f)</code> adds the leaf hash value f to the MMR. The resulting MMR is always complete.<a href="#section-8.1.1-1" class="pilcrow">¶</a></p>
+<p id="section-8.1.1-2">As defined in <span><a href="#node-values" class="internal xref">Node values</a> (<a href="#node-values" class="auto internal xref">Section 8.3</a>)</span>, the interior nodes each commit the
+size of the MMR, which is just the node index + 1.
+This makes it impossible to create a leaf whose value collides with an interior node.
+This protects the MMR against second pre-image attacks.<a href="#section-8.1.1-2" class="pilcrow">¶</a></p>
+<p id="section-8.1.1-3">It is assumed that the algorithm terminates and returns on any transient error.<a href="#section-8.1.1-3" class="pilcrow">¶</a></p>
+<p id="section-8.1.1-4">Given:<a href="#section-8.1.1-4" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-8.1.1-5.1">
+              <p id="section-8.1.1-5.1.1"><code>f</code> the leaf value resulting from <code>H(x)</code> for the caller defined leaf value <code>x</code><a href="#section-8.1.1-5.1.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-8.1.1-5.2">
+              <p id="section-8.1.1-5.2.1"><code>db</code> an interface supporting the <span><a href="#append" class="internal xref">append</a> (<a href="#append" class="auto internal xref">Section 8.2.2</a>)</span> and <span><a href="#get" class="internal xref">get</a> (<a href="#get" class="auto internal xref">Section 8.2.1</a>)</span> implementation defined storage methods.<a href="#section-8.1.1-5.2.1" class="pilcrow">¶</a></p>
+</li>
+          </ul>
+<p id="section-8.1.1-6">And the methods:<a href="#section-8.1.1-6" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-8.1.1-7.1">
+              <p id="section-8.1.1-7.1.1"><span><a href="#indexheight" class="internal xref">index_height</a> (<a href="#indexheight" class="auto internal xref">Section 9.1</a>)</span><a href="#section-8.1.1-7.1.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-8.1.1-7.2">
+              <p id="section-8.1.1-7.2.1"><a href="#hashpospair64" class="auto internal xref">Section 8.3.1</a><a href="#section-8.1.1-7.2.1" class="pilcrow">¶</a></p>
+</li>
+          </ul>
+<p id="section-8.1.1-8">We define <code>add_leaf_hash</code> as<a href="#section-8.1.1-8" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-8.1.1-9">
 <pre>
 def add_leaf_hash(db, f: bytes):
 
@@ -2027,21 +2157,27 @@ def add_leaf_hash(db, f: bytes):
     # If index_height(i) is greater than g (#looptarget)
     while index_height(i) &gt; g:
 
-        # Set ileft to the index of the left child of i, which is i - 2^(g+1)
+        # Set ileft to the index of the left child of i,
+        # which is i - 2^(g+1)
+
         ileft = i - (2 &lt;&lt; g)
 
-        # Set iright to the index of the the right child of i, which is i - 1
+        # Set iright to the index of the the right child of i,
+        # which is i - 1
+
         iright = i - 1
 
         # Set v to H(i + 1 || Get(ileft) || Get(iright))
         # Set i to the result of invoking Append(v)
-        i = db.append(hash_pospair64(i+1, db.get(ileft), db.get(iright)))
+
+        i = db.append(
+            hash_pospair64(i+1, db.get(ileft), db.get(iright)))
 
         1. Set g to the height of the new i, which is g + 1`
         g += 1
 
     return i
-</pre><a href="#section-8.1.1-11" class="pilcrow">¶</a>
+</pre><a href="#section-8.1.1-9" class="pilcrow">¶</a>
 </div>
 </section>
 </div>
@@ -2075,7 +2211,7 @@ def add_leaf_hash(db, f: bytes):
 <p id="section-8.2.2-3">Append <span class="bcp14">MUST</span> return the node <code>i</code> identifying the node location which comes next.<a href="#section-8.2.2-3" class="pilcrow">¶</a></p>
 <p id="section-8.2.2-4">There <span class="bcp14">MUST</span> be a 1 to 1 correspondence between the MMR node index and the storage location of the node's value.<a href="#section-8.2.2-4" class="pilcrow">¶</a></p>
 <p id="section-8.2.2-5">The implementation <span class="bcp14">MUST</span> guarantee that the storage organization is linear and non-sparse.<a href="#section-8.2.2-5" class="pilcrow">¶</a></p>
-<p id="section-8.2.2-6">Implementations <span class="bcp14">MAY</span> rely on the verifiable properties of the tree,
+<p id="section-8.2.2-6">Implementations <span class="bcp14">MAY</span> rely on the verifiable properties of the MMR,
 or optimistic concurrency control, to afford detection of accidental or competing overwrites.<a href="#section-8.2.2-6" class="pilcrow">¶</a></p>
 <p id="section-8.2.2-7">Used only by <span><a href="#addleafhash" class="internal xref">add_leaf_hash</a> (<a href="#addleafhash" class="auto internal xref">Section 8.1.1</a>)</span><a href="#section-8.2.2-7" class="pilcrow">¶</a></p>
 <p id="section-8.2.2-8">The implementation <span class="bcp14">MAY</span> defer commitment to underlying persistent storage.<a href="#section-8.2.2-8" class="pilcrow">¶</a></p>
@@ -2089,7 +2225,7 @@ or optimistic concurrency control, to afford detection of accidental or competin
         <h3 id="name-node-values">
 <a href="#section-8.3" class="section-number selfRef">8.3. </a><a href="#name-node-values" class="section-name selfRef">Node values</a>
         </h3>
-<p id="section-8.3-1">Interior nodes in the tree <span class="bcp14">SHALL</span> prefix the value provided to <code>H(x)</code> with <code>pos</code>.<a href="#section-8.3-1" class="pilcrow">¶</a></p>
+<p id="section-8.3-1">Interior nodes in the MMR <span class="bcp14">SHALL</span> prefix the value provided to <code>H(x)</code> with <code>pos</code>.<a href="#section-8.3-1" class="pilcrow">¶</a></p>
 <p id="section-8.3-2">The value <code>v</code> for any interior node <span class="bcp14">MUST</span> be <code>H(pos || Get(LEFT_CHILD) || Get(RIGHT_CHILD))</code><a href="#section-8.3-2" class="pilcrow">¶</a></p>
 <p id="section-8.3-3">This naturally affords the pre-image resistance typically obtained with specific leaf/interior node prefixes.
 Nonce schemes to account for duplicate leaves are also un-necessary as a result,
@@ -2101,24 +2237,32 @@ The application <span class="bcp14">MUST</span> define how it produces <code>x</
           <h4 id="name-hash_pospair64">
 <a href="#section-8.3.1" class="section-number selfRef">8.3.1. </a><a href="#name-hash_pospair64" class="section-name selfRef">hash_pospair64</a>
           </h4>
-<p id="section-8.3.1-1">All interior nodes <span class="bcp14">MUST</span> commit the size of the MMR created by their addition by pre-pending the size to its child hashes.<a href="#section-8.3.1-1" class="pilcrow">¶</a></p>
-<p id="section-8.3.1-2">Editors note: How this draft accommodates hash alg agility is tbd.<a href="#section-8.3.1-2" class="pilcrow">¶</a></p>
-<p id="section-8.3.1-3">Given,<a href="#section-8.3.1-3" class="pilcrow">¶</a></p>
+<p id="section-8.3.1-1">Returns <code>H(pos || a || b)</code>, which is the value for the node identified by index <code>pos - 1</code><a href="#section-8.3.1-1" class="pilcrow">¶</a></p>
+<p id="section-8.3.1-2">All interior nodes <span class="bcp14">MUST</span> commit the size of the MMR created by their addition by pre-pending the size to its child hashes.<a href="#section-8.3.1-2" class="pilcrow">¶</a></p>
+<p id="section-8.3.1-3">Editors note: How this draft accommodates hash alg agility is tbd.<a href="#section-8.3.1-3" class="pilcrow">¶</a></p>
+<p id="section-8.3.1-4">Given:<a href="#section-8.3.1-4" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-8.3.1-4.1">
-              <p id="section-8.3.1-4.1.1"><code>pos</code> the size of the MMR whose last node index is <code>pos - 1</code><a href="#section-8.3.1-4.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-8.3.1-5.1">
+              <p id="section-8.3.1-5.1.1"><code>pos</code> the size of the MMR whose last node index is <code>pos - 1</code><a href="#section-8.3.1-5.1.1" class="pilcrow">¶</a></p>
 </li>
-            <li class="normal" id="section-8.3.1-4.2">
-              <p id="section-8.3.1-4.2.1"><code>a</code> the first value to include in the hash after <code>pos</code><a href="#section-8.3.1-4.2.1" class="pilcrow">¶</a></p>
+            <li class="normal" id="section-8.3.1-5.2">
+              <p id="section-8.3.1-5.2.1"><code>a</code> the first value to include in the hash after <code>pos</code><a href="#section-8.3.1-5.2.1" class="pilcrow">¶</a></p>
 </li>
-            <li class="normal" id="section-8.3.1-4.3">
-              <p id="section-8.3.1-4.3.1"><code>b</code> the second value to include in the hash after <code>pos</code><a href="#section-8.3.1-4.3.1" class="pilcrow">¶</a></p>
+            <li class="normal" id="section-8.3.1-5.3">
+              <p id="section-8.3.1-5.3.1"><code>b</code> the second value to include in the hash after <code>pos</code><a href="#section-8.3.1-5.3.1" class="pilcrow">¶</a></p>
 </li>
           </ul>
-<p id="section-8.3.1-5"><code>pos</code> <span class="bcp14">MUST</span> be &lt; 2^64
-<code>a</code> and <code>b</code> <span class="bcp14">MUST</span> be hashes produced by the appropriate hash alg.<a href="#section-8.3.1-5" class="pilcrow">¶</a></p>
-<p id="section-8.3.1-6">Returns <code>H(pos || a || b)</code>, which is the value for the node identified by index <code>pos - 1</code><a href="#section-8.3.1-6" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="section-8.3.1-7">
+<p id="section-8.3.1-6">And the constraints:<a href="#section-8.3.1-6" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-8.3.1-7.1">
+              <p id="section-8.3.1-7.1.1"><code>pos &lt; 2^64</code><a href="#section-8.3.1-7.1.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-8.3.1-7.2">
+              <p id="section-8.3.1-7.2.1"><code>a</code> and <code>b</code> <span class="bcp14">MUST</span> be hashes produced by the appropriate hash alg.<a href="#section-8.3.1-7.2.1" class="pilcrow">¶</a></p>
+</li>
+          </ul>
+<p id="section-8.3.1-8">We define <code>hash_pospair64</code> as:<a href="#section-8.3.1-8" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-8.3.1-9">
 <pre>
 def hash_pospair64(pos, a, b):
 
@@ -2130,7 +2274,7 @@ def hash_pospair64(pos, a, b):
     h.update(a)
     h.update(b)
     return h.digest()
-</pre><a href="#section-8.3.1-7" class="pilcrow">¶</a>
+</pre><a href="#section-8.3.1-9" class="pilcrow">¶</a>
 </div>
 </section>
 </div>
@@ -2149,8 +2293,14 @@ def hash_pospair64(pos, a, b):
 <a href="#section-9.1" class="section-number selfRef">9.1. </a><a href="#name-index_height" class="section-name selfRef">index_height</a>
         </h3>
 <p id="section-9.1-1"><code>index_height(i)</code> returns the zero based height <code>g</code> of the node index <code>i</code><a href="#section-9.1-1" class="pilcrow">¶</a></p>
-<p id="section-9.1-2">The pseudo code describing the algorithm relies on the bit primitive <span><a href="#bitlength" class="internal xref">bit_length</a> (<a href="#bitlength" class="auto internal xref">Section 11.3</a>)</span><a href="#section-9.1-2" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="section-9.1-3">
+<p id="section-9.1-2">Given:<a href="#section-9.1-2" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-9.1-3.1">
+            <p id="section-9.1-3.1.1"><code>i</code> the index of any mmr node.<a href="#section-9.1-3.1.1" class="pilcrow">¶</a></p>
+</li>
+        </ul>
+<p id="section-9.1-4">We define <code>index_height</code> as:<a href="#section-9.1-4" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-9.1-5">
 <pre>
 def index_height(i) -&gt; int:
     pos = i + 1
@@ -2158,7 +2308,7 @@ def index_height(i) -&gt; int:
       pos = pos - most_sig_bit(pos) + 1
 
     return bit_length(pos) - 1
-</pre><a href="#section-9.1-3" class="pilcrow">¶</a>
+</pre><a href="#section-9.1-5" class="pilcrow">¶</a>
 </div>
 </section>
 </div>
@@ -2167,12 +2317,17 @@ def index_height(i) -&gt; int:
         <h3 id="name-peaks">
 <a href="#section-9.2" class="section-number selfRef">9.2. </a><a href="#name-peaks" class="section-name selfRef">peaks</a>
         </h3>
-<p id="section-9.2-1"><code>peaks(i)</code> returns the peak positions for <code>MMR(i+1)</code> (Note: these are just the
-corresponding storage indices + 1)<a href="#section-9.2-1" class="pilcrow">¶</a></p>
-<p id="section-9.2-2">Returns the peak indices for MMR(i+1).<a href="#section-9.2-2" class="pilcrow">¶</a></p>
-<p id="section-9.2-3">Assumes MMR(i+1) is complete, implementations can check for this condition by
-testing the height of i+1<a href="#section-9.2-3" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="section-9.2-4">
+<p id="section-9.2-1"><code>peaks(i)</code> returns the peak indices for <code>MMR(i+1)</code>, which is also its accumulator.<a href="#section-9.2-1" class="pilcrow">¶</a></p>
+<p id="section-9.2-2">Assumes MMR(i+1) is complete, implementations can check for this condition by
+testing the height of i+1<a href="#section-9.2-2" class="pilcrow">¶</a></p>
+<p id="section-9.2-3">Given:<a href="#section-9.2-3" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-9.2-4.1">
+            <p id="section-9.2-4.1.1"><code>i</code> the index of any mmr node.<a href="#section-9.2-4.1.1" class="pilcrow">¶</a></p>
+</li>
+        </ul>
+<p id="section-9.2-5">We define <code>peaks</code> as:<a href="#section-9.2-5" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-9.2-6">
 <pre>
 def peaks(i):
     peak = 0
@@ -2186,276 +2341,48 @@ def peaks(i):
         s -= highest_size
 
     return peaks
-</pre><a href="#section-9.2-4" class="pilcrow">¶</a>
-</div>
-</section>
-</div>
-</section>
-</div>
-<div id="supplemental-commonly-useful-supporting-algorithms">
-<section id="section-10">
-      <h2 id="name-supplemental-commonly-usefu">
-<a href="#section-10" class="section-number selfRef">10. </a><a href="#name-supplemental-commonly-usefu" class="section-name selfRef">Supplemental, commonly useful, supporting algorithms</a>
-      </h2>
-<div id="leafcount">
-<section id="section-10.1">
-        <h3 id="name-leaf_count">
-<a href="#section-10.1" class="section-number selfRef">10.1. </a><a href="#name-leaf_count" class="section-name selfRef">leaf_count</a>
-        </h3>
-<p id="section-10.1-1"><code>leaf_count(i)</code> Returns a mask with a bit set for each peak,
-interpreted as an integer this is also the count of leaves in <code>MMR(i+1)</code><a href="#section-10.1-1" class="pilcrow">¶</a></p>
-<p id="section-10.1-2">The bits of the count also form a mask, where a single bit is set for each
-"peak" present in the accumulator. The bit position is the height of the
-binary tree committing the elements to the corresponding accumulator entry.<a href="#section-10.1-2" class="pilcrow">¶</a></p>
-<p id="section-10.1-3">The (sparse) accumulator entry is also derived from the height as accummulator[len(accumulator) - bitpos]<a href="#section-10.1-3" class="pilcrow">¶</a></p>
-<p id="section-10.1-4">Where accumulator is the list of accumulator peak indices in descending order of
-height and bitpos is any bit set in the leaf count.<a href="#section-10.1-4" class="pilcrow">¶</a></p>
-<p id="section-10.1-5">The pseudo code describing the algorithm relies on the bit primitive <span><a href="#bitlength" class="internal xref">bit_length</a> (<a href="#bitlength" class="auto internal xref">Section 11.3</a>)</span><a href="#section-10.1-5" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="section-10.1-6">
-<pre>
-def leaf_count(i):
-
-    s = i + 1
-
-    # Establish the largest relevant complete tree as our starting point.
-    peaksize = (1 &lt;&lt; bit_length(s)) - 1
-    peakmap = 0
-    while peaksize &gt; 0:
-        peakmap &lt;&lt;= 1
-
-        # At each round we halve peak size, if doing so causes our current
-        # value for s to excede the remaining peak size, we need the peak in
-        # the accumulator.
-        if s &gt;= peaksize:
-            s -= peaksize
-            peakmap |= 1
-        peaksize &gt;&gt;= 1
-
-    return peakmap
-</pre><a href="#section-10.1-6" class="pilcrow">¶</a>
-</div>
-</section>
-</div>
-<div id="mmrindex">
-<section id="section-10.2">
-        <h3 id="name-mmr_index">
-<a href="#section-10.2" class="section-number selfRef">10.2. </a><a href="#name-mmr_index" class="section-name selfRef">mmr_index</a>
-        </h3>
-<p id="section-10.2-1">Given,<a href="#section-10.2-1" class="pilcrow">¶</a></p>
-<ul class="normal">
-<li class="normal" id="section-10.2-2.1">
-            <p id="section-10.2-2.1.1"><code>e</code> the index of a leaf (where the leaves are considered in isolation)<a href="#section-10.2-2.1.1" class="pilcrow">¶</a></p>
-</li>
-        </ul>
-<p id="section-10.2-3">Return the node index <code>i</code> locating its location in the MMR<a href="#section-10.2-3" class="pilcrow">¶</a></p>
-<p id="section-10.2-4">The pseudo code describing the algorithm relies on the bit primitive <span><a href="#bitlength" class="internal xref">bit_length</a> (<a href="#bitlength" class="auto internal xref">Section 11.3</a>)</span><a href="#section-10.2-4" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="section-10.2-5">
-<pre>
-def mmr_index(e):
-    sum = 0
-    while e &gt; 0:
-        # The bit length of e is its 1 based height `h`
-        h = bit_length(e)
-        sum += (1 &lt;&lt; h) - 1
-        half = 1 &lt;&lt; (h - 1)
-        e -= half
-    return sum
-</pre><a href="#section-10.2-5" class="pilcrow">¶</a>
-</div>
-</section>
-</div>
-<div id="parent">
-<section id="section-10.3">
-        <h3 id="name-parent">
-<a href="#section-10.3" class="section-number selfRef">10.3. </a><a href="#name-parent" class="section-name selfRef">parent</a>
-        </h3>
-<p id="section-10.3-1">Given,<a href="#section-10.3-1" class="pilcrow">¶</a></p>
-<ul class="normal">
-<li class="normal" id="section-10.3-2.1">
-            <p id="section-10.3-2.1.1"><code>i</code> a node index<a href="#section-10.3-2.1.1" class="pilcrow">¶</a></p>
-</li>
-        </ul>
-<p id="section-10.3-3">Return its parent node index.<a href="#section-10.3-3" class="pilcrow">¶</a></p>
-<p id="section-10.3-4">The pseudo code describing the algorithm relies on  <span><a href="#indexheight" class="internal xref">index_height</a> (<a href="#indexheight" class="auto internal xref">Section 9.1</a>)</span><a href="#section-10.3-4" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="section-10.3-5">
-<pre>
-def parent(i):
-    g = index_height(i)
-
-    if index_height(i + 1) &gt; g:
-        # The next node is higher, so it is the parent.
-        return i + 1
-
-    # i is the left sibling, so the parent is the offset to the right
-    # sibling + 1, which is just 2^(g+1)
-    return i + (2 &lt;&lt; g)
-</pre><a href="#section-10.3-5" class="pilcrow">¶</a>
-</div>
-</section>
-</div>
-<div id="completemmr">
-<section id="section-10.4">
-        <h3 id="name-complete_mmr">
-<a href="#section-10.4" class="section-number selfRef">10.4. </a><a href="#name-complete_mmr" class="section-name selfRef">complete_mmr</a>
-        </h3>
-<p id="section-10.4-1">Many of the algorithms specify dealing with <em>complete</em> mmr's.<a href="#section-10.4-1" class="pilcrow">¶</a></p>
-<p id="section-10.4-2">This algorithm returns i if it is complete, and the index of the next node
-corresponding to a complete mmr otherwise.<a href="#section-10.4-2" class="pilcrow">¶</a></p>
-<p id="section-10.4-3">Given,<a href="#section-10.4-3" class="pilcrow">¶</a></p>
-<ul class="normal">
-<li class="normal" id="section-10.4-4.1">
-            <p id="section-10.4-4.1.1"><code>i</code> a node index<a href="#section-10.4-4.1.1" class="pilcrow">¶</a></p>
-</li>
-        </ul>
-<p id="section-10.4-5">Return <code>i</code> if <code>MMR(i+1)</code> is complete, and the next complete node index otherwise.<a href="#section-10.4-5" class="pilcrow">¶</a></p>
-<p id="section-10.4-6">The pseudo code describing the algorithm relies on  <span><a href="#indexheight" class="internal xref">index_height</a> (<a href="#indexheight" class="auto internal xref">Section 9.1</a>)</span><a href="#section-10.4-6" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="section-10.4-7">
-<pre>
-def complete_mmr(i):
-
-    h0 = index_height(i)
-    h1 = index_height(i + 1)
-    while h0 &lt; h1:
-        i += 1
-        h0 = h1
-        h1 = index_height(i + 1)
-
-    return i
-</pre><a href="#section-10.4-7" class="pilcrow">¶</a>
-</div>
-</section>
-</div>
-</section>
-</div>
-<div id="assumed-bit-primitives">
-<section id="section-11">
-      <h2 id="name-assumed-bit-primitives">
-<a href="#section-11" class="section-number selfRef">11. </a><a href="#name-assumed-bit-primitives" class="section-name selfRef">Assumed bit primitives</a>
-      </h2>
-<div id="a-note-on-hardware-sympathy">
-<section id="section-11.1">
-        <h3 id="name-a-note-on-hardware-sympathy">
-<a href="#section-11.1" class="section-number selfRef">11.1. </a><a href="#name-a-note-on-hardware-sympathy" class="section-name selfRef">A Note On Hardware Sympathy</a>
-        </h3>
-<p id="section-11.1-1">MMR's are a series of complete binary trees followed by at most one incomplete tree. This is sometimes referred to as a flat base tree. In these constructions many operations are formally <span class="contact-name">łog_2(n)</span><a href="#section-11.1-1" class="pilcrow">¶</a></p>
-<p id="section-11.1-2">However, precisely because of the binary nature of the tree, most benefit from single-cycle assembly level optimizations, assuming a counter limit of <span class="contact-name">2^{64}</span> Which as discussed above, is a <em>lot</em> of tree.<a href="#section-11.1-2" class="pilcrow">¶</a></p>
-<p id="section-11.1-3">Finding the position of the first non-zero bit or counting the number of bits that are set are both primitives necessary for some of the algorithms.
-<a href="https://developer.arm.com/documentation/dui0802/b/A32-and-T32-Instructions/CLZ">CLZ</a> has single-cycle implementations on most architectures. Similarly, <code>POPCNT</code> exists.
-AMD defined some useful <a href="https://en.wikipedia.org/wiki/X86_Bit_manipulation_instruction_set">binary manipulation</a> extensions.<a href="#section-11.1-3" class="pilcrow">¶</a></p>
-<p id="section-11.1-4">Sympathetic instructions, or compact look up table implementations exist for other fundamental operations too.
-Most languages have sensible standard wrappers.
-While these operations are not strictly O(1) complexity, this has little impact in practice.<a href="#section-11.1-4" class="pilcrow">¶</a></p>
-</section>
-</div>
-<div id="mostsigbit">
-<section id="section-11.2">
-        <h3 id="name-most_sig_bit">
-<a href="#section-11.2" class="section-number selfRef">11.2. </a><a href="#name-most_sig_bit" class="section-name selfRef">most_sig_bit</a>
-        </h3>
-<p id="section-11.2-1">Returns the mask for the the most significant bit in pos<a href="#section-11.2-1" class="pilcrow">¶</a></p>
-<p id="section-11.2-2"><code>1 &lt;&lt; (bit_length(pos) - 1)</code><a href="#section-11.2-2" class="pilcrow">¶</a></p>
-<p id="section-11.2-3">Expressed in python<a href="#section-11.2-3" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="section-11.2-4">
-<pre>
-def most_sig_bit(pos) -&gt; int:
-    return 1 &lt;&lt; (pos.bit_length() - 1)
-</pre><a href="#section-11.2-4" class="pilcrow">¶</a>
-</div>
-<p id="section-11.2-5">We assume the following primitives for working with bits as they commonly have library or hardware support.<a href="#section-11.2-5" class="pilcrow">¶</a></p>
-</section>
-</div>
-<div id="bitlength">
-<section id="section-11.3">
-        <h3 id="name-bit_length">
-<a href="#section-11.3" class="section-number selfRef">11.3. </a><a href="#name-bit_length" class="section-name selfRef">bit_length</a>
-        </h3>
-<p id="section-11.3-1">The minimum number of bits to represent pos. b011 would be 2, b010 would be 2, and b001 would be 1.<a href="#section-11.3-1" class="pilcrow">¶</a></p>
-<p id="section-11.3-2">In python,<a href="#section-11.3-2" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="section-11.3-3">
-<pre>
-def bit_length(pos):
-    return pos.bit_length()
-</pre><a href="#section-11.3-3" class="pilcrow">¶</a>
-</div>
-</section>
-</div>
-<div id="allones">
-<section id="section-11.4">
-        <h3 id="name-all_ones">
-<a href="#section-11.4" class="section-number selfRef">11.4. </a><a href="#name-all_ones" class="section-name selfRef">all_ones</a>
-        </h3>
-<p id="section-11.4-1">Tests if all bits, from the most significant that is set, are 1, b0111 would be true, b0101 would be false.<a href="#section-11.4-1" class="pilcrow">¶</a></p>
-<p id="section-11.4-2">In python,<a href="#section-11.4-2" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="section-11.4-3">
-<pre>
-def all_ones(pos) -&gt; bool:
-    msb = most_sig_bit(pos)
-    mask = (1 &lt;&lt; (msb + 1)) - 1
-    return pos == mask
-</pre><a href="#section-11.4-3" class="pilcrow">¶</a>
-</div>
-</section>
-</div>
-<div id="onescount">
-<section id="section-11.5">
-        <h3 id="name-ones_count">
-<a href="#section-11.5" class="section-number selfRef">11.5. </a><a href="#name-ones_count" class="section-name selfRef">ones_count</a>
-        </h3>
-<p id="section-11.5-1">Count of set bits. For example <code>ones_count(b101)</code> is 2<a href="#section-11.5-1" class="pilcrow">¶</a></p>
-</section>
-</div>
-<div id="trailingzeros">
-<section id="section-11.6">
-        <h3 id="name-trailing_zeros">
-<a href="#section-11.6" class="section-number selfRef">11.6. </a><a href="#name-trailing_zeros" class="section-name selfRef">trailing_zeros</a>
-        </h3>
-<p id="section-11.6-1">The count of nodes above and to the left of <code>pos</code><a href="#section-11.6-1" class="pilcrow">¶</a></p>
-<p id="section-11.6-2">In python,<a href="#section-11.6-2" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="section-11.6-3">
-<pre>
-(v &amp; -v).bit_length() - 1
-</pre><a href="#section-11.6-3" class="pilcrow">¶</a>
+</pre><a href="#section-9.2-6" class="pilcrow">¶</a>
 </div>
 </section>
 </div>
 </section>
 </div>
 <div id="security-considerations">
-<section id="section-12">
+<section id="section-10">
       <h2 id="name-security-considerations">
-<a href="#section-12" class="section-number selfRef">12. </a><a href="#name-security-considerations" class="section-name selfRef">Security Considerations</a>
+<a href="#section-10" class="section-number selfRef">10. </a><a href="#name-security-considerations" class="section-name selfRef">Security Considerations</a>
       </h2>
-<p id="section-12-1">TODO Security<a href="#section-12-1" class="pilcrow">¶</a></p>
+<p id="section-10-1">TODO Security<a href="#section-10-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="iana-considerations">
-<section id="section-13">
+<section id="section-11">
       <h2 id="name-iana-considerations">
-<a href="#section-13" class="section-number selfRef">13. </a><a href="#name-iana-considerations" class="section-name selfRef">IANA Considerations</a>
+<a href="#section-11" class="section-number selfRef">11. </a><a href="#name-iana-considerations" class="section-name selfRef">IANA Considerations</a>
       </h2>
+<p id="section-11-1">Editors note: Hash agility is desired. We can start with SHA-256. Two of the referenced implementations use BLAKE2b-256,
+We would like to add support for SHA3-256, SHA3-512, and possibly Keccak and Pedersen.<a href="#section-11-1" class="pilcrow">¶</a></p>
 <div id="additions-to-existing-registries">
-<section id="section-13.1">
+<section id="section-11.1">
         <h3 id="name-additions-to-existing-regis">
-<a href="#section-13.1" class="section-number selfRef">13.1. </a><a href="#name-additions-to-existing-regis" class="section-name selfRef">Additions to Existing Registries</a>
+<a href="#section-11.1" class="section-number selfRef">11.1. </a><a href="#name-additions-to-existing-regis" class="section-name selfRef">Additions to Existing Registries</a>
         </h3>
-<p id="section-13.1-1">Editors note: we will require an addition to the CoMETER spec once it is accepted.<a href="#section-13.1-1" class="pilcrow">¶</a></p>
+<p id="section-11.1-1">Editors note: we will require an addition to the CoMETER spec once it is accepted.<a href="#section-11.1-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="new-registries">
-<section id="section-13.2">
+<section id="section-11.2">
         <h3 id="name-new-registries">
-<a href="#section-13.2" class="section-number selfRef">13.2. </a><a href="#name-new-registries" class="section-name selfRef">New Registries</a>
-        </h3>
-<p id="section-13.2-1">Editors note: We can start with SHA-256. Two of the referenced implementations use BLAKE2b-256,
-We would like to add support for SHA3-256 (and possibly SHA3-512)<a href="#section-13.2-1" class="pilcrow">¶</a></p>
+<a href="#section-11.2" class="section-number selfRef">11.2. </a><a href="#name-new-registries" class="section-name selfRef">New Registries</a>
+      </h3>
 </section>
 </div>
 </section>
 </div>
 <div id="sec-normative-references">
-<section id="section-14">
+<section id="section-12">
       <h2 id="name-normative-references">
-<a href="#section-14" class="section-number selfRef">14. </a><a href="#name-normative-references" class="section-name selfRef">Normative References</a>
+<a href="#section-12" class="section-number selfRef">12. </a><a href="#name-normative-references" class="section-name selfRef">Normative References</a>
       </h2>
 <dl class="references">
 <dt id="RFC2119">[RFC2119]</dt>
@@ -2469,138 +2396,412 @@ We would like to add support for SHA3-256 (and possibly SHA3-512)<a href="#secti
 </dl>
 </section>
 </div>
-<div id="implementation-status">
+<div id="supplemental-commonly-useful-supporting-algorithms">
 <section id="appendix-A">
-      <h2 id="name-implementation-status">
-<a href="#appendix-A" class="section-number selfRef">Appendix A. </a><a href="#name-implementation-status" class="section-name selfRef">Implementation Status</a>
+      <h2 id="name-supplemental-commonly-usefu">
+<a href="#appendix-A" class="section-number selfRef">Appendix A. </a><a href="#name-supplemental-commonly-usefu" class="section-name selfRef">Supplemental, commonly useful, supporting algorithms</a>
       </h2>
-<p id="appendix-A-1">Note to RFC Editor: Please remove this section as well as references to BCP205 before AUTH48.<a href="#appendix-A-1" class="pilcrow">¶</a></p>
-<p id="appendix-A-2">This section records the status of known implementations of the protocol defined by this specification at the time of posting of this Internet-Draft, and is based on a proposal described in BCP205.
+<div id="leafcount">
+<section id="appendix-A.1">
+        <h3 id="name-leaf_count">
+<a href="#appendix-A.1" class="section-number selfRef">A.1. </a><a href="#name-leaf_count" class="section-name selfRef">leaf_count</a>
+        </h3>
+<p id="appendix-A.1-1"><code>leaf_count(i)</code> Returns a the count of leaves in <code>MMR(i+1)</code><a href="#appendix-A.1-1" class="pilcrow">¶</a></p>
+<p id="appendix-A.1-2">The bits of the count also form a mask, where a single bit is set for each
+peak present in the accumulator. The bit position is the height of the
+binary tree committing the elements to the corresponding accumulator entry.<a href="#appendix-A.1-2" class="pilcrow">¶</a></p>
+<p id="appendix-A.1-3">The (sparse) accumulator entry is also derived from the height as <code>accummulator[len(accumulator) - bitpos]</code><a href="#appendix-A.1-3" class="pilcrow">¶</a></p>
+<p id="appendix-A.1-4">Where accumulator is the list of accumulator peak indices in descending order of
+height and bitpos is any bit set in the leaf count.<a href="#appendix-A.1-4" class="pilcrow">¶</a></p>
+<p id="appendix-A.1-5">Given:<a href="#appendix-A.1-5" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="appendix-A.1-6.1">
+            <p id="appendix-A.1-6.1.1"><code>i</code> the index of any mmr node.<a href="#appendix-A.1-6.1.1" class="pilcrow">¶</a></p>
+</li>
+        </ul>
+<p id="appendix-A.1-7">And the methods:<a href="#appendix-A.1-7" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="appendix-A.1-8.1">
+            <p id="appendix-A.1-8.1.1"><span><a href="#bitlength" class="internal xref">bit_length</a> (<a href="#bitlength" class="auto internal xref">Appendix B.4</a>)</span> which returns the number of bits required to represent the argument.<a href="#appendix-A.1-8.1.1" class="pilcrow">¶</a></p>
+</li>
+        </ul>
+<p id="appendix-A.1-9">We define <code>leaf_count</code> as:<a href="#appendix-A.1-9" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="appendix-A.1-10">
+<pre>
+def leaf_count(i):
+
+    s = i + 1
+
+    # Establish the largest relevant complete tree as our starting point
+    peaksize = (1 &lt;&lt; bit_length(s)) - 1
+    peakmap = 0
+    while peaksize &gt; 0:
+        peakmap &lt;&lt;= 1
+
+        # At each round we halve peak size, if doing so causes our
+        # current value for s to excede the remaining peak size, we need
+        # the peak in the accumulator.
+        if s &gt;= peaksize:
+            s -= peaksize
+            peakmap |= 1
+        peaksize &gt;&gt;= 1
+
+    return peakmap
+</pre><a href="#appendix-A.1-10" class="pilcrow">¶</a>
+</div>
+</section>
+</div>
+<div id="mmrindex">
+<section id="appendix-A.2">
+        <h3 id="name-mmr_index">
+<a href="#appendix-A.2" class="section-number selfRef">A.2. </a><a href="#name-mmr_index" class="section-name selfRef">mmr_index</a>
+        </h3>
+<p id="appendix-A.2-1">Returns the node index <code>i</code> locating the leaf in the MMR<a href="#appendix-A.2-1" class="pilcrow">¶</a></p>
+<p id="appendix-A.2-2">Given:<a href="#appendix-A.2-2" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="appendix-A.2-3.1">
+            <p id="appendix-A.2-3.1.1"><code>e</code> the index of a leaf (where the leaves are considered in isolation)<a href="#appendix-A.2-3.1.1" class="pilcrow">¶</a></p>
+</li>
+        </ul>
+<p id="appendix-A.2-4">And the methods:<a href="#appendix-A.2-4" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="appendix-A.2-5.1">
+            <p id="appendix-A.2-5.1.1"><span><a href="#bitlength" class="internal xref">bit_length</a> (<a href="#bitlength" class="auto internal xref">Appendix B.4</a>)</span> which returns the number of bits required to represent the argument.<a href="#appendix-A.2-5.1.1" class="pilcrow">¶</a></p>
+</li>
+        </ul>
+<p id="appendix-A.2-6">We define <code>mmr_index</code> as:<a href="#appendix-A.2-6" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="appendix-A.2-7">
+<pre>
+def mmr_index(e):
+    sum = 0
+    while e &gt; 0:
+        # The bit length of e is its 1 based height `h`
+        h = bit_length(e)
+        sum += (1 &lt;&lt; h) - 1
+        half = 1 &lt;&lt; (h - 1)
+        e -= half
+    return sum
+</pre><a href="#appendix-A.2-7" class="pilcrow">¶</a>
+</div>
+</section>
+</div>
+<div id="parent">
+<section id="appendix-A.3">
+        <h3 id="name-parent">
+<a href="#appendix-A.3" class="section-number selfRef">A.3. </a><a href="#name-parent" class="section-name selfRef">parent</a>
+        </h3>
+<p id="appendix-A.3-1">Returns the parent of the supplied node index.<a href="#appendix-A.3-1" class="pilcrow">¶</a></p>
+<p id="appendix-A.3-2">Given:<a href="#appendix-A.3-2" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="appendix-A.3-3.1">
+            <p id="appendix-A.3-3.1.1"><code>i</code> the index of any mmr node.<a href="#appendix-A.3-3.1.1" class="pilcrow">¶</a></p>
+</li>
+        </ul>
+<p id="appendix-A.3-4">And the methods:<a href="#appendix-A.3-4" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="appendix-A.3-5.1">
+            <p id="appendix-A.3-5.1.1"><span><a href="#indexheight" class="internal xref">index_height</a> (<a href="#indexheight" class="auto internal xref">Section 9.1</a>)</span><a href="#appendix-A.3-5.1.1" class="pilcrow">¶</a></p>
+</li>
+        </ul>
+<p id="appendix-A.3-6">We define <code>parent</code> as:<a href="#appendix-A.3-6" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="appendix-A.3-7">
+<pre>
+def parent(i):
+    g = index_height(i)
+
+    if index_height(i + 1) &gt; g:
+        # The next node is higher, so it is the parent.
+        return i + 1
+
+    # i is the left sibling, so the parent is the offset to the right
+    # sibling + 1, which is just 2^(g+1)
+    return i + (2 &lt;&lt; g)
+</pre><a href="#appendix-A.3-7" class="pilcrow">¶</a>
+</div>
+</section>
+</div>
+<div id="completemmr">
+<section id="appendix-A.4">
+        <h3 id="name-complete_mmr">
+<a href="#appendix-A.4" class="section-number selfRef">A.4. </a><a href="#name-complete_mmr" class="section-name selfRef">complete_mmr</a>
+        </h3>
+<p id="appendix-A.4-1">Return <code>i</code> if <code>MMR(i+1)</code> is complete, and the next complete node index otherwise.<a href="#appendix-A.4-1" class="pilcrow">¶</a></p>
+<p id="appendix-A.4-2">Many of the algorithms specify dealing with <em>complete</em> mmr's.<a href="#appendix-A.4-2" class="pilcrow">¶</a></p>
+<p id="appendix-A.4-3">This algorithm returns i if it is complete, and the index of the next node
+corresponding to a complete mmr otherwise.<a href="#appendix-A.4-3" class="pilcrow">¶</a></p>
+<p id="appendix-A.4-4">Given:<a href="#appendix-A.4-4" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="appendix-A.4-5.1">
+            <p id="appendix-A.4-5.1.1"><code>i</code> a node index<a href="#appendix-A.4-5.1.1" class="pilcrow">¶</a></p>
+</li>
+        </ul>
+<p id="appendix-A.4-6">And the methods:<a href="#appendix-A.4-6" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="appendix-A.4-7.1">
+            <p id="appendix-A.4-7.1.1"><span><a href="#indexheight" class="internal xref">index_height</a> (<a href="#indexheight" class="auto internal xref">Section 9.1</a>)</span><a href="#appendix-A.4-7.1.1" class="pilcrow">¶</a></p>
+</li>
+        </ul>
+<p id="appendix-A.4-8">We define <code>complate_mmr</code> as:<a href="#appendix-A.4-8" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="appendix-A.4-9">
+<pre>
+def complete_mmr(i):
+
+    h0 = index_height(i)
+    h1 = index_height(i + 1)
+    while h0 &lt; h1:
+        i += 1
+        h0 = h1
+        h1 = index_height(i + 1)
+
+    return i
+</pre><a href="#appendix-A.4-9" class="pilcrow">¶</a>
+</div>
+</section>
+</div>
+</section>
+</div>
+<div id="assumed-bit-primitives">
+<section id="appendix-B">
+      <h2 id="name-assumed-bit-primitives">
+<a href="#appendix-B" class="section-number selfRef">Appendix B. </a><a href="#name-assumed-bit-primitives" class="section-name selfRef">Assumed bit primitives</a>
+      </h2>
+<div id="a-note-on-hardware-sympathy">
+<section id="appendix-B.1">
+        <h3 id="name-a-note-on-hardware-sympathy">
+<a href="#appendix-B.1" class="section-number selfRef">B.1. </a><a href="#name-a-note-on-hardware-sympathy" class="section-name selfRef">A Note On Hardware Sympathy</a>
+        </h3>
+<p id="appendix-B.1-1">MMR's are a series of complete binary trees followed by at most one incomplete tree. This is sometimes referred to as a flat base tree. In these constructions many operations are formally <span class="contact-name">łog_2(n)</span><a href="#appendix-B.1-1" class="pilcrow">¶</a></p>
+<p id="appendix-B.1-2">However, precisely because of the binary nature of the MMR construction, most benefit from single-cycle assembly level optimizations, assuming a counter limit of <span class="contact-name">2^{64}</span> Which as discussed above, is a <em>lot</em> of MMR.<a href="#appendix-B.1-2" class="pilcrow">¶</a></p>
+<p id="appendix-B.1-3">Finding the position of the first non-zero bit or counting the number of bits that are set are both primitives necessary for some of the algorithms.
+<a href="https://developer.arm.com/documentation/dui0802/b/A32-and-T32-Instructions/CLZ">CLZ</a> has single-cycle implementations on most architectures. Similarly, <code>POPCNT</code> exists.
+AMD defined some useful <a href="https://en.wikipedia.org/wiki/X86_Bit_manipulation_instruction_set">binary manipulation</a> extensions.<a href="#appendix-B.1-3" class="pilcrow">¶</a></p>
+<p id="appendix-B.1-4">Sympathetic instructions, or compact look up table implementations exist for other fundamental operations too.
+Most languages have sensible standard wrappers.
+While these operations are not strictly O(1) complexity, this has little impact in practice.<a href="#appendix-B.1-4" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="log2floor">
+<section id="appendix-B.2">
+        <h3 id="name-log2floor">
+<a href="#appendix-B.2" class="section-number selfRef">B.2. </a><a href="#name-log2floor" class="section-name selfRef">log2floor</a>
+        </h3>
+<p id="appendix-B.2-1">Returns the floor of log base 2 x<a href="#appendix-B.2-1" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="appendix-B.2-2">
+<pre>
+def log2floor(x):
+    return x.bit_length() - 1
+</pre><a href="#appendix-B.2-2" class="pilcrow">¶</a>
+</div>
+</section>
+</div>
+<div id="mostsigbit">
+<section id="appendix-B.3">
+        <h3 id="name-most_sig_bit">
+<a href="#appendix-B.3" class="section-number selfRef">B.3. </a><a href="#name-most_sig_bit" class="section-name selfRef">most_sig_bit</a>
+        </h3>
+<p id="appendix-B.3-1">Returns the mask for the the most significant bit in pos<a href="#appendix-B.3-1" class="pilcrow">¶</a></p>
+<p id="appendix-B.3-2"><code>1 &lt;&lt; (bit_length(pos) - 1)</code><a href="#appendix-B.3-2" class="pilcrow">¶</a></p>
+<p id="appendix-B.3-3">Expressed in python<a href="#appendix-B.3-3" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="appendix-B.3-4">
+<pre>
+def most_sig_bit(pos) -&gt; int:
+    return 1 &lt;&lt; (pos.bit_length() - 1)
+</pre><a href="#appendix-B.3-4" class="pilcrow">¶</a>
+</div>
+<p id="appendix-B.3-5">We assume the following primitives for working with bits as they commonly have library or hardware support.<a href="#appendix-B.3-5" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="bitlength">
+<section id="appendix-B.4">
+        <h3 id="name-bit_length">
+<a href="#appendix-B.4" class="section-number selfRef">B.4. </a><a href="#name-bit_length" class="section-name selfRef">bit_length</a>
+        </h3>
+<p id="appendix-B.4-1">The minimum number of bits to represent pos. b011 would be 2, b010 would be 2, and b001 would be 1.<a href="#appendix-B.4-1" class="pilcrow">¶</a></p>
+<p id="appendix-B.4-2">In python,<a href="#appendix-B.4-2" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="appendix-B.4-3">
+<pre>
+def bit_length(pos):
+    return pos.bit_length()
+</pre><a href="#appendix-B.4-3" class="pilcrow">¶</a>
+</div>
+</section>
+</div>
+<div id="allones">
+<section id="appendix-B.5">
+        <h3 id="name-all_ones">
+<a href="#appendix-B.5" class="section-number selfRef">B.5. </a><a href="#name-all_ones" class="section-name selfRef">all_ones</a>
+        </h3>
+<p id="appendix-B.5-1">Tests if all bits, from the most significant that is set, are 1, b0111 would be true, b0101 would be false.<a href="#appendix-B.5-1" class="pilcrow">¶</a></p>
+<p id="appendix-B.5-2">In python,<a href="#appendix-B.5-2" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="appendix-B.5-3">
+<pre>
+def all_ones(pos) -&gt; bool:
+    msb = most_sig_bit(pos)
+    mask = (1 &lt;&lt; (msb + 1)) - 1
+    return pos == mask
+</pre><a href="#appendix-B.5-3" class="pilcrow">¶</a>
+</div>
+</section>
+</div>
+<div id="onescount">
+<section id="appendix-B.6">
+        <h3 id="name-ones_count">
+<a href="#appendix-B.6" class="section-number selfRef">B.6. </a><a href="#name-ones_count" class="section-name selfRef">ones_count</a>
+        </h3>
+<p id="appendix-B.6-1">Count of set bits. For example <code>ones_count(b101)</code> is 2<a href="#appendix-B.6-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="trailingzeros">
+<section id="appendix-B.7">
+        <h3 id="name-trailing_zeros">
+<a href="#appendix-B.7" class="section-number selfRef">B.7. </a><a href="#name-trailing_zeros" class="section-name selfRef">trailing_zeros</a>
+        </h3>
+<p id="appendix-B.7-1">The count of nodes above and to the left of <code>pos</code><a href="#appendix-B.7-1" class="pilcrow">¶</a></p>
+<p id="appendix-B.7-2">In python,<a href="#appendix-B.7-2" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="appendix-B.7-3">
+<pre>
+(v &amp; -v).bit_length() - 1
+</pre><a href="#appendix-B.7-3" class="pilcrow">¶</a>
+</div>
+</section>
+</div>
+</section>
+</div>
+<div id="implementation-status">
+<section id="appendix-C">
+      <h2 id="name-implementation-status">
+<a href="#appendix-C" class="section-number selfRef">Appendix C. </a><a href="#name-implementation-status" class="section-name selfRef">Implementation Status</a>
+      </h2>
+<p id="appendix-C-1">Note to RFC Editor: Please remove this section as well as references to BCP205 before AUTH48.<a href="#appendix-C-1" class="pilcrow">¶</a></p>
+<p id="appendix-C-2">This section records the status of known implementations of the protocol defined by this specification at the time of posting of this Internet-Draft, and is based on a proposal described in BCP205.
 The description of implementations in this section is intended to assist the IETF in its decision processes in progressing drafts to RFCs.
 Please note that the listing of any individual implementation here does not imply endorsement by the IETF.
 Furthermore, no effort has been spent to verify the information presented here that was supplied by IETF contributors.
 This is not intended as, and must not be construed to be, a catalog of available implementations or their features.
-Readers are advised to note that other implementations may exist.<a href="#appendix-A-2" class="pilcrow">¶</a></p>
-<p id="appendix-A-3">According to BCP205,
+Readers are advised to note that other implementations may exist.<a href="#appendix-C-2" class="pilcrow">¶</a></p>
+<p id="appendix-C-3">According to BCP205,
 "this will allow reviewers and working groups to assign due consideration to documents that have the benefit of running code, which may serve as evidence of valuable experimentation and feedback that have made the implemented protocols more mature.
-It is up to the individual working groups to use this information as they see fit".<a href="#appendix-A-3" class="pilcrow">¶</a></p>
+It is up to the individual working groups to use this information as they see fit".<a href="#appendix-C-3" class="pilcrow">¶</a></p>
 <div id="implementers">
-<section id="appendix-A.1">
+<section id="appendix-C.1">
         <h3 id="name-implementers">
-<a href="#appendix-A.1" class="section-number selfRef">A.1. </a><a href="#name-implementers" class="section-name selfRef">Implementers</a>
+<a href="#appendix-C.1" class="section-number selfRef">C.1. </a><a href="#name-implementers" class="section-name selfRef">Implementers</a>
         </h3>
 <div id="datatrails">
-<section id="appendix-A.1.1">
+<section id="appendix-C.1.1">
           <h4 id="name-datatrails">
-<a href="#appendix-A.1.1" class="section-number selfRef">A.1.1. </a><a href="#name-datatrails" class="section-name selfRef">DataTrails</a>
+<a href="#appendix-C.1.1" class="section-number selfRef">C.1.1. </a><a href="#name-datatrails" class="section-name selfRef">DataTrails</a>
           </h4>
-<p id="appendix-A.1.1-1">An open-source implementation was initiated and is maintained by Data Trails Inc. - DataTrails.<a href="#appendix-A.1.1-1" class="pilcrow">¶</a></p>
-<p id="appendix-A.1.1-2">Uses SHA-256 as the hash alg<a href="#appendix-A.1.1-2" class="pilcrow">¶</a></p>
+<p id="appendix-C.1.1-1">An open-source implementation was initiated and is maintained by Data Trails Inc. - DataTrails.<a href="#appendix-C.1.1-1" class="pilcrow">¶</a></p>
+<p id="appendix-C.1.1-2">Uses SHA-256 as the hash alg<a href="#appendix-C.1.1-2" class="pilcrow">¶</a></p>
 <div id="implementation-name">
-<section id="appendix-A.1.1.1">
+<section id="appendix-C.1.1.1">
             <h5 id="name-implementation-name">
-<a href="#appendix-A.1.1.1" class="section-number selfRef">A.1.1.1. </a><a href="#name-implementation-name" class="section-name selfRef">Implementation Name</a>
+<a href="#appendix-C.1.1.1" class="section-number selfRef">C.1.1.1. </a><a href="#name-implementation-name" class="section-name selfRef">Implementation Name</a>
             </h5>
-<p id="appendix-A.1.1.1-1">An application demonstrating the concepts is available at <a href="https://app.datatrails.ai/">https://app.datatrails.ai/</a>.<a href="#appendix-A.1.1.1-1" class="pilcrow">¶</a></p>
+<p id="appendix-C.1.1.1-1">An application demonstrating the concepts is available at <a href="https://app.datatrails.ai/">https://app.datatrails.ai/</a>.<a href="#appendix-C.1.1.1-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="implementation-url">
-<section id="appendix-A.1.1.2">
+<section id="appendix-C.1.1.2">
             <h5 id="name-implementation-url">
-<a href="#appendix-A.1.1.2" class="section-number selfRef">A.1.1.2. </a><a href="#name-implementation-url" class="section-name selfRef">Implementation URL</a>
+<a href="#appendix-C.1.1.2" class="section-number selfRef">C.1.1.2. </a><a href="#name-implementation-url" class="section-name selfRef">Implementation URL</a>
             </h5>
-<p id="appendix-A.1.1.2-1">An open-source implementation is available at:<a href="#appendix-A.1.1.2-1" class="pilcrow">¶</a></p>
+<p id="appendix-C.1.1.2-1">An open-source implementation is available at:<a href="#appendix-C.1.1.2-1" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="appendix-A.1.1.2-2.1">
-                <p id="appendix-A.1.1.2-2.1.1">https://github.com/datatrails/go-datatrails-merklelog<a href="#appendix-A.1.1.2-2.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="appendix-C.1.1.2-2.1">
+                <p id="appendix-C.1.1.2-2.1.1">https://github.com/datatrails/go-datatrails-merklelog<a href="#appendix-C.1.1.2-2.1.1" class="pilcrow">¶</a></p>
 </li>
             </ul>
 </section>
 </div>
 <div id="maturity">
-<section id="appendix-A.1.1.3">
+<section id="appendix-C.1.1.3">
             <h5 id="name-maturity">
-<a href="#appendix-A.1.1.3" class="section-number selfRef">A.1.1.3. </a><a href="#name-maturity" class="section-name selfRef">Maturity</a>
+<a href="#appendix-C.1.1.3" class="section-number selfRef">C.1.1.3. </a><a href="#name-maturity" class="section-name selfRef">Maturity</a>
             </h5>
-<p id="appendix-A.1.1.3-1">Used in production. SEMVER unstable (no backwards compat declared yet)<a href="#appendix-A.1.1.3-1" class="pilcrow">¶</a></p>
+<p id="appendix-C.1.1.3-1">Used in production. SEMVER unstable (no backwards compat declared yet)<a href="#appendix-C.1.1.3-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
 </div>
 <div id="peter-todd">
-<section id="appendix-A.1.2">
+<section id="appendix-C.1.2">
           <h4 id="name-peter-todd">
-<a href="#appendix-A.1.2" class="section-number selfRef">A.1.2. </a><a href="#name-peter-todd" class="section-name selfRef">Peter Todd</a>
+<a href="#appendix-C.1.2" class="section-number selfRef">C.1.2. </a><a href="#name-peter-todd" class="section-name selfRef">Peter Todd</a>
           </h4>
-<p id="appendix-A.1.2-1">Almost compatible, where here the leaf hash is not defined, in Peter Todd's formal description, all nodes, including the leaves include the position in the hash. In this specification, leaf hashes are added 'as is'. Interior nodes commit to the size of the balanced tree rooted at the node.<a href="#appendix-A.1.2-1" class="pilcrow">¶</a></p>
+<p id="appendix-C.1.2-1">Almost compatible, where here the leaf hash is not defined, in Peter Todd's formal description, all nodes, including the leaves include the position in the hash.
+In this specification, leaf hashes are added 'as is'. Interior nodes commit to the size of the entire MMR including the interior node.<a href="#appendix-C.1.2-1" class="pilcrow">¶</a></p>
 <div id="implementation-url-1">
-<section id="appendix-A.1.2.1">
+<section id="appendix-C.1.2.1">
             <h5 id="name-implementation-url-2">
-<a href="#appendix-A.1.2.1" class="section-number selfRef">A.1.2.1. </a><a href="#name-implementation-url-2" class="section-name selfRef">Implementation URL</a>
+<a href="#appendix-C.1.2.1" class="section-number selfRef">C.1.2.1. </a><a href="#name-implementation-url-2" class="section-name selfRef">Implementation URL</a>
             </h5>
 <ul class="normal">
-<li class="normal" id="appendix-A.1.2.1-1.1">
-                <p id="appendix-A.1.2.1-1.1.1">https://github.com/proofchains/python-proofmarshal/blob/master/proofmarshal/mmr.py<a href="#appendix-A.1.2.1-1.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="appendix-C.1.2.1-1.1">
+                <p id="appendix-C.1.2.1-1.1.1">https://github.com/proofchains/python-proofmarshal/blob/master/proofmarshal/mmr.py<a href="#appendix-C.1.2.1-1.1.1" class="pilcrow">¶</a></p>
 </li>
             </ul>
 </section>
 </div>
 <div id="maturity-1">
-<section id="appendix-A.1.2.2">
+<section id="appendix-C.1.2.2">
             <h5 id="name-maturity-2">
-<a href="#appendix-A.1.2.2" class="section-number selfRef">A.1.2.2. </a><a href="#name-maturity-2" class="section-name selfRef">Maturity</a>
+<a href="#appendix-C.1.2.2" class="section-number selfRef">C.1.2.2. </a><a href="#name-maturity-2" class="section-name selfRef">Maturity</a>
             </h5>
-<p id="appendix-A.1.2.2-1">Reference implementation, but the "original".<a href="#appendix-A.1.2.2-1" class="pilcrow">¶</a></p>
+<p id="appendix-C.1.2.2-1">Reference implementation, but the "original".<a href="#appendix-C.1.2.2-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
 </div>
 <div id="robin-bryce">
-<section id="appendix-A.1.3">
+<section id="appendix-C.1.3">
           <h4 id="name-robin-bryce">
-<a href="#appendix-A.1.3" class="section-number selfRef">A.1.3. </a><a href="#name-robin-bryce" class="section-name selfRef">Robin Bryce</a>
+<a href="#appendix-C.1.3" class="section-number selfRef">C.1.3. </a><a href="#name-robin-bryce" class="section-name selfRef">Robin Bryce</a>
           </h4>
 <div id="implementation-url-2">
-<section id="appendix-A.1.3.1">
+<section id="appendix-C.1.3.1">
             <h5 id="name-implementation-url-3">
-<a href="#appendix-A.1.3.1" class="section-number selfRef">A.1.3.1. </a><a href="#name-implementation-url-3" class="section-name selfRef">Implementation URL</a>
+<a href="#appendix-C.1.3.1" class="section-number selfRef">C.1.3.1. </a><a href="#name-implementation-url-3" class="section-name selfRef">Implementation URL</a>
             </h5>
-<p id="appendix-A.1.3.1-1">A minimal reference implementation of this draft. Used to generate the test vectors in this draft, is available at:<a href="#appendix-A.1.3.1-1" class="pilcrow">¶</a></p>
+<p id="appendix-C.1.3.1-1">A minimal reference implementation of this draft. Used to generate the test vectors in this draft, is available at:<a href="#appendix-C.1.3.1-1" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="appendix-A.1.3.1-2.1">
-                <p id="appendix-A.1.3.1-2.1.1">https://github.com/robinbryce/merkle-mountain-range-proofs/blob/main/algorithms.py<a href="#appendix-A.1.3.1-2.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="appendix-C.1.3.1-2.1">
+                <p id="appendix-C.1.3.1-2.1.1">https://github.com/robinbryce/merkle-mountain-range-proofs/blob/main/algorithms.py<a href="#appendix-C.1.3.1-2.1.1" class="pilcrow">¶</a></p>
 </li>
             </ul>
 </section>
 </div>
 <div id="maturity-2">
-<section id="appendix-A.1.3.2">
+<section id="appendix-C.1.3.2">
             <h5 id="name-maturity-3">
-<a href="#appendix-A.1.3.2" class="section-number selfRef">A.1.3.2. </a><a href="#name-maturity-3" class="section-name selfRef">Maturity</a>
+<a href="#appendix-C.1.3.2" class="section-number selfRef">C.1.3.2. </a><a href="#name-maturity-3" class="section-name selfRef">Maturity</a>
             </h5>
-<p id="appendix-A.1.3.2-1">Reference only<a href="#appendix-A.1.3.2-1" class="pilcrow">¶</a></p>
+<p id="appendix-C.1.3.2-1">Reference only<a href="#appendix-C.1.3.2-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
 </div>
 <div id="mimblewimble-">
-<section id="appendix-A.1.4">
+<section id="appendix-C.1.4">
           <h4 id="name-mimblewimble">
-<a href="#appendix-A.1.4" class="section-number selfRef">A.1.4. </a><a href="#name-mimblewimble" class="section-name selfRef">Mimblewimble ?</a>
+<a href="#appendix-C.1.4" class="section-number selfRef">C.1.4. </a><a href="#name-mimblewimble" class="section-name selfRef">Mimblewimble ?</a>
           </h4>
-<p id="appendix-A.1.4-1">Is specifically committing to positions as we describe, but is committing zero based indices, and uses BLAKE2B as the HASH-ALG. Accounting for those differences, their commitment trees would be compatible with this draft.<a href="#appendix-A.1.4-1" class="pilcrow">¶</a></p>
+<p id="appendix-C.1.4-1">Is specifically committing to positions as we describe, but is committing zero based indices,
+and uses BLAKE2B as the HASH-ALG.
+Accounting for those differences, their commitment trees would be compatible with this draft.<a href="#appendix-C.1.4-1" class="pilcrow">¶</a></p>
 <div id="implementation-url-3">
-<section id="appendix-A.1.4.1">
+<section id="appendix-C.1.4.1">
             <h5 id="name-implementation-url-4">
-<a href="#appendix-A.1.4.1" class="section-number selfRef">A.1.4.1. </a><a href="#name-implementation-url-4" class="section-name selfRef">Implementation URL</a>
+<a href="#appendix-C.1.4.1" class="section-number selfRef">C.1.4.1. </a><a href="#name-implementation-url-4" class="section-name selfRef">Implementation URL</a>
             </h5>
-<p id="appendix-A.1.4.1-1">An implementation is available here:<a href="#appendix-A.1.4.1-1" class="pilcrow">¶</a></p>
+<p id="appendix-C.1.4.1-1">An implementation is available here:<a href="#appendix-C.1.4.1-1" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="appendix-A.1.4.1-2.1">
-                <p id="appendix-A.1.4.1-2.1.1">https://github.com/mimblewimble/grin/blob/master/doc/mmr.md (Grin is a rust implementation of the mimblewimble protocol)<a href="#appendix-A.1.4.1-2.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="appendix-C.1.4.1-2.1">
+                <p id="appendix-C.1.4.1-2.1.1">https://github.com/mimblewimble/grin/blob/master/doc/mmr.md (Grin is a rust implementation of the mimblewimble protocol)<a href="#appendix-C.1.4.1-2.1.1" class="pilcrow">¶</a></p>
 </li>
-              <li class="normal" id="appendix-A.1.4.1-2.2">
-                <p id="appendix-A.1.4.1-2.2.1">https://github.com/BeamMW/beam/blob/master/core/merkle.cpp (Beam is a C++ implementation of the mimblewimble protocol)<a href="#appendix-A.1.4.1-2.2.1" class="pilcrow">¶</a></p>
+              <li class="normal" id="appendix-C.1.4.1-2.2">
+                <p id="appendix-C.1.4.1-2.2.1">https://github.com/BeamMW/beam/blob/master/core/merkle.cpp (Beam is a C++ implementation of the mimblewimble protocol)<a href="#appendix-C.1.4.1-2.2.1" class="pilcrow">¶</a></p>
 </li>
             </ul>
 </section>
@@ -2608,57 +2809,57 @@ It is up to the individual working groups to use this information as they see fi
 </section>
 </div>
 <div id="zcash-">
-<section id="appendix-A.1.5">
+<section id="appendix-C.1.5">
           <h4 id="name-zcash">
-<a href="#appendix-A.1.5" class="section-number selfRef">A.1.5. </a><a href="#name-zcash" class="section-name selfRef">ZCash ?</a>
+<a href="#appendix-C.1.5" class="section-number selfRef">C.1.5. </a><a href="#name-zcash" class="section-name selfRef">ZCash ?</a>
           </h4>
-<p id="appendix-A.1.5-1">Uses an incompatible scheme for committing the sub trees, and additionally specifies how the leaf hash is produced.<a href="#appendix-A.1.5-1" class="pilcrow">¶</a></p>
+<p id="appendix-C.1.5-1">Uses an incompatible scheme for committing the sub trees, and additionally specifies how the leaf hash is produced.<a href="#appendix-C.1.5-1" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="appendix-A.1.5-2.1">
-              <p id="appendix-A.1.5-2.1.1">https://zips.z.cash/zip-0221<a href="#appendix-A.1.5-2.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="appendix-C.1.5-2.1">
+              <p id="appendix-C.1.5-2.1.1">https://zips.z.cash/zip-0221<a href="#appendix-C.1.5-2.1.1" class="pilcrow">¶</a></p>
 </li>
           </ul>
 <div id="implementation-url-4">
-<section id="appendix-A.1.5.1">
+<section id="appendix-C.1.5.1">
             <h5 id="name-implementation-url-5">
-<a href="#appendix-A.1.5.1" class="section-number selfRef">A.1.5.1. </a><a href="#name-implementation-url-5" class="section-name selfRef">Implementation URL</a>
+<a href="#appendix-C.1.5.1" class="section-number selfRef">C.1.5.1. </a><a href="#name-implementation-url-5" class="section-name selfRef">Implementation URL</a>
             </h5>
-<p id="appendix-A.1.5.1-1">TODO: check if they are to positions as we describe, if so their commitment trees should be compatible with this draft.<a href="#appendix-A.1.5.1-1" class="pilcrow">¶</a></p>
-<p id="appendix-A.1.5.1-2">The code's level of maturity is considered to be "prototype".<a href="#appendix-A.1.5.1-2" class="pilcrow">¶</a></p>
+<p id="appendix-C.1.5.1-1">TODO: check if they are to positions as we describe, if so their commitment trees should be compatible with this draft.<a href="#appendix-C.1.5.1-1" class="pilcrow">¶</a></p>
+<p id="appendix-C.1.5.1-2">The code's level of maturity is considered to be "prototype".<a href="#appendix-C.1.5.1-2" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
 </div>
 <div id="herodotus">
-<section id="appendix-A.1.6">
+<section id="appendix-C.1.6">
           <h4 id="name-herodotus">
-<a href="#appendix-A.1.6" class="section-number selfRef">A.1.6. </a><a href="#name-herodotus" class="section-name selfRef">Herodotus</a>
+<a href="#appendix-C.1.6" class="section-number selfRef">C.1.6. </a><a href="#name-herodotus" class="section-name selfRef">Herodotus</a>
           </h4>
 <div id="implementation-url-5">
-<section id="appendix-A.1.6.1">
+<section id="appendix-C.1.6.1">
             <h5 id="name-implementation-url-6">
-<a href="#appendix-A.1.6.1" class="section-number selfRef">A.1.6.1. </a><a href="#name-implementation-url-6" class="section-name selfRef">Implementation URL</a>
+<a href="#appendix-C.1.6.1" class="section-number selfRef">C.1.6.1. </a><a href="#name-implementation-url-6" class="section-name selfRef">Implementation URL</a>
             </h5>
-<p id="appendix-A.1.6.1-1">https://github.com/HerodotusDev/rust-accumulators<a href="#appendix-A.1.6.1-1" class="pilcrow">¶</a></p>
-<p id="appendix-A.1.6.1-2">Production, supports keccak, posiedon &amp; pedersen hash algs<a href="#appendix-A.1.6.1-2" class="pilcrow">¶</a></p>
+<p id="appendix-C.1.6.1-1">https://github.com/HerodotusDev/rust-accumulators<a href="#appendix-C.1.6.1-1" class="pilcrow">¶</a></p>
+<p id="appendix-C.1.6.1-2">Production, supports keccak, posiedon &amp; pedersen hash algs<a href="#appendix-C.1.6.1-2" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
 </div>
 <div id="tari-project">
-<section id="appendix-A.1.7">
+<section id="appendix-C.1.7">
           <h4 id="name-tari-project">
-<a href="#appendix-A.1.7" class="section-number selfRef">A.1.7. </a><a href="#name-tari-project" class="section-name selfRef">Tari-Project</a>
+<a href="#appendix-C.1.7" class="section-number selfRef">C.1.7. </a><a href="#name-tari-project" class="section-name selfRef">Tari-Project</a>
           </h4>
-<p id="appendix-A.1.7-1">Incompatible, does not include commitment of position in the interior node hash<a href="#appendix-A.1.7-1" class="pilcrow">¶</a></p>
+<p id="appendix-C.1.7-1">Incompatible, does not include commitment of position in the interior node hash<a href="#appendix-C.1.7-1" class="pilcrow">¶</a></p>
 <div id="implementation-url-6">
-<section id="appendix-A.1.7.1">
+<section id="appendix-C.1.7.1">
             <h5 id="name-implementation-url-7">
-<a href="#appendix-A.1.7.1" class="section-number selfRef">A.1.7.1. </a><a href="#name-implementation-url-7" class="section-name selfRef">Implementation URL</a>
+<a href="#appendix-C.1.7.1" class="section-number selfRef">C.1.7.1. </a><a href="#name-implementation-url-7" class="section-name selfRef">Implementation URL</a>
             </h5>
 <ul class="normal">
-<li class="normal" id="appendix-A.1.7.1-1.1">
-                <p id="appendix-A.1.7.1-1.1.1">https://github.com/tari-project/tari/blob/development/base_layer/mmr/src/merkle_mountain_range.rs<a href="#appendix-A.1.7.1-1.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="appendix-C.1.7.1-1.1">
+                <p id="appendix-C.1.7.1-1.1.1">https://github.com/tari-project/tari/blob/development/base_layer/mmr/src/merkle_mountain_range.rs<a href="#appendix-C.1.7.1-1.1.1" class="pilcrow">¶</a></p>
 </li>
             </ul>
 </section>
@@ -2670,18 +2871,18 @@ It is up to the individual working groups to use this information as they see fi
 </section>
 </div>
 <div id="algorithm-test-vectors">
-<section id="appendix-B">
+<section id="appendix-D">
       <h2 id="name-algorithm-test-vectors">
-<a href="#appendix-B" class="section-number selfRef">Appendix B. </a><a href="#name-algorithm-test-vectors" class="section-name selfRef">Algorithm Test Vectors</a>
+<a href="#appendix-D" class="section-number selfRef">Appendix D. </a><a href="#name-algorithm-test-vectors" class="section-name selfRef">Algorithm Test Vectors</a>
       </h2>
-<p id="appendix-B-1">In this section we provide known answer outputs for the various algorithms for the <code>MMR(39)</code><a href="#appendix-B-1" class="pilcrow">¶</a></p>
+<p id="appendix-D-1">In this section we provide known answer outputs for the various algorithms for the <code>MMR(39)</code><a href="#appendix-D-1" class="pilcrow">¶</a></p>
 <div id="mmr39">
-<section id="appendix-B.1">
+<section id="appendix-D.1">
         <h3 id="name-mmr39">
-<a href="#appendix-B.1" class="section-number selfRef">B.1. </a><a href="#name-mmr39" class="section-name selfRef">MMR(39)</a>
+<a href="#appendix-D.1" class="section-number selfRef">D.1. </a><a href="#name-mmr39" class="section-name selfRef">MMR(39)</a>
         </h3>
-<p id="appendix-B.1-1">The node index tree for <code>MMR(39)</code> is<a href="#appendix-B.1-1" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="appendix-B.1-2">
+<p id="appendix-D.1-1">The node indices for <code>MMR(39)</code> is<a href="#appendix-D.1-1" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="appendix-D.1-2">
 <pre>
 g
 
@@ -2701,18 +2902,18 @@ g
 0   0   1 3   4  7   8 10  11 15  16 18  19 22  23   25   26  31  32   34  35   38
 
 .   0   1 2   3  4   5  6   7  8   9 10  11 12  13   14   15  16  17   18  19   20 e
-</pre><a href="#appendix-B.1-2" class="pilcrow">¶</a>
+</pre><a href="#appendix-D.1-2" class="pilcrow">¶</a>
 </div>
-<p id="appendix-B.1-3">The vertical axis is <code>g</code>, the zero based height of the tree.<a href="#appendix-B.1-3" class="pilcrow">¶</a></p>
-<p id="appendix-B.1-4">The horizontal axis is <code>e</code>, the leaf indices corresponding to the <code>g=0</code> nodes in the tree<a href="#appendix-B.1-4" class="pilcrow">¶</a></p>
+<p id="appendix-D.1-3">The vertical axis is <code>g</code>, the zero based height of the MMR.<a href="#appendix-D.1-3" class="pilcrow">¶</a></p>
+<p id="appendix-D.1-4">The horizontal axis is <code>e</code>, the leaf indices corresponding to the <code>g=0</code> nodes in the MMR<a href="#appendix-D.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="mmr39-leaf-values-excluding-interior-nodes">
-<section id="appendix-B.2">
+<section id="appendix-D.2">
         <h3 id="name-mmr39-leaf-values-excluding">
-<a href="#appendix-B.2" class="section-number selfRef">B.2. </a><a href="#name-mmr39-leaf-values-excluding" class="section-name selfRef">MMR(39) leaf values (excluding interior nodes)</a>
+<a href="#appendix-D.2" class="section-number selfRef">D.2. </a><a href="#name-mmr39-leaf-values-excluding" class="section-name selfRef">MMR(39) leaf values (excluding interior nodes)</a>
         </h3>
-<p id="appendix-B.2-1">We define <code>H(v)</code> for test vector leaf values <code>f</code> as the SHA-256 hash of the the big endian representation of <code>e</code>.<a href="#appendix-B.2-1" class="pilcrow">¶</a></p>
+<p id="appendix-D.2-1">We define <code>H(v)</code> for test vector leaf values <code>f</code> as the SHA-256 hash of the the big endian representation of <code>e</code>.<a href="#appendix-D.2-1" class="pilcrow">¶</a></p>
 <table class="center" id="table-1">
           <caption><a href="#table-1" class="selfRef">Table 1</a></caption>
 <thead>
@@ -2811,9 +3012,9 @@ g
 </section>
 </div>
 <div id="mmr39-node-values-including-leaves">
-<section id="appendix-B.3">
+<section id="appendix-D.3">
         <h3 id="name-mmr39-node-values-including">
-<a href="#appendix-B.3" class="section-number selfRef">B.3. </a><a href="#name-mmr39-node-values-including" class="section-name selfRef">MMR(39) node values (including leaves)</a>
+<a href="#appendix-D.3" class="section-number selfRef">D.3. </a><a href="#name-mmr39-node-values-including" class="section-name selfRef">MMR(39) node values (including leaves)</a>
         </h3>
 <table class="center" id="table-2">
           <caption><a href="#table-2" class="selfRef">Table 2</a></caption>
@@ -2985,11 +3186,11 @@ g
 </section>
 </div>
 <div id="peak-accumulator-indices-and-values-for-all-mmrs-to-mmr39">
-<section id="appendix-B.4">
+<section id="appendix-D.4">
         <h3 id="name-peak-accumulator-indices-an">
-<a href="#appendix-B.4" class="section-number selfRef">B.4. </a><a href="#name-peak-accumulator-indices-an" class="section-name selfRef">Peak (accumulator) indices and values for all MMR's to MMR(39)</a>
+<a href="#appendix-D.4" class="section-number selfRef">D.4. </a><a href="#name-peak-accumulator-indices-an" class="section-name selfRef">Peak (accumulator) indices and values for all MMR's to MMR(39)</a>
         </h3>
-<p id="appendix-B.4-1">(peaks)[#peaks] will produce the following index lists.<a href="#appendix-B.4-1" class="pilcrow">¶</a></p>
+<p id="appendix-D.4-1">(peaks)[#peaks] will produce the following index lists.<a href="#appendix-D.4-1" class="pilcrow">¶</a></p>
 <table class="center" id="table-3">
           <caption><a href="#table-3" class="selfRef">Table 3</a></caption>
 <thead>
@@ -3085,7 +3286,7 @@ g
             </tr>
           </tbody>
         </table>
-<p id="appendix-B.4-3">The indices will retrieve the following values from the MMR<a href="#appendix-B.4-3" class="pilcrow">¶</a></p>
+<p id="appendix-D.4-3">The indices will retrieve the following values from the MMR<a href="#appendix-D.4-3" class="pilcrow">¶</a></p>
 <table class="center" id="table-4">
           <caption><a href="#table-4" class="selfRef">Table 4</a></caption>
 <thead>
@@ -3184,13 +3385,13 @@ g
 </section>
 </div>
 <div id="node-height-leaf-count-and-peak-mask">
-<section id="appendix-B.5">
+<section id="appendix-D.5">
         <h3 id="name-node-height-leaf-count-and-">
-<a href="#appendix-B.5" class="section-number selfRef">B.5. </a><a href="#name-node-height-leaf-count-and-" class="section-name selfRef">node height, leaf count and peak mask</a>
+<a href="#appendix-D.5" class="section-number selfRef">D.5. </a><a href="#name-node-height-leaf-count-and-" class="section-name selfRef">node height, leaf count and peak mask</a>
         </h3>
-<p id="appendix-B.5-1">These tables cover the outputs of <code>index_height</code> and <code>leaf_count</code>.
-<code>g=index_height</code>, <code>e</code> &amp; <code>m</code> are the decimal and binary representations of <code>leaf_count</code><a href="#appendix-B.5-1" class="pilcrow">¶</a></p>
-<p id="appendix-B.5-2"><code>m</code> is the bit map of peaks, and also the binary representation of <code>e</code><a href="#appendix-B.5-2" class="pilcrow">¶</a></p>
+<p id="appendix-D.5-1">These tables cover the outputs of <code>index_height</code> and <code>leaf_count</code>.
+<code>g=index_height</code>, <code>e</code> &amp; <code>m</code> are the decimal and binary representations of <code>leaf_count</code><a href="#appendix-D.5-1" class="pilcrow">¶</a></p>
+<p id="appendix-D.5-2"><code>m</code> is the bit map of peaks, and also the binary representation of <code>e</code><a href="#appendix-D.5-2" class="pilcrow">¶</a></p>
 <table class="center" id="table-5">
           <caption><a href="#table-5" class="selfRef">Table 5</a></caption>
 <thead>
@@ -3426,28 +3627,28 @@ g
 </section>
 </div>
 <div id="inclusion-proof-paths-and-the-associated-accumulator-states">
-<section id="appendix-B.6">
+<section id="appendix-D.6">
         <h3 id="name-inclusion-proof-paths-and-t">
-<a href="#appendix-B.6" class="section-number selfRef">B.6. </a><a href="#name-inclusion-proof-paths-and-t" class="section-name selfRef">Inclusion proof paths and the associated accumulator states</a>
+<a href="#appendix-D.6" class="section-number selfRef">D.6. </a><a href="#name-inclusion-proof-paths-and-t" class="section-name selfRef">Inclusion proof paths and the associated accumulator states</a>
         </h3>
 <ul class="normal">
-<li class="normal" id="appendix-B.6-1.1">
-            <p id="appendix-B.6-1.1.1">The inclusion path column defines the outputs of <span><a href="#inclusionproofpath" class="internal xref">inclusion_proof_path</a> (<a href="#inclusionproofpath" class="auto internal xref">Section 4.1</a>)</span>)<a href="#appendix-B.6-1.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="appendix-D.6-1.1">
+            <p id="appendix-D.6-1.1.1">The inclusion path column defines the outputs of <span><a href="#inclusionproofpath" class="internal xref">inclusion_proof_path</a> (<a href="#inclusionproofpath" class="auto internal xref">Section 4.1</a>)</span>)<a href="#appendix-D.6-1.1.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="normal" id="appendix-B.6-1.2">
-            <p id="appendix-B.6-1.2.1">The accumlator column shows the output of [peaks][#peaks], but adjusted index the storage.<a href="#appendix-B.6-1.2.1" class="pilcrow">¶</a></p>
+          <li class="normal" id="appendix-D.6-1.2">
+            <p id="appendix-D.6-1.2.1">The accumlator column shows the output of [peaks][#peaks], but adjusted index the storage.<a href="#appendix-D.6-1.2.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="normal" id="appendix-B.6-1.3">
-            <p id="appendix-B.6-1.3.1">The accumulator root index shows the output of PeakIndex<a href="#appendix-B.6-1.3.1" class="pilcrow">¶</a></p>
+          <li class="normal" id="appendix-D.6-1.3">
+            <p id="appendix-D.6-1.3.1">The accumulator root index shows the output of PeakIndex<a href="#appendix-D.6-1.3.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="normal" id="appendix-B.6-1.4">
-            <p id="appendix-B.6-1.4.1">The root column shows the value in the storage corresponding to the index in accumulator selected by the accumulator_root_index. Eg `storage[]<a href="#appendix-B.6-1.4.1" class="pilcrow">¶</a></p>
+          <li class="normal" id="appendix-D.6-1.4">
+            <p id="appendix-D.6-1.4.1">The root column shows the value in the storage corresponding to the index in accumulator selected by the accumulator_root_index. Eg `storage[]<a href="#appendix-D.6-1.4.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
-<p id="appendix-B.6-2">This table illustrates the low, and predictably reducing, rate with which the authentication root changes for any single entry in the MMR.
-Each time the root for a leaf changes, the validity period doubles.<a href="#appendix-B.6-2" class="pilcrow">¶</a></p>
-<p id="appendix-B.6-3">This table also ilustrates that the authentication path for any single entry only ever grows.
-It is therefore guaranteed to be a prefix of any future path for the same entry.<a href="#appendix-B.6-3" class="pilcrow">¶</a></p>
+<p id="appendix-D.6-2">This table illustrates the low, and predictably reducing, rate with which the root changes for any single entry in the MMR.
+Each time the root for a leaf changes, the validity period doubles.<a href="#appendix-D.6-2" class="pilcrow">¶</a></p>
+<p id="appendix-D.6-3">This table also ilustrates that the verification path for any single entry only ever grows.
+It is therefore guaranteed to be a prefix of any future path for the same entry.<a href="#appendix-D.6-3" class="pilcrow">¶</a></p>
 <table class="center" id="table-9">
           <caption><a href="#table-9" class="selfRef">Table 9</a></caption>
 <thead>
@@ -6384,9 +6585,9 @@ It is therefore guaranteed to be a prefix of any future path for the same entry.
 </section>
 </div>
 <div id="accumulator-peak-hashes">
-<section id="appendix-B.7">
+<section id="appendix-D.7">
         <h3 id="name-accumulator-peak-hashes">
-<a href="#appendix-B.7" class="section-number selfRef">B.7. </a><a href="#name-accumulator-peak-hashes" class="section-name selfRef">Accumulator peak hashes</a>
+<a href="#appendix-D.7" class="section-number selfRef">D.7. </a><a href="#name-accumulator-peak-hashes" class="section-name selfRef">Accumulator peak hashes</a>
         </h3>
 <table class="center" id="table-10">
           <caption><a href="#table-10" class="selfRef">Table 10</a></caption>
@@ -8490,57 +8691,57 @@ It is therefore guaranteed to be a prefix of any future path for the same entry.
 </section>
 </div>
 <div id="references">
-<section id="appendix-C">
+<section id="appendix-E">
       <h2 id="name-references">
-<a href="#appendix-C" class="section-number selfRef">Appendix C. </a><a href="#name-references" class="section-name selfRef">References</a>
+<a href="#appendix-E" class="section-number selfRef">Appendix E. </a><a href="#name-references" class="section-name selfRef">References</a>
       </h2>
 <div id="normative-references">
-<section id="appendix-C.1">
+<section id="appendix-E.1">
         <h3 id="name-normative-references-2">
-<a href="#appendix-C.1" class="section-number selfRef">C.1. </a><a href="#name-normative-references-2" class="section-name selfRef">Normative References</a>
+<a href="#appendix-E.1" class="section-number selfRef">E.1. </a><a href="#name-normative-references-2" class="section-name selfRef">Normative References</a>
         </h3>
 <ul class="normal">
-<li class="normal" id="appendix-C.1-1.1">
-            <p id="appendix-C.1-1.1.1"><a href="https://datatracker.ietf.org/doc/html/rfc9162">RFC9162</a><a href="#appendix-C.1-1.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="appendix-E.1-1.1">
+            <p id="appendix-E.1-1.1.1"><a href="https://datatracker.ietf.org/doc/html/rfc9162">RFC9162</a><a href="#appendix-E.1-1.1.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="normal" id="appendix-C.1-1.2">
-            <p id="appendix-C.1-1.2.1"><a href="https://datatracker.ietf.org/doc/html/rfc9162#name-verifying-an-inclusion-proo">RFC9162_VerInc</a> 2.1.3.1 Generating an Inclusion Proof<a href="#appendix-C.1-1.2.1" class="pilcrow">¶</a></p>
+          <li class="normal" id="appendix-E.1-1.2">
+            <p id="appendix-E.1-1.2.1"><a href="https://datatracker.ietf.org/doc/html/rfc9162#name-verifying-an-inclusion-proo">RFC9162_VerInc</a> 2.1.3.1 Generating an Inclusion Proof<a href="#appendix-E.1-1.2.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="normal" id="appendix-C.1-1.3">
-            <p id="appendix-C.1-1.3.1"><a href="https://datatracker.ietf.org/doc/html/rfc9162#name-verifying-consistency-betwe">RFC9162_VerCon</a> 2.1.4.2 Verifying Consistency between Two Tree Heads<a href="#appendix-C.1-1.3.1" class="pilcrow">¶</a></p>
+          <li class="normal" id="appendix-E.1-1.3">
+            <p id="appendix-E.1-1.3.1"><a href="https://datatracker.ietf.org/doc/html/rfc9162#name-verifying-consistency-betwe">RFC9162_VerCon</a> 2.1.4.2 Verifying Consistency between Two Tree Heads<a href="#appendix-E.1-1.3.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
 </section>
 </div>
 <div id="informative-references">
-<section id="appendix-C.2">
+<section id="appendix-E.2">
         <h3 id="name-informative-references">
-<a href="#appendix-C.2" class="section-number selfRef">C.2. </a><a href="#name-informative-references" class="section-name selfRef">Informative References</a>
+<a href="#appendix-E.2" class="section-number selfRef">E.2. </a><a href="#name-informative-references" class="section-name selfRef">Informative References</a>
         </h3>
 <ul class="normal">
-<li class="normal" id="appendix-C.2-1.1">
-            <p id="appendix-C.2-1.1.1"><a href="https://lists.linuxfoundation.org/pipermail/bitcoin-dev/2016-May/012715.html">PeterTodd</a><a href="#appendix-C.2-1.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="appendix-E.2-1.1">
+            <p id="appendix-E.2-1.1.1"><a href="https://lists.linuxfoundation.org/pipermail/bitcoin-dev/2016-May/012715.html">PeterTodd</a><a href="#appendix-E.2-1.1.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="normal" id="appendix-C.2-1.2">
-            <p id="appendix-C.2-1.2.1"><a href="https://static.usenix.org/event/sec09/tech/full_papers/crosby.pdf">CrosbyWallach</a><a href="#appendix-C.2-1.2.1" class="pilcrow">¶</a></p>
+          <li class="normal" id="appendix-E.2-1.2">
+            <p id="appendix-E.2-1.2.1"><a href="https://static.usenix.org/event/sec09/tech/full_papers/crosby.pdf">CrosbyWallach</a><a href="#appendix-E.2-1.2.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="normal" id="appendix-C.2-1.3">
-            <p id="appendix-C.2-1.3.1"><a href="https://static.usenix.org/event/sec09/tech/full_papers/crosby.pdf">CrosbySecondaryStorage</a> 3.3 Storing the log on secondary storage<a href="#appendix-C.2-1.3.1" class="pilcrow">¶</a></p>
+          <li class="normal" id="appendix-E.2-1.3">
+            <p id="appendix-E.2-1.3.1"><a href="https://static.usenix.org/event/sec09/tech/full_papers/crosby.pdf">CrosbySecondaryStorage</a> 3.3 Storing the log on secondary storage<a href="#appendix-E.2-1.3.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="normal" id="appendix-C.2-1.4">
-            <p id="appendix-C.2-1.4.1"><a href="https://research.swtch.com/tlog#appendix_a">PostOrderTlog</a><a href="#appendix-C.2-1.4.1" class="pilcrow">¶</a></p>
+          <li class="normal" id="appendix-E.2-1.4">
+            <p id="appendix-E.2-1.4.1"><a href="https://research.swtch.com/tlog#appendix_a">PostOrderTlog</a><a href="#appendix-E.2-1.4.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="normal" id="appendix-C.2-1.5">
-            <p id="appendix-C.2-1.5.1"><a href="https://www-cs-faculty.stanford.edu/~knuth/taocp.html">KnuthTBT</a> 2.3.1 Traversing Binary Trees<a href="#appendix-C.2-1.5.1" class="pilcrow">¶</a></p>
+          <li class="normal" id="appendix-E.2-1.5">
+            <p id="appendix-E.2-1.5.1"><a href="https://www-cs-faculty.stanford.edu/~knuth/taocp.html">KnuthTBT</a> 2.3.1 Traversing Binary Trees<a href="#appendix-E.2-1.5.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="normal" id="appendix-C.2-1.6">
-            <p id="appendix-C.2-1.6.1"><a href="https://eprint.iacr.org/2021/038.pdf">BNT</a><a href="#appendix-C.2-1.6.1" class="pilcrow">¶</a></p>
+          <li class="normal" id="appendix-E.2-1.6">
+            <p id="appendix-E.2-1.6.1"><a href="https://eprint.iacr.org/2021/038.pdf">BNT</a><a href="#appendix-E.2-1.6.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="normal" id="appendix-C.2-1.7">
-            <p id="appendix-C.2-1.7.1"><a href="https://eprint.iacr.org/2015/718.pdf">ReyzinYakoubov</a><a href="#appendix-C.2-1.7.1" class="pilcrow">¶</a></p>
+          <li class="normal" id="appendix-E.2-1.7">
+            <p id="appendix-E.2-1.7.1"><a href="https://eprint.iacr.org/2015/718.pdf">ReyzinYakoubov</a><a href="#appendix-E.2-1.7.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="normal" id="appendix-C.2-1.8">
-            <p id="appendix-C.2-1.8.1"><a href="https://www.tomshardware.com/news/microsoft-repositions-7tb-project-silica-glass-media-as-a-cloud-storage-solution">ProjectSilica</a><a href="#appendix-C.2-1.8.1" class="pilcrow">¶</a></p>
+          <li class="normal" id="appendix-E.2-1.8">
+            <p id="appendix-E.2-1.8.1"><a href="https://www.tomshardware.com/news/microsoft-repositions-7tb-project-silica-glass-media-as-a-cloud-storage-solution">ProjectSilica</a><a href="#appendix-E.2-1.8.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
 </section>
@@ -8548,15 +8749,15 @@ It is therefore guaranteed to be a prefix of any future path for the same entry.
 </section>
 </div>
 <div id="acknowledgments">
-<section id="appendix-D">
+<section id="appendix-F">
       <h2 id="name-acknowledgments">
 <a href="#name-acknowledgments" class="section-name selfRef">Acknowledgments</a>
       </h2>
-<p id="appendix-D-1">TODO acknowledge.<a href="#appendix-D-1" class="pilcrow">¶</a></p>
+<p id="appendix-F-1">TODO acknowledge.<a href="#appendix-F-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="authors-addresses">
-<section id="appendix-E">
+<section id="appendix-G">
       <h2 id="name-authors-address">
 <a href="#name-authors-address" class="section-name selfRef">Author's Address</a>
       </h2>
