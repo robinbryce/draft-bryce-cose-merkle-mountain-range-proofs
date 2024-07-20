@@ -101,40 +101,40 @@ Table of Contents
      11.1.  Additions to Existing Registries
      11.2.  New Registries
    12. Normative References
-   Appendix A.  Supplemental, commonly useful, supporting algorithms
-     A.1.  leaf_count
-     A.2.  mmr_index
-     A.3.  parent
-     A.4.  complete_mmr
-   Appendix B.  Assumed bit primitives
-     B.1.  A Note On Hardware Sympathy
-     B.2.  log2floor
-     B.3.  most_sig_bit
-     B.4.  bit_length
-     B.5.  all_ones
-     B.6.  ones_count
-     B.7.  trailing_zeros
-   Appendix C.  Implementation Status
-     C.1.  Implementers
-       C.1.1.  DataTrails
-       C.1.2.  Peter Todd
-       C.1.3.  Robin Bryce
-       C.1.4.  Mimblewimble ?
-       C.1.5.  ZCash ?
-       C.1.6.   Herodotus
-       C.1.7.  Tari-Project
-   Appendix D.  Algorithm Test Vectors
-     D.1.  MMR(39)
-     D.2.  MMR(39) leaf values (excluding interior nodes)
-     D.3.  MMR(39) node values (including leaves)
-     D.4.  Peak (accumulator) indices and values for all MMR's to
+   Appendix A.  References
+     A.1.  Normative References
+     A.2.  Informative References
+   Appendix B.  Supplemental, commonly useful, supporting algorithms
+     B.1.  leaf_count
+     B.2.  mmr_index
+     B.3.  parent
+     B.4.  complete_mmr
+   Appendix C.  Assumed bit primitives
+     C.1.  A Note On Hardware Sympathy
+     C.2.  log2floor
+     C.3.  most_sig_bit
+     C.4.  bit_length
+     C.5.  all_ones
+     C.6.  ones_count
+     C.7.  trailing_zeros
+   Appendix D.  Implementation Status
+     D.1.  Implementers
+       D.1.1.  DataTrails
+       D.1.2.  Peter Todd
+       D.1.3.  Robin Bryce
+       D.1.4.  Mimblewimble ?
+       D.1.5.  ZCash ?
+       D.1.6.   Herodotus
+       D.1.7.  Tari-Project
+   Appendix E.  Algorithm Test Vectors
+     E.1.  MMR(39)
+     E.2.  MMR(39) leaf values (excluding interior nodes)
+     E.3.  MMR(39) node values (including leaves)
+     E.4.  Peak (accumulator) indices and values for all MMR's to
            MMR(39)
-     D.5.  node height, leaf count and peak mask
-     D.6.  Inclusion proof paths and the associated accumulator states
-     D.7.  Accumulator peak hashes
-   Appendix E.  References
-     E.1.  Normative References
-     E.2.  Informative References
+     E.5.  node height, leaf count and peak mask
+     E.6.  Inclusion proof paths and the associated accumulator states
+     E.7.  Included roots
    Acknowledgments
    Author's Address
 
@@ -443,7 +443,7 @@ Table of Contents
    given by peaks (Section 9.2)
 
    An algorithm which sets a bit for each present accumulator peaks in
-   an MMR of size S is given by leaf_count (Appendix A.1), the produced
+   an MMR of size S is given by leaf_count (Appendix B.1), the produced
    value is also the count of leaves present in that MMR.
 
    Lastly, many primitives for working with MMR's rely on a property of
@@ -565,7 +565,7 @@ Table of Contents
 
    And the methods:
 
-   *  parent (Appendix A.3) which obtains the parent node index of any
+   *  parent (Appendix B.3) which obtains the parent node index of any
       node
 
    The following hold for all MMR(c0) and MMR(c1):
@@ -708,8 +708,9 @@ Table of Contents
        ; latest MMR size
        mmr-size-2: uint
 
-       ; the inclusion path from each accumulator peak in MMR(mmr-size-1)
-       ; to its new accumulator peak in MMR(mmr-size-2).
+       ; the inclusion path from each accumulator peak in
+       ; MMR(mmr-size-1) to its new accumulator peak in
+       ; MMR(mmr-size-2).
        consistency-paths: [ + consistency-path ]
    ]
 
@@ -1110,9 +1111,49 @@ Table of Contents
               2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174,
               May 2017, <https://www.rfc-editor.org/rfc/rfc8174>.
 
-Appendix A.  Supplemental, commonly useful, supporting algorithms
+Appendix A.  References
 
-A.1.  leaf_count
+A.1.  Normative References
+
+   *  RFC9162 (https://datatracker.ietf.org/doc/html/rfc9162)
+
+   *  RFC9162_VerInc (https://datatracker.ietf.org/doc/html/
+      rfc9162#name-verifying-an-inclusion-proo) 2.1.3.1 Generating an
+      Inclusion Proof
+
+   *  RFC9162_VerCon (https://datatracker.ietf.org/doc/html/
+      rfc9162#name-verifying-consistency-betwe) 2.1.4.2 Verifying
+      Consistency between Two Tree Heads
+
+A.2.  Informative References
+
+   *  PeterTodd (https://lists.linuxfoundation.org/pipermail/bitcoin-
+      dev/2016-May/012715.html)
+
+   *  CrosbyWallach
+      (https://static.usenix.org/event/sec09/tech/full_papers/
+      crosby.pdf)
+
+   *  CrosbySecondaryStorage
+      (https://static.usenix.org/event/sec09/tech/full_papers/
+      crosby.pdf) 3.3 Storing the log on secondary storage
+
+   *  PostOrderTlog (https://research.swtch.com/tlog#appendix_a)
+
+   *  KnuthTBT (https://www-cs-faculty.stanford.edu/~knuth/taocp.html)
+      2.3.1 Traversing Binary Trees
+
+   *  BNT (https://eprint.iacr.org/2021/038.pdf)
+
+   *  ReyzinYakoubov (https://eprint.iacr.org/2015/718.pdf)
+
+   *  ProjectSilica (https://www.tomshardware.com/news/microsoft-
+      repositions-7tb-project-silica-glass-media-as-a-cloud-storage-
+      solution)
+
+Appendix B.  Supplemental, commonly useful, supporting algorithms
+
+B.1.  leaf_count
 
    leaf_count(i) Returns a the count of leaves in MMR(i+1)
 
@@ -1134,7 +1175,7 @@ A.1.  leaf_count
 
    And the methods:
 
-   *  bit_length (Appendix B.4) which returns the number of bits
+   *  bit_length (Appendix C.4) which returns the number of bits
       required to represent the argument.
 
    We define leaf_count as:
@@ -1159,7 +1200,7 @@ def leaf_count(i):
 
     return peakmap
 
-A.2.  mmr_index
+B.2.  mmr_index
 
    Returns the node index i locating the leaf in the MMR
 
@@ -1170,7 +1211,7 @@ A.2.  mmr_index
 
    And the methods:
 
-   *  bit_length (Appendix B.4) which returns the number of bits
+   *  bit_length (Appendix C.4) which returns the number of bits
       required to represent the argument.
 
    We define mmr_index as:
@@ -1185,7 +1226,7 @@ A.2.  mmr_index
            e -= half
        return sum
 
-A.3.  parent
+B.3.  parent
 
    Returns the parent of the supplied node index.
 
@@ -1210,7 +1251,7 @@ A.3.  parent
        # sibling + 1, which is just 2^(g+1)
        return i + (2 << g)
 
-A.4.  complete_mmr
+B.4.  complete_mmr
 
    Return i if MMR(i+1) is complete, and the next complete node index
    otherwise.
@@ -1241,9 +1282,9 @@ A.4.  complete_mmr
 
        return i
 
-Appendix B.  Assumed bit primitives
+Appendix C.  Assumed bit primitives
 
-B.1.  A Note On Hardware Sympathy
+C.1.  A Note On Hardware Sympathy
 
    MMR's are a series of complete binary trees followed by at most one
    incomplete tree.  This is sometimes referred to as a flat base tree.
@@ -1267,14 +1308,14 @@ B.1.  A Note On Hardware Sympathy
    sensible standard wrappers.  While these operations are not strictly
    O(1) complexity, this has little impact in practice.
 
-B.2.  log2floor
+C.2.  log2floor
 
    Returns the floor of log base 2 x
 
    def log2floor(x):
        return x.bit_length() - 1
 
-B.3.  most_sig_bit
+C.3.  most_sig_bit
 
    Returns the mask for the the most significant bit in pos
 
@@ -1288,7 +1329,7 @@ B.3.  most_sig_bit
    We assume the following primitives for working with bits as they
    commonly have library or hardware support.
 
-B.4.  bit_length
+C.4.  bit_length
 
    The minimum number of bits to represent pos. b011 would be 2, b010
    would be 2, and b001 would be 1.
@@ -1298,7 +1339,7 @@ B.4.  bit_length
    def bit_length(pos):
        return pos.bit_length()
 
-B.5.  all_ones
+C.5.  all_ones
 
    Tests if all bits, from the most significant that is set, are 1,
    b0111 would be true, b0101 would be false.
@@ -1310,11 +1351,11 @@ B.5.  all_ones
        mask = (1 << (msb + 1)) - 1
        return pos == mask
 
-B.6.  ones_count
+C.6.  ones_count
 
    Count of set bits.  For example ones_count(b101) is 2
 
-B.7.  trailing_zeros
+C.7.  trailing_zeros
 
    The count of nodes above and to the left of pos
 
@@ -1322,7 +1363,7 @@ B.7.  trailing_zeros
 
    (v & -v).bit_length() - 1
 
-Appendix C.  Implementation Status
+Appendix D.  Implementation Status
 
    Note to RFC Editor: Please remove this section as well as references
    to BCP205 before AUTH48.
@@ -1347,32 +1388,32 @@ Appendix C.  Implementation Status
    It is up to the individual working groups to use this information as
    they see fit".
 
-C.1.  Implementers
+D.1.  Implementers
 
-C.1.1.  DataTrails
+D.1.1.  DataTrails
 
    An open-source implementation was initiated and is maintained by Data
    Trails Inc. - DataTrails.
 
    Uses SHA-256 as the hash alg
 
-C.1.1.1.  Implementation Name
+D.1.1.1.  Implementation Name
 
    An application demonstrating the concepts is available at
    https://app.datatrails.ai/ (https://app.datatrails.ai/).
 
-C.1.1.2.  Implementation URL
+D.1.1.2.  Implementation URL
 
    An open-source implementation is available at:
 
    *  https://github.com/datatrails/go-datatrails-merklelog
 
-C.1.1.3.  Maturity
+D.1.1.3.  Maturity
 
    Used in production.  SEMVER unstable (no backwards compat declared
    yet)
 
-C.1.2.  Peter Todd
+D.1.2.  Peter Todd
 
    Almost compatible, where here the leaf hash is not defined, in Peter
    Todd's formal description, all nodes, including the leaves include
@@ -1380,18 +1421,18 @@ C.1.2.  Peter Todd
    added 'as is'.  Interior nodes commit to the size of the entire MMR
    including the interior node.
 
-C.1.2.1.  Implementation URL
+D.1.2.1.  Implementation URL
 
    *  https://github.com/proofchains/python-
       proofmarshal/blob/master/proofmarshal/mmr.py
 
-C.1.2.2.  Maturity
+D.1.2.2.  Maturity
 
    Reference implementation, but the "original".
 
-C.1.3.  Robin Bryce
+D.1.3.  Robin Bryce
 
-C.1.3.1.  Implementation URL
+D.1.3.1.  Implementation URL
 
    A minimal reference implementation of this draft.  Used to generate
    the test vectors in this draft, is available at:
@@ -1399,18 +1440,18 @@ C.1.3.1.  Implementation URL
    *  https://github.com/robinbryce/merkle-mountain-range-
       proofs/blob/main/algorithms.py
 
-C.1.3.2.  Maturity
+D.1.3.2.  Maturity
 
    Reference only
 
-C.1.4.  Mimblewimble ?
+D.1.4.  Mimblewimble ?
 
    Is specifically committing to positions as we describe, but is
    committing zero based indices, and uses BLAKE2B as the HASH-ALG.
    Accounting for those differences, their commitment trees would be
    compatible with this draft.
 
-C.1.4.1.  Implementation URL
+D.1.4.1.  Implementation URL
 
    An implementation is available here:
 
@@ -1420,73 +1461,88 @@ C.1.4.1.  Implementation URL
    *  https://github.com/BeamMW/beam/blob/master/core/merkle.cpp (Beam
       is a C++ implementation of the mimblewimble protocol)
 
-C.1.5.  ZCash ?
+D.1.5.  ZCash ?
 
    Uses an incompatible scheme for committing the sub trees, and
    additionally specifies how the leaf hash is produced.
 
    *  https://zips.z.cash/zip-0221
 
-C.1.5.1.  Implementation URL
+D.1.5.1.  Implementation URL
 
    TODO: check if they are to positions as we describe, if so their
    commitment trees should be compatible with this draft.
 
    The code's level of maturity is considered to be "prototype".
 
-C.1.6.   Herodotus
+D.1.6.   Herodotus
 
-C.1.6.1.  Implementation URL
+D.1.6.1.  Implementation URL
 
    https://github.com/HerodotusDev/rust-accumulators
 
    Production, supports keccak, posiedon & pedersen hash algs
 
-C.1.7.  Tari-Project
+D.1.7.  Tari-Project
 
    Incompatible, does not include commitment of position in the interior
    node hash
 
-C.1.7.1.  Implementation URL
+D.1.7.1.  Implementation URL
 
    *  https://github.com/tari-
       project/tari/blob/development/base_layer/mmr/src/
       merkle_mountain_range.rs
 
-Appendix D.  Algorithm Test Vectors
+Appendix E.  Algorithm Test Vectors
 
    In this section we provide known answer outputs for the various
    algorithms for the MMR(39)
 
-D.1.  MMR(39)
+E.1.  MMR(39)
 
-   The node indices for MMR(39) is
+   Editors note: The MMR table is split in two due to format
+   restrictions.
 
-g
+   The node indices for MMR(39) (leaves 0-15) are
 
-4                         30
+   g
+
+   4                         30
 
 
-3              14                       29
-              / \
-             /   \
-            /     \
-           /       \
-          /         \
-2        6           13            21             28                37
-       /   \        /   \        /    \
-1     2     5      9     12     17     20     24       27       33      36
-     / \   / \    / \   /  \   /  \   /  \
-0   0   1 3   4  7   8 10  11 15  16 18  19 22  23   25   26  31  32   34  35   38
+   3              14                       29
+                 / \
+                /   \
+               /     \
+              /       \
+             /         \
+   2        6           13            21             28
+          /   \        /   \        /    \
+   1     2     5      9     12     17     20     24       27
+        / \   / \    / \   /  \   /  \   /  \
+   0   0   1 3   4  7   8 10  11 15  16 18  19 22  23   25   26
 
-.   0   1 2   3  4   5  6   7  8   9 10  11 12  13   14   15  16  17   18  19   20 e
+   .   0   1 2   3  4   5  6   7  8   9 10  11 12  13   14   15 e
+
+   The node indices for MMR(39) (leaves 16 - 20) are
+
+   g
+
+   2           37
+
+   1       33      36
+
+   0     31  32   34  35   38
+
+   .     16  17   18  19   20 e
 
    The vertical axis is g, the zero based height of the MMR.
 
    The horizontal axis is e, the leaf indices corresponding to the g=0
    nodes in the MMR
 
-D.2.  MMR(39) leaf values (excluding interior nodes)
+E.2.  MMR(39) leaf values (excluding interior nodes)
 
    We define H(v) for test vector leaf values f as the SHA-256 hash of
    the the big endian representation of e.
@@ -1539,7 +1595,7 @@ D.2.  MMR(39) leaf values (excluding interior nodes)
 
                                   Table 1
 
-D.3.  MMR(39) node values (including leaves)
+E.3.  MMR(39) node values (including leaves)
 
    +==+================================================================+
    |i |node values                                                     |
@@ -1625,7 +1681,7 @@ D.3.  MMR(39) node values (including leaves)
 
                                   Table 2
 
-D.4.  Peak (accumulator) indices and values for all MMR's to MMR(39)
+E.4.  Peak (accumulator) indices and values for all MMR's to MMR(39)
 
    (peaks)[#peaks] will produce the following index lists.
 
@@ -1677,81 +1733,82 @@ D.4.  Peak (accumulator) indices and values for all MMR's to MMR(39)
 
                                  Table 3
 
-   The indices will retrieve the following values from the MMR
+   The indices will retrieve the following values from the MMR.  The row
+   indices, starting with 0, are the corresponding mmr node indices 0-38
 
-   +==+=================================================================+
-   |i |accumulator peaks                                                |
-   +==+=================================================================+
-   |0 |af5570f5a1810b7af78caf4bc70a660f0df51e42baf91d4de5b2328de0e83dfc |
-   +--+-----------------------------------------------------------------+
-   |2 |ad104051c516812ea5874ca3ff06d0258303623d04307c41ec80a7a18b332ef8 |
-   +--+-----------------------------------------------------------------+
-   |3 |ad104051c516812ea5874ca3ff06d0258303623d04307c41ec80a7a18b332ef8,|
-   |  |d5688a52d55a02ec4aea5ec1eadfffe1c9e0ee6a4ddbe2377f98326d42dfc975 |
-   +--+-----------------------------------------------------------------+
-   |6 |827f3213c1de0d4c6277caccc1eeca325e45dfe2c65adce1943774218db61f88 |
-   +--+-----------------------------------------------------------------+
-   |7 |827f3213c1de0d4c6277caccc1eeca325e45dfe2c65adce1943774218db61f88,|
-   |  |a3eb8db89fc5123ccfd49585059f292bc40a1c0d550b860f24f84efb4760fbf2 |
-   +--+-----------------------------------------------------------------+
-   |9 |827f3213c1de0d4c6277caccc1eeca325e45dfe2c65adce1943774218db61f88,|
-   |  |b8faf5f748f149b04018491a51334499fd8b6060c42a835f361fa9665562d12d |
-   +--+-----------------------------------------------------------------+
-   |10|827f3213c1de0d4c6277caccc1eeca325e45dfe2c65adce1943774218db61f88,|
-   |  |b8faf5f748f149b04018491a51334499fd8b6060c42a835f361fa9665562d12d,|
-   |  |8d85f8467240628a94819b26bee26e3a9b2804334c63482deacec8d64ab4e1e7 |
-   +--+-----------------------------------------------------------------+
-   |14|78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112 |
-   +--+-----------------------------------------------------------------+
-   |15|78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112,|
-   |  |e66c57014a6156061ae669809ec5d735e484e8fcfd540e110c9b04f84c0b4504 |
-   +--+-----------------------------------------------------------------+
-   |17|78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112,|
-   |  |f4a0db79de0fee128fbe95ecf3509646203909dc447ae911aa29416bf6fcba21 |
-   +--+-----------------------------------------------------------------+
-   |18|78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112,|
-   |  |f4a0db79de0fee128fbe95ecf3509646203909dc447ae911aa29416bf6fcba21,|
-   |  |5bc67471c189d78c76461dcab6141a733bdab3799d1d69e0c419119c92e82b3d |
-   +--+-----------------------------------------------------------------+
-   |21|78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112,|
-   |  |61b3ff808934301578c9ed7402e3dd7dfe98b630acdf26d1fd2698a3c4a22710 |
-   +--+-----------------------------------------------------------------+
-   |22|78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112,|
-   |  |61b3ff808934301578c9ed7402e3dd7dfe98b630acdf26d1fd2698a3c4a22710,|
-   |  |7a42e3892368f826928202014a6ca95a3d8d846df25088da80018663edf96b1c |
-   +--+-----------------------------------------------------------------+
-   |24|78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112,|
-   |  |61b3ff808934301578c9ed7402e3dd7dfe98b630acdf26d1fd2698a3c4a22710,|
-   |  |dd7efba5f1824103f1fa820a5c9e6cd90a82cf123d88bd035c7e5da0aba8a9ae |
-   +--+-----------------------------------------------------------------+
-   |25|78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112,|
-   |  |61b3ff808934301578c9ed7402e3dd7dfe98b630acdf26d1fd2698a3c4a22710,|
-   |  |dd7efba5f1824103f1fa820a5c9e6cd90a82cf123d88bd035c7e5da0aba8a9ae,|
-   |  |561f627b4213258dc8863498bb9b07c904c3c65a78c1a36bca329154d1ded213 |
-   +--+-----------------------------------------------------------------+
-   |30|d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7 |
-   +--+-----------------------------------------------------------------+
-   |31|d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7,|
-   |  |1664a6e0ea12d234b4911d011800bb0f8c1101a0f9a49a91ee6e2493e34d8e7b |
-   +--+-----------------------------------------------------------------+
-   |33|d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7,|
-   |  |0c9f36783b5929d43c97fe4b170d12137e6950ef1b3a8bd254b15bbacbfdee7f |
-   +--+-----------------------------------------------------------------+
-   |34|d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7,|
-   |  |0c9f36783b5929d43c97fe4b170d12137e6950ef1b3a8bd254b15bbacbfdee7f,|
-   |  |4d75f61869104baa4ccff5be73311be9bdd6cc31779301dfc699479403c8a786 |
-   +--+-----------------------------------------------------------------+
-   |37|d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7,|
-   |  |6a169105dcc487dbbae5747a0fd9b1d33a40320cf91cf9a323579139e7ff72aa |
-   +--+-----------------------------------------------------------------+
-   |38|d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7,|
-   |  |6a169105dcc487dbbae5747a0fd9b1d33a40320cf91cf9a323579139e7ff72aa,|
-   |  |e9a5f5201eb3c3c856e0a224527af5ac7eb1767fb1aff9bd53ba41a60cde9785 |
-   +--+-----------------------------------------------------------------+
+    +=================================================================+
+    |accumulator peaks                                                |
+    +=================================================================+
+    |af5570f5a1810b7af78caf4bc70a660f0df51e42baf91d4de5b2328de0e83dfc |
+    +-----------------------------------------------------------------+
+    |ad104051c516812ea5874ca3ff06d0258303623d04307c41ec80a7a18b332ef8 |
+    +-----------------------------------------------------------------+
+    |ad104051c516812ea5874ca3ff06d0258303623d04307c41ec80a7a18b332ef8,|
+    |d5688a52d55a02ec4aea5ec1eadfffe1c9e0ee6a4ddbe2377f98326d42dfc975 |
+    +-----------------------------------------------------------------+
+    |827f3213c1de0d4c6277caccc1eeca325e45dfe2c65adce1943774218db61f88 |
+    +-----------------------------------------------------------------+
+    |827f3213c1de0d4c6277caccc1eeca325e45dfe2c65adce1943774218db61f88,|
+    |a3eb8db89fc5123ccfd49585059f292bc40a1c0d550b860f24f84efb4760fbf2 |
+    +-----------------------------------------------------------------+
+    |827f3213c1de0d4c6277caccc1eeca325e45dfe2c65adce1943774218db61f88,|
+    |b8faf5f748f149b04018491a51334499fd8b6060c42a835f361fa9665562d12d |
+    +-----------------------------------------------------------------+
+    |827f3213c1de0d4c6277caccc1eeca325e45dfe2c65adce1943774218db61f88,|
+    |b8faf5f748f149b04018491a51334499fd8b6060c42a835f361fa9665562d12d,|
+    |8d85f8467240628a94819b26bee26e3a9b2804334c63482deacec8d64ab4e1e7 |
+    +-----------------------------------------------------------------+
+    |78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112 |
+    +-----------------------------------------------------------------+
+    |78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112,|
+    |e66c57014a6156061ae669809ec5d735e484e8fcfd540e110c9b04f84c0b4504 |
+    +-----------------------------------------------------------------+
+    |78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112,|
+    |f4a0db79de0fee128fbe95ecf3509646203909dc447ae911aa29416bf6fcba21 |
+    +-----------------------------------------------------------------+
+    |78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112,|
+    |f4a0db79de0fee128fbe95ecf3509646203909dc447ae911aa29416bf6fcba21,|
+    |5bc67471c189d78c76461dcab6141a733bdab3799d1d69e0c419119c92e82b3d |
+    +-----------------------------------------------------------------+
+    |78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112,|
+    |61b3ff808934301578c9ed7402e3dd7dfe98b630acdf26d1fd2698a3c4a22710 |
+    +-----------------------------------------------------------------+
+    |78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112,|
+    |61b3ff808934301578c9ed7402e3dd7dfe98b630acdf26d1fd2698a3c4a22710,|
+    |7a42e3892368f826928202014a6ca95a3d8d846df25088da80018663edf96b1c |
+    +-----------------------------------------------------------------+
+    |78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112,|
+    |61b3ff808934301578c9ed7402e3dd7dfe98b630acdf26d1fd2698a3c4a22710,|
+    |dd7efba5f1824103f1fa820a5c9e6cd90a82cf123d88bd035c7e5da0aba8a9ae |
+    +-----------------------------------------------------------------+
+    |78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112,|
+    |61b3ff808934301578c9ed7402e3dd7dfe98b630acdf26d1fd2698a3c4a22710,|
+    |dd7efba5f1824103f1fa820a5c9e6cd90a82cf123d88bd035c7e5da0aba8a9ae,|
+    |561f627b4213258dc8863498bb9b07c904c3c65a78c1a36bca329154d1ded213 |
+    +-----------------------------------------------------------------+
+    |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7 |
+    +-----------------------------------------------------------------+
+    |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7,|
+    |1664a6e0ea12d234b4911d011800bb0f8c1101a0f9a49a91ee6e2493e34d8e7b |
+    +-----------------------------------------------------------------+
+    |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7,|
+    |0c9f36783b5929d43c97fe4b170d12137e6950ef1b3a8bd254b15bbacbfdee7f |
+    +-----------------------------------------------------------------+
+    |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7,|
+    |0c9f36783b5929d43c97fe4b170d12137e6950ef1b3a8bd254b15bbacbfdee7f,|
+    |4d75f61869104baa4ccff5be73311be9bdd6cc31779301dfc699479403c8a786 |
+    +-----------------------------------------------------------------+
+    |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7,|
+    |6a169105dcc487dbbae5747a0fd9b1d33a40320cf91cf9a323579139e7ff72aa |
+    +-----------------------------------------------------------------+
+    |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7 |
+    |6a169105dcc487dbbae5747a0fd9b1d33a40320cf91cf9a323579139e7ff72aa,|
+    |e9a5f5201eb3c3c856e0a224527af5ac7eb1767fb1aff9bd53ba41a60cde9785 |
+    +-----------------------------------------------------------------+
 
                                   Table 4
 
-D.5.  node height, leaf count and peak mask
+E.5.  node height, leaf count and peak mask
 
    These tables cover the outputs of index_height and leaf_count.
    g=index_height, e & m are the decimal and binary representations of
@@ -1807,7 +1864,7 @@ D.5.  node height, leaf count and peak mask
 
                                   Table 8
 
-D.6.  Inclusion proof paths and the associated accumulator states
+E.6.  Inclusion proof paths and the associated accumulator states
 
    *  The inclusion path column defines the outputs of
       inclusion_proof_path (Section 4.1))
@@ -2869,888 +2926,1027 @@ D.6.  Inclusion proof paths and the associated accumulator states
 
                                   Table 9
 
-D.7.  Accumulator peak hashes
+E.7.  Included roots
 
-   +==+===========+================================================================+
-   |i |accumulator|root                                                            |
-   |  |root index |                                                                |
-   +==+===========+================================================================+
-   |0 |0          |af5570f5a1810b7af78caf4bc70a660f0df51e42baf91d4de5b2328de0e83dfc|
-   +--+-----------+----------------------------------------------------------------+
-   |0 |0          |ad104051c516812ea5874ca3ff06d0258303623d04307c41ec80a7a18b332ef8|
-   +--+-----------+----------------------------------------------------------------+
-   |0 |0          |ad104051c516812ea5874ca3ff06d0258303623d04307c41ec80a7a18b332ef8|
-   +--+-----------+----------------------------------------------------------------+
-   |0 |0          |827f3213c1de0d4c6277caccc1eeca325e45dfe2c65adce1943774218db61f88|
-   +--+-----------+----------------------------------------------------------------+
-   |0 |0          |827f3213c1de0d4c6277caccc1eeca325e45dfe2c65adce1943774218db61f88|
-   +--+-----------+----------------------------------------------------------------+
-   |0 |0          |827f3213c1de0d4c6277caccc1eeca325e45dfe2c65adce1943774218db61f88|
-   +--+-----------+----------------------------------------------------------------+
-   |0 |0          |827f3213c1de0d4c6277caccc1eeca325e45dfe2c65adce1943774218db61f88|
-   +--+-----------+----------------------------------------------------------------+
-   |0 |0          |78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112|
-   +--+-----------+----------------------------------------------------------------+
-   |0 |0          |78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112|
-   +--+-----------+----------------------------------------------------------------+
-   |0 |0          |78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112|
-   +--+-----------+----------------------------------------------------------------+
-   |0 |0          |78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112|
-   +--+-----------+----------------------------------------------------------------+
-   |0 |0          |78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112|
-   +--+-----------+----------------------------------------------------------------+
-   |0 |0          |78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112|
-   +--+-----------+----------------------------------------------------------------+
-   |0 |0          |78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112|
-   +--+-----------+----------------------------------------------------------------+
-   |0 |0          |78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112|
-   +--+-----------+----------------------------------------------------------------+
-   |0 |0          |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7|
-   +--+-----------+----------------------------------------------------------------+
-   |0 |0          |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7|
-   +--+-----------+----------------------------------------------------------------+
-   |0 |0          |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7|
-   +--+-----------+----------------------------------------------------------------+
-   |0 |0          |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7|
-   +--+-----------+----------------------------------------------------------------+
-   |0 |0          |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7|
-   +--+-----------+----------------------------------------------------------------+
-   |0 |0          |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7|
-   +--+-----------+----------------------------------------------------------------+
-   |1 |0          |ad104051c516812ea5874ca3ff06d0258303623d04307c41ec80a7a18b332ef8|
-   +--+-----------+----------------------------------------------------------------+
-   |1 |0          |ad104051c516812ea5874ca3ff06d0258303623d04307c41ec80a7a18b332ef8|
-   +--+-----------+----------------------------------------------------------------+
-   |1 |0          |827f3213c1de0d4c6277caccc1eeca325e45dfe2c65adce1943774218db61f88|
-   +--+-----------+----------------------------------------------------------------+
-   |1 |0          |827f3213c1de0d4c6277caccc1eeca325e45dfe2c65adce1943774218db61f88|
-   +--+-----------+----------------------------------------------------------------+
-   |1 |0          |827f3213c1de0d4c6277caccc1eeca325e45dfe2c65adce1943774218db61f88|
-   +--+-----------+----------------------------------------------------------------+
-   |1 |0          |827f3213c1de0d4c6277caccc1eeca325e45dfe2c65adce1943774218db61f88|
-   +--+-----------+----------------------------------------------------------------+
-   |1 |0          |78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112|
-   +--+-----------+----------------------------------------------------------------+
-   |1 |0          |78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112|
-   +--+-----------+----------------------------------------------------------------+
-   |1 |0          |78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112|
-   +--+-----------+----------------------------------------------------------------+
-   |1 |0          |78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112|
-   +--+-----------+----------------------------------------------------------------+
-   |1 |0          |78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112|
-   +--+-----------+----------------------------------------------------------------+
-   |1 |0          |78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112|
-   +--+-----------+----------------------------------------------------------------+
-   |1 |0          |78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112|
-   +--+-----------+----------------------------------------------------------------+
-   |1 |0          |78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112|
-   +--+-----------+----------------------------------------------------------------+
-   |1 |0          |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7|
-   +--+-----------+----------------------------------------------------------------+
-   |1 |0          |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7|
-   +--+-----------+----------------------------------------------------------------+
-   |1 |0          |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7|
-   +--+-----------+----------------------------------------------------------------+
-   |1 |0          |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7|
-   +--+-----------+----------------------------------------------------------------+
-   |1 |0          |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7|
-   +--+-----------+----------------------------------------------------------------+
-   |1 |0          |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7|
-   +--+-----------+----------------------------------------------------------------+
-   |2 |0          |ad104051c516812ea5874ca3ff06d0258303623d04307c41ec80a7a18b332ef8|
-   +--+-----------+----------------------------------------------------------------+
-   |2 |0          |ad104051c516812ea5874ca3ff06d0258303623d04307c41ec80a7a18b332ef8|
-   +--+-----------+----------------------------------------------------------------+
-   |2 |0          |827f3213c1de0d4c6277caccc1eeca325e45dfe2c65adce1943774218db61f88|
-   +--+-----------+----------------------------------------------------------------+
-   |2 |0          |827f3213c1de0d4c6277caccc1eeca325e45dfe2c65adce1943774218db61f88|
-   +--+-----------+----------------------------------------------------------------+
-   |2 |0          |827f3213c1de0d4c6277caccc1eeca325e45dfe2c65adce1943774218db61f88|
-   +--+-----------+----------------------------------------------------------------+
-   |2 |0          |827f3213c1de0d4c6277caccc1eeca325e45dfe2c65adce1943774218db61f88|
-   +--+-----------+----------------------------------------------------------------+
-   |2 |0          |78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112|
-   +--+-----------+----------------------------------------------------------------+
-   |2 |0          |78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112|
-   +--+-----------+----------------------------------------------------------------+
-   |2 |0          |78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112|
-   +--+-----------+----------------------------------------------------------------+
-   |2 |0          |78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112|
-   +--+-----------+----------------------------------------------------------------+
-   |2 |0          |78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112|
-   +--+-----------+----------------------------------------------------------------+
-   |2 |0          |78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112|
-   +--+-----------+----------------------------------------------------------------+
-   |2 |0          |78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112|
-   +--+-----------+----------------------------------------------------------------+
-   |2 |0          |78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112|
-   +--+-----------+----------------------------------------------------------------+
-   |2 |0          |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7|
-   +--+-----------+----------------------------------------------------------------+
-   |2 |0          |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7|
-   +--+-----------+----------------------------------------------------------------+
-   |2 |0          |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7|
-   +--+-----------+----------------------------------------------------------------+
-   |2 |0          |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7|
-   +--+-----------+----------------------------------------------------------------+
-   |2 |0          |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7|
-   +--+-----------+----------------------------------------------------------------+
-   |2 |0          |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7|
-   +--+-----------+----------------------------------------------------------------+
-   |3 |1          |d5688a52d55a02ec4aea5ec1eadfffe1c9e0ee6a4ddbe2377f98326d42dfc975|
-   +--+-----------+----------------------------------------------------------------+
-   |3 |0          |827f3213c1de0d4c6277caccc1eeca325e45dfe2c65adce1943774218db61f88|
-   +--+-----------+----------------------------------------------------------------+
-   |3 |0          |827f3213c1de0d4c6277caccc1eeca325e45dfe2c65adce1943774218db61f88|
-   +--+-----------+----------------------------------------------------------------+
-   |3 |0          |827f3213c1de0d4c6277caccc1eeca325e45dfe2c65adce1943774218db61f88|
-   +--+-----------+----------------------------------------------------------------+
-   |3 |0          |827f3213c1de0d4c6277caccc1eeca325e45dfe2c65adce1943774218db61f88|
-   +--+-----------+----------------------------------------------------------------+
-   |3 |0          |78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112|
-   +--+-----------+----------------------------------------------------------------+
-   |3 |0          |78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112|
-   +--+-----------+----------------------------------------------------------------+
-   |3 |0          |78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112|
-   +--+-----------+----------------------------------------------------------------+
-   |3 |0          |78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112|
-   +--+-----------+----------------------------------------------------------------+
-   |3 |0          |78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112|
-   +--+-----------+----------------------------------------------------------------+
-   |3 |0          |78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112|
-   +--+-----------+----------------------------------------------------------------+
-   |3 |0          |78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112|
-   +--+-----------+----------------------------------------------------------------+
-   |3 |0          |78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112|
-   +--+-----------+----------------------------------------------------------------+
-   |3 |0          |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7|
-   +--+-----------+----------------------------------------------------------------+
-   |3 |0          |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7|
-   +--+-----------+----------------------------------------------------------------+
-   |3 |0          |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7|
-   +--+-----------+----------------------------------------------------------------+
-   |3 |0          |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7|
-   +--+-----------+----------------------------------------------------------------+
-   |3 |0          |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7|
-   +--+-----------+----------------------------------------------------------------+
-   |3 |0          |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7|
-   +--+-----------+----------------------------------------------------------------+
-   |4 |0          |827f3213c1de0d4c6277caccc1eeca325e45dfe2c65adce1943774218db61f88|
-   +--+-----------+----------------------------------------------------------------+
-   |4 |0          |827f3213c1de0d4c6277caccc1eeca325e45dfe2c65adce1943774218db61f88|
-   +--+-----------+----------------------------------------------------------------+
-   |4 |0          |827f3213c1de0d4c6277caccc1eeca325e45dfe2c65adce1943774218db61f88|
-   +--+-----------+----------------------------------------------------------------+
-   |4 |0          |827f3213c1de0d4c6277caccc1eeca325e45dfe2c65adce1943774218db61f88|
-   +--+-----------+----------------------------------------------------------------+
-   |4 |0          |78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112|
-   +--+-----------+----------------------------------------------------------------+
-   |4 |0          |78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112|
-   +--+-----------+----------------------------------------------------------------+
-   |4 |0          |78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112|
-   +--+-----------+----------------------------------------------------------------+
-   |4 |0          |78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112|
-   +--+-----------+----------------------------------------------------------------+
-   |4 |0          |78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112|
-   +--+-----------+----------------------------------------------------------------+
-   |4 |0          |78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112|
-   +--+-----------+----------------------------------------------------------------+
-   |4 |0          |78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112|
-   +--+-----------+----------------------------------------------------------------+
-   |4 |0          |78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112|
-   +--+-----------+----------------------------------------------------------------+
-   |4 |0          |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7|
-   +--+-----------+----------------------------------------------------------------+
-   |4 |0          |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7|
-   +--+-----------+----------------------------------------------------------------+
-   |4 |0          |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7|
-   +--+-----------+----------------------------------------------------------------+
-   |4 |0          |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7|
-   +--+-----------+----------------------------------------------------------------+
-   |4 |0          |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7|
-   +--+-----------+----------------------------------------------------------------+
-   |4 |0          |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7|
-   +--+-----------+----------------------------------------------------------------+
-   |5 |0          |827f3213c1de0d4c6277caccc1eeca325e45dfe2c65adce1943774218db61f88|
-   +--+-----------+----------------------------------------------------------------+
-   |5 |0          |827f3213c1de0d4c6277caccc1eeca325e45dfe2c65adce1943774218db61f88|
-   +--+-----------+----------------------------------------------------------------+
-   |5 |0          |827f3213c1de0d4c6277caccc1eeca325e45dfe2c65adce1943774218db61f88|
-   +--+-----------+----------------------------------------------------------------+
-   |5 |0          |827f3213c1de0d4c6277caccc1eeca325e45dfe2c65adce1943774218db61f88|
-   +--+-----------+----------------------------------------------------------------+
-   |5 |0          |78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112|
-   +--+-----------+----------------------------------------------------------------+
-   |5 |0          |78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112|
-   +--+-----------+----------------------------------------------------------------+
-   |5 |0          |78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112|
-   +--+-----------+----------------------------------------------------------------+
-   |5 |0          |78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112|
-   +--+-----------+----------------------------------------------------------------+
-   |5 |0          |78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112|
-   +--+-----------+----------------------------------------------------------------+
-   |5 |0          |78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112|
-   +--+-----------+----------------------------------------------------------------+
-   |5 |0          |78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112|
-   +--+-----------+----------------------------------------------------------------+
-   |5 |0          |78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112|
-   +--+-----------+----------------------------------------------------------------+
-   |5 |0          |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7|
-   +--+-----------+----------------------------------------------------------------+
-   |5 |0          |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7|
-   +--+-----------+----------------------------------------------------------------+
-   |5 |0          |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7|
-   +--+-----------+----------------------------------------------------------------+
-   |5 |0          |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7|
-   +--+-----------+----------------------------------------------------------------+
-   |5 |0          |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7|
-   +--+-----------+----------------------------------------------------------------+
-   |5 |0          |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7|
-   +--+-----------+----------------------------------------------------------------+
-   |6 |0          |827f3213c1de0d4c6277caccc1eeca325e45dfe2c65adce1943774218db61f88|
-   +--+-----------+----------------------------------------------------------------+
-   |6 |0          |827f3213c1de0d4c6277caccc1eeca325e45dfe2c65adce1943774218db61f88|
-   +--+-----------+----------------------------------------------------------------+
-   |6 |0          |827f3213c1de0d4c6277caccc1eeca325e45dfe2c65adce1943774218db61f88|
-   +--+-----------+----------------------------------------------------------------+
-   |6 |0          |827f3213c1de0d4c6277caccc1eeca325e45dfe2c65adce1943774218db61f88|
-   +--+-----------+----------------------------------------------------------------+
-   |6 |0          |78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112|
-   +--+-----------+----------------------------------------------------------------+
-   |6 |0          |78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112|
-   +--+-----------+----------------------------------------------------------------+
-   |6 |0          |78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112|
-   +--+-----------+----------------------------------------------------------------+
-   |6 |0          |78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112|
-   +--+-----------+----------------------------------------------------------------+
-   |6 |0          |78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112|
-   +--+-----------+----------------------------------------------------------------+
-   |6 |0          |78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112|
-   +--+-----------+----------------------------------------------------------------+
-   |6 |0          |78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112|
-   +--+-----------+----------------------------------------------------------------+
-   |6 |0          |78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112|
-   +--+-----------+----------------------------------------------------------------+
-   |6 |0          |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7|
-   +--+-----------+----------------------------------------------------------------+
-   |6 |0          |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7|
-   +--+-----------+----------------------------------------------------------------+
-   |6 |0          |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7|
-   +--+-----------+----------------------------------------------------------------+
-   |6 |0          |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7|
-   +--+-----------+----------------------------------------------------------------+
-   |6 |0          |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7|
-   +--+-----------+----------------------------------------------------------------+
-   |6 |0          |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7|
-   +--+-----------+----------------------------------------------------------------+
-   |7 |1          |a3eb8db89fc5123ccfd49585059f292bc40a1c0d550b860f24f84efb4760fbf2|
-   +--+-----------+----------------------------------------------------------------+
-   |7 |1          |b8faf5f748f149b04018491a51334499fd8b6060c42a835f361fa9665562d12d|
-   +--+-----------+----------------------------------------------------------------+
-   |7 |1          |b8faf5f748f149b04018491a51334499fd8b6060c42a835f361fa9665562d12d|
-   +--+-----------+----------------------------------------------------------------+
-   |7 |0          |78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112|
-   +--+-----------+----------------------------------------------------------------+
-   |7 |0          |78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112|
-   +--+-----------+----------------------------------------------------------------+
-   |7 |0          |78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112|
-   +--+-----------+----------------------------------------------------------------+
-   |7 |0          |78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112|
-   +--+-----------+----------------------------------------------------------------+
-   |7 |0          |78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112|
-   +--+-----------+----------------------------------------------------------------+
-   |7 |0          |78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112|
-   +--+-----------+----------------------------------------------------------------+
-   |7 |0          |78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112|
-   +--+-----------+----------------------------------------------------------------+
-   |7 |0          |78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112|
-   +--+-----------+----------------------------------------------------------------+
-   |7 |0          |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7|
-   +--+-----------+----------------------------------------------------------------+
-   |7 |0          |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7|
-   +--+-----------+----------------------------------------------------------------+
-   |7 |0          |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7|
-   +--+-----------+----------------------------------------------------------------+
-   |7 |0          |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7|
-   +--+-----------+----------------------------------------------------------------+
-   |7 |0          |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7|
-   +--+-----------+----------------------------------------------------------------+
-   |7 |0          |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7|
-   +--+-----------+----------------------------------------------------------------+
-   |8 |1          |b8faf5f748f149b04018491a51334499fd8b6060c42a835f361fa9665562d12d|
-   +--+-----------+----------------------------------------------------------------+
-   |8 |1          |b8faf5f748f149b04018491a51334499fd8b6060c42a835f361fa9665562d12d|
-   +--+-----------+----------------------------------------------------------------+
-   |8 |0          |78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112|
-   +--+-----------+----------------------------------------------------------------+
-   |8 |0          |78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112|
-   +--+-----------+----------------------------------------------------------------+
-   |8 |0          |78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112|
-   +--+-----------+----------------------------------------------------------------+
-   |8 |0          |78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112|
-   +--+-----------+----------------------------------------------------------------+
-   |8 |0          |78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112|
-   +--+-----------+----------------------------------------------------------------+
-   |8 |0          |78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112|
-   +--+-----------+----------------------------------------------------------------+
-   |8 |0          |78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112|
-   +--+-----------+----------------------------------------------------------------+
-   |8 |0          |78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112|
-   +--+-----------+----------------------------------------------------------------+
-   |8 |0          |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7|
-   +--+-----------+----------------------------------------------------------------+
-   |8 |0          |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7|
-   +--+-----------+----------------------------------------------------------------+
-   |8 |0          |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7|
-   +--+-----------+----------------------------------------------------------------+
-   |8 |0          |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7|
-   +--+-----------+----------------------------------------------------------------+
-   |8 |0          |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7|
-   +--+-----------+----------------------------------------------------------------+
-   |8 |0          |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7|
-   +--+-----------+----------------------------------------------------------------+
-   |9 |1          |b8faf5f748f149b04018491a51334499fd8b6060c42a835f361fa9665562d12d|
-   +--+-----------+----------------------------------------------------------------+
-   |9 |1          |b8faf5f748f149b04018491a51334499fd8b6060c42a835f361fa9665562d12d|
-   +--+-----------+----------------------------------------------------------------+
-   |9 |0          |78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112|
-   +--+-----------+----------------------------------------------------------------+
-   |9 |0          |78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112|
-   +--+-----------+----------------------------------------------------------------+
-   |9 |0          |78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112|
-   +--+-----------+----------------------------------------------------------------+
-   |9 |0          |78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112|
-   +--+-----------+----------------------------------------------------------------+
-   |9 |0          |78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112|
-   +--+-----------+----------------------------------------------------------------+
-   |9 |0          |78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112|
-   +--+-----------+----------------------------------------------------------------+
-   |9 |0          |78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112|
-   +--+-----------+----------------------------------------------------------------+
-   |9 |0          |78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112|
-   +--+-----------+----------------------------------------------------------------+
-   |9 |0          |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7|
-   +--+-----------+----------------------------------------------------------------+
-   |9 |0          |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7|
-   +--+-----------+----------------------------------------------------------------+
-   |9 |0          |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7|
-   +--+-----------+----------------------------------------------------------------+
-   |9 |0          |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7|
-   +--+-----------+----------------------------------------------------------------+
-   |9 |0          |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7|
-   +--+-----------+----------------------------------------------------------------+
-   |9 |0          |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7|
-   +--+-----------+----------------------------------------------------------------+
-   |10|2          |8d85f8467240628a94819b26bee26e3a9b2804334c63482deacec8d64ab4e1e7|
-   +--+-----------+----------------------------------------------------------------+
-   |10|0          |78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112|
-   +--+-----------+----------------------------------------------------------------+
-   |10|0          |78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112|
-   +--+-----------+----------------------------------------------------------------+
-   |10|0          |78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112|
-   +--+-----------+----------------------------------------------------------------+
-   |10|0          |78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112|
-   +--+-----------+----------------------------------------------------------------+
-   |10|0          |78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112|
-   +--+-----------+----------------------------------------------------------------+
-   |10|0          |78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112|
-   +--+-----------+----------------------------------------------------------------+
-   |10|0          |78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112|
-   +--+-----------+----------------------------------------------------------------+
-   |10|0          |78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112|
-   +--+-----------+----------------------------------------------------------------+
-   |10|0          |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7|
-   +--+-----------+----------------------------------------------------------------+
-   |10|0          |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7|
-   +--+-----------+----------------------------------------------------------------+
-   |10|0          |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7|
-   +--+-----------+----------------------------------------------------------------+
-   |10|0          |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7|
-   +--+-----------+----------------------------------------------------------------+
-   |10|0          |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7|
-   +--+-----------+----------------------------------------------------------------+
-   |10|0          |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7|
-   +--+-----------+----------------------------------------------------------------+
-   |11|0          |78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112|
-   +--+-----------+----------------------------------------------------------------+
-   |11|0          |78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112|
-   +--+-----------+----------------------------------------------------------------+
-   |11|0          |78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112|
-   +--+-----------+----------------------------------------------------------------+
-   |11|0          |78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112|
-   +--+-----------+----------------------------------------------------------------+
-   |11|0          |78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112|
-   +--+-----------+----------------------------------------------------------------+
-   |11|0          |78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112|
-   +--+-----------+----------------------------------------------------------------+
-   |11|0          |78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112|
-   +--+-----------+----------------------------------------------------------------+
-   |11|0          |78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112|
-   +--+-----------+----------------------------------------------------------------+
-   |11|0          |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7|
-   +--+-----------+----------------------------------------------------------------+
-   |11|0          |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7|
-   +--+-----------+----------------------------------------------------------------+
-   |11|0          |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7|
-   +--+-----------+----------------------------------------------------------------+
-   |11|0          |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7|
-   +--+-----------+----------------------------------------------------------------+
-   |11|0          |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7|
-   +--+-----------+----------------------------------------------------------------+
-   |11|0          |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7|
-   +--+-----------+----------------------------------------------------------------+
-   |12|0          |78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112|
-   +--+-----------+----------------------------------------------------------------+
-   |12|0          |78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112|
-   +--+-----------+----------------------------------------------------------------+
-   |12|0          |78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112|
-   +--+-----------+----------------------------------------------------------------+
-   |12|0          |78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112|
-   +--+-----------+----------------------------------------------------------------+
-   |12|0          |78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112|
-   +--+-----------+----------------------------------------------------------------+
-   |12|0          |78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112|
-   +--+-----------+----------------------------------------------------------------+
-   |12|0          |78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112|
-   +--+-----------+----------------------------------------------------------------+
-   |12|0          |78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112|
-   +--+-----------+----------------------------------------------------------------+
-   |12|0          |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7|
-   +--+-----------+----------------------------------------------------------------+
-   |12|0          |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7|
-   +--+-----------+----------------------------------------------------------------+
-   |12|0          |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7|
-   +--+-----------+----------------------------------------------------------------+
-   |12|0          |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7|
-   +--+-----------+----------------------------------------------------------------+
-   |12|0          |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7|
-   +--+-----------+----------------------------------------------------------------+
-   |12|0          |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7|
-   +--+-----------+----------------------------------------------------------------+
-   |13|0          |78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112|
-   +--+-----------+----------------------------------------------------------------+
-   |13|0          |78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112|
-   +--+-----------+----------------------------------------------------------------+
-   |13|0          |78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112|
-   +--+-----------+----------------------------------------------------------------+
-   |13|0          |78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112|
-   +--+-----------+----------------------------------------------------------------+
-   |13|0          |78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112|
-   +--+-----------+----------------------------------------------------------------+
-   |13|0          |78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112|
-   +--+-----------+----------------------------------------------------------------+
-   |13|0          |78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112|
-   +--+-----------+----------------------------------------------------------------+
-   |13|0          |78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112|
-   +--+-----------+----------------------------------------------------------------+
-   |13|0          |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7|
-   +--+-----------+----------------------------------------------------------------+
-   |13|0          |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7|
-   +--+-----------+----------------------------------------------------------------+
-   |13|0          |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7|
-   +--+-----------+----------------------------------------------------------------+
-   |13|0          |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7|
-   +--+-----------+----------------------------------------------------------------+
-   |13|0          |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7|
-   +--+-----------+----------------------------------------------------------------+
-   |13|0          |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7|
-   +--+-----------+----------------------------------------------------------------+
-   |14|0          |78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112|
-   +--+-----------+----------------------------------------------------------------+
-   |14|0          |78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112|
-   +--+-----------+----------------------------------------------------------------+
-   |14|0          |78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112|
-   +--+-----------+----------------------------------------------------------------+
-   |14|0          |78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112|
-   +--+-----------+----------------------------------------------------------------+
-   |14|0          |78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112|
-   +--+-----------+----------------------------------------------------------------+
-   |14|0          |78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112|
-   +--+-----------+----------------------------------------------------------------+
-   |14|0          |78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112|
-   +--+-----------+----------------------------------------------------------------+
-   |14|0          |78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112|
-   +--+-----------+----------------------------------------------------------------+
-   |14|0          |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7|
-   +--+-----------+----------------------------------------------------------------+
-   |14|0          |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7|
-   +--+-----------+----------------------------------------------------------------+
-   |14|0          |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7|
-   +--+-----------+----------------------------------------------------------------+
-   |14|0          |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7|
-   +--+-----------+----------------------------------------------------------------+
-   |14|0          |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7|
-   +--+-----------+----------------------------------------------------------------+
-   |14|0          |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7|
-   +--+-----------+----------------------------------------------------------------+
-   |15|1          |e66c57014a6156061ae669809ec5d735e484e8fcfd540e110c9b04f84c0b4504|
-   +--+-----------+----------------------------------------------------------------+
-   |15|1          |f4a0db79de0fee128fbe95ecf3509646203909dc447ae911aa29416bf6fcba21|
-   +--+-----------+----------------------------------------------------------------+
-   |15|1          |f4a0db79de0fee128fbe95ecf3509646203909dc447ae911aa29416bf6fcba21|
-   +--+-----------+----------------------------------------------------------------+
-   |15|1          |61b3ff808934301578c9ed7402e3dd7dfe98b630acdf26d1fd2698a3c4a22710|
-   +--+-----------+----------------------------------------------------------------+
-   |15|1          |61b3ff808934301578c9ed7402e3dd7dfe98b630acdf26d1fd2698a3c4a22710|
-   +--+-----------+----------------------------------------------------------------+
-   |15|1          |61b3ff808934301578c9ed7402e3dd7dfe98b630acdf26d1fd2698a3c4a22710|
-   +--+-----------+----------------------------------------------------------------+
-   |15|1          |61b3ff808934301578c9ed7402e3dd7dfe98b630acdf26d1fd2698a3c4a22710|
-   +--+-----------+----------------------------------------------------------------+
-   |15|0          |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7|
-   +--+-----------+----------------------------------------------------------------+
-   |15|0          |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7|
-   +--+-----------+----------------------------------------------------------------+
-   |15|0          |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7|
-   +--+-----------+----------------------------------------------------------------+
-   |15|0          |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7|
-   +--+-----------+----------------------------------------------------------------+
-   |15|0          |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7|
-   +--+-----------+----------------------------------------------------------------+
-   |15|0          |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7|
-   +--+-----------+----------------------------------------------------------------+
-   |16|1          |f4a0db79de0fee128fbe95ecf3509646203909dc447ae911aa29416bf6fcba21|
-   +--+-----------+----------------------------------------------------------------+
-   |16|1          |f4a0db79de0fee128fbe95ecf3509646203909dc447ae911aa29416bf6fcba21|
-   +--+-----------+----------------------------------------------------------------+
-   |16|1          |61b3ff808934301578c9ed7402e3dd7dfe98b630acdf26d1fd2698a3c4a22710|
-   +--+-----------+----------------------------------------------------------------+
-   |16|1          |61b3ff808934301578c9ed7402e3dd7dfe98b630acdf26d1fd2698a3c4a22710|
-   +--+-----------+----------------------------------------------------------------+
-   |16|1          |61b3ff808934301578c9ed7402e3dd7dfe98b630acdf26d1fd2698a3c4a22710|
-   +--+-----------+----------------------------------------------------------------+
-   |16|1          |61b3ff808934301578c9ed7402e3dd7dfe98b630acdf26d1fd2698a3c4a22710|
-   +--+-----------+----------------------------------------------------------------+
-   |16|0          |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7|
-   +--+-----------+----------------------------------------------------------------+
-   |16|0          |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7|
-   +--+-----------+----------------------------------------------------------------+
-   |16|0          |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7|
-   +--+-----------+----------------------------------------------------------------+
-   |16|0          |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7|
-   +--+-----------+----------------------------------------------------------------+
-   |16|0          |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7|
-   +--+-----------+----------------------------------------------------------------+
-   |16|0          |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7|
-   +--+-----------+----------------------------------------------------------------+
-   |17|1          |f4a0db79de0fee128fbe95ecf3509646203909dc447ae911aa29416bf6fcba21|
-   +--+-----------+----------------------------------------------------------------+
-   |17|1          |f4a0db79de0fee128fbe95ecf3509646203909dc447ae911aa29416bf6fcba21|
-   +--+-----------+----------------------------------------------------------------+
-   |17|1          |61b3ff808934301578c9ed7402e3dd7dfe98b630acdf26d1fd2698a3c4a22710|
-   +--+-----------+----------------------------------------------------------------+
-   |17|1          |61b3ff808934301578c9ed7402e3dd7dfe98b630acdf26d1fd2698a3c4a22710|
-   +--+-----------+----------------------------------------------------------------+
-   |17|1          |61b3ff808934301578c9ed7402e3dd7dfe98b630acdf26d1fd2698a3c4a22710|
-   +--+-----------+----------------------------------------------------------------+
-   |17|1          |61b3ff808934301578c9ed7402e3dd7dfe98b630acdf26d1fd2698a3c4a22710|
-   +--+-----------+----------------------------------------------------------------+
-   |17|0          |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7|
-   +--+-----------+----------------------------------------------------------------+
-   |17|0          |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7|
-   +--+-----------+----------------------------------------------------------------+
-   |17|0          |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7|
-   +--+-----------+----------------------------------------------------------------+
-   |17|0          |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7|
-   +--+-----------+----------------------------------------------------------------+
-   |17|0          |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7|
-   +--+-----------+----------------------------------------------------------------+
-   |17|0          |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7|
-   +--+-----------+----------------------------------------------------------------+
-   |18|2          |5bc67471c189d78c76461dcab6141a733bdab3799d1d69e0c419119c92e82b3d|
-   +--+-----------+----------------------------------------------------------------+
-   |18|1          |61b3ff808934301578c9ed7402e3dd7dfe98b630acdf26d1fd2698a3c4a22710|
-   +--+-----------+----------------------------------------------------------------+
-   |18|1          |61b3ff808934301578c9ed7402e3dd7dfe98b630acdf26d1fd2698a3c4a22710|
-   +--+-----------+----------------------------------------------------------------+
-   |18|1          |61b3ff808934301578c9ed7402e3dd7dfe98b630acdf26d1fd2698a3c4a22710|
-   +--+-----------+----------------------------------------------------------------+
-   |18|1          |61b3ff808934301578c9ed7402e3dd7dfe98b630acdf26d1fd2698a3c4a22710|
-   +--+-----------+----------------------------------------------------------------+
-   |18|0          |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7|
-   +--+-----------+----------------------------------------------------------------+
-   |18|0          |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7|
-   +--+-----------+----------------------------------------------------------------+
-   |18|0          |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7|
-   +--+-----------+----------------------------------------------------------------+
-   |18|0          |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7|
-   +--+-----------+----------------------------------------------------------------+
-   |18|0          |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7|
-   +--+-----------+----------------------------------------------------------------+
-   |18|0          |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7|
-   +--+-----------+----------------------------------------------------------------+
-   |19|1          |61b3ff808934301578c9ed7402e3dd7dfe98b630acdf26d1fd2698a3c4a22710|
-   +--+-----------+----------------------------------------------------------------+
-   |19|1          |61b3ff808934301578c9ed7402e3dd7dfe98b630acdf26d1fd2698a3c4a22710|
-   +--+-----------+----------------------------------------------------------------+
-   |19|1          |61b3ff808934301578c9ed7402e3dd7dfe98b630acdf26d1fd2698a3c4a22710|
-   +--+-----------+----------------------------------------------------------------+
-   |19|1          |61b3ff808934301578c9ed7402e3dd7dfe98b630acdf26d1fd2698a3c4a22710|
-   +--+-----------+----------------------------------------------------------------+
-   |19|0          |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7|
-   +--+-----------+----------------------------------------------------------------+
-   |19|0          |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7|
-   +--+-----------+----------------------------------------------------------------+
-   |19|0          |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7|
-   +--+-----------+----------------------------------------------------------------+
-   |19|0          |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7|
-   +--+-----------+----------------------------------------------------------------+
-   |19|0          |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7|
-   +--+-----------+----------------------------------------------------------------+
-   |19|0          |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7|
-   +--+-----------+----------------------------------------------------------------+
-   |20|1          |61b3ff808934301578c9ed7402e3dd7dfe98b630acdf26d1fd2698a3c4a22710|
-   +--+-----------+----------------------------------------------------------------+
-   |20|1          |61b3ff808934301578c9ed7402e3dd7dfe98b630acdf26d1fd2698a3c4a22710|
-   +--+-----------+----------------------------------------------------------------+
-   |20|1          |61b3ff808934301578c9ed7402e3dd7dfe98b630acdf26d1fd2698a3c4a22710|
-   +--+-----------+----------------------------------------------------------------+
-   |20|1          |61b3ff808934301578c9ed7402e3dd7dfe98b630acdf26d1fd2698a3c4a22710|
-   +--+-----------+----------------------------------------------------------------+
-   |20|0          |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7|
-   +--+-----------+----------------------------------------------------------------+
-   |20|0          |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7|
-   +--+-----------+----------------------------------------------------------------+
-   |20|0          |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7|
-   +--+-----------+----------------------------------------------------------------+
-   |20|0          |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7|
-   +--+-----------+----------------------------------------------------------------+
-   |20|0          |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7|
-   +--+-----------+----------------------------------------------------------------+
-   |20|0          |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7|
-   +--+-----------+----------------------------------------------------------------+
-   |21|1          |61b3ff808934301578c9ed7402e3dd7dfe98b630acdf26d1fd2698a3c4a22710|
-   +--+-----------+----------------------------------------------------------------+
-   |21|1          |61b3ff808934301578c9ed7402e3dd7dfe98b630acdf26d1fd2698a3c4a22710|
-   +--+-----------+----------------------------------------------------------------+
-   |21|1          |61b3ff808934301578c9ed7402e3dd7dfe98b630acdf26d1fd2698a3c4a22710|
-   +--+-----------+----------------------------------------------------------------+
-   |21|1          |61b3ff808934301578c9ed7402e3dd7dfe98b630acdf26d1fd2698a3c4a22710|
-   +--+-----------+----------------------------------------------------------------+
-   |21|0          |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7|
-   +--+-----------+----------------------------------------------------------------+
-   |21|0          |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7|
-   +--+-----------+----------------------------------------------------------------+
-   |21|0          |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7|
-   +--+-----------+----------------------------------------------------------------+
-   |21|0          |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7|
-   +--+-----------+----------------------------------------------------------------+
-   |21|0          |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7|
-   +--+-----------+----------------------------------------------------------------+
-   |21|0          |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7|
-   +--+-----------+----------------------------------------------------------------+
-   |22|2          |7a42e3892368f826928202014a6ca95a3d8d846df25088da80018663edf96b1c|
-   +--+-----------+----------------------------------------------------------------+
-   |22|2          |dd7efba5f1824103f1fa820a5c9e6cd90a82cf123d88bd035c7e5da0aba8a9ae|
-   +--+-----------+----------------------------------------------------------------+
-   |22|2          |dd7efba5f1824103f1fa820a5c9e6cd90a82cf123d88bd035c7e5da0aba8a9ae|
-   +--+-----------+----------------------------------------------------------------+
-   |22|0          |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7|
-   +--+-----------+----------------------------------------------------------------+
-   |22|0          |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7|
-   +--+-----------+----------------------------------------------------------------+
-   |22|0          |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7|
-   +--+-----------+----------------------------------------------------------------+
-   |22|0          |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7|
-   +--+-----------+----------------------------------------------------------------+
-   |22|0          |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7|
-   +--+-----------+----------------------------------------------------------------+
-   |22|0          |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7|
-   +--+-----------+----------------------------------------------------------------+
-   |23|2          |dd7efba5f1824103f1fa820a5c9e6cd90a82cf123d88bd035c7e5da0aba8a9ae|
-   +--+-----------+----------------------------------------------------------------+
-   |23|2          |dd7efba5f1824103f1fa820a5c9e6cd90a82cf123d88bd035c7e5da0aba8a9ae|
-   +--+-----------+----------------------------------------------------------------+
-   |23|0          |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7|
-   +--+-----------+----------------------------------------------------------------+
-   |23|0          |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7|
-   +--+-----------+----------------------------------------------------------------+
-   |23|0          |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7|
-   +--+-----------+----------------------------------------------------------------+
-   |23|0          |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7|
-   +--+-----------+----------------------------------------------------------------+
-   |23|0          |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7|
-   +--+-----------+----------------------------------------------------------------+
-   |23|0          |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7|
-   +--+-----------+----------------------------------------------------------------+
-   |24|2          |dd7efba5f1824103f1fa820a5c9e6cd90a82cf123d88bd035c7e5da0aba8a9ae|
-   +--+-----------+----------------------------------------------------------------+
-   |24|2          |dd7efba5f1824103f1fa820a5c9e6cd90a82cf123d88bd035c7e5da0aba8a9ae|
-   +--+-----------+----------------------------------------------------------------+
-   |24|0          |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7|
-   +--+-----------+----------------------------------------------------------------+
-   |24|0          |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7|
-   +--+-----------+----------------------------------------------------------------+
-   |24|0          |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7|
-   +--+-----------+----------------------------------------------------------------+
-   |24|0          |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7|
-   +--+-----------+----------------------------------------------------------------+
-   |24|0          |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7|
-   +--+-----------+----------------------------------------------------------------+
-   |24|0          |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7|
-   +--+-----------+----------------------------------------------------------------+
-   |25|3          |561f627b4213258dc8863498bb9b07c904c3c65a78c1a36bca329154d1ded213|
-   +--+-----------+----------------------------------------------------------------+
-   |25|0          |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7|
-   +--+-----------+----------------------------------------------------------------+
-   |25|0          |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7|
-   +--+-----------+----------------------------------------------------------------+
-   |25|0          |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7|
-   +--+-----------+----------------------------------------------------------------+
-   |25|0          |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7|
-   +--+-----------+----------------------------------------------------------------+
-   |25|0          |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7|
-   +--+-----------+----------------------------------------------------------------+
-   |25|0          |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7|
-   +--+-----------+----------------------------------------------------------------+
-   |26|0          |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7|
-   +--+-----------+----------------------------------------------------------------+
-   |26|0          |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7|
-   +--+-----------+----------------------------------------------------------------+
-   |26|0          |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7|
-   +--+-----------+----------------------------------------------------------------+
-   |26|0          |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7|
-   +--+-----------+----------------------------------------------------------------+
-   |26|0          |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7|
-   +--+-----------+----------------------------------------------------------------+
-   |26|0          |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7|
-   +--+-----------+----------------------------------------------------------------+
-   |27|0          |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7|
-   +--+-----------+----------------------------------------------------------------+
-   |27|0          |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7|
-   +--+-----------+----------------------------------------------------------------+
-   |27|0          |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7|
-   +--+-----------+----------------------------------------------------------------+
-   |27|0          |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7|
-   +--+-----------+----------------------------------------------------------------+
-   |27|0          |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7|
-   +--+-----------+----------------------------------------------------------------+
-   |27|0          |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7|
-   +--+-----------+----------------------------------------------------------------+
-   |28|0          |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7|
-   +--+-----------+----------------------------------------------------------------+
-   |28|0          |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7|
-   +--+-----------+----------------------------------------------------------------+
-   |28|0          |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7|
-   +--+-----------+----------------------------------------------------------------+
-   |28|0          |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7|
-   +--+-----------+----------------------------------------------------------------+
-   |28|0          |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7|
-   +--+-----------+----------------------------------------------------------------+
-   |28|0          |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7|
-   +--+-----------+----------------------------------------------------------------+
-   |29|0          |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7|
-   +--+-----------+----------------------------------------------------------------+
-   |29|0          |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7|
-   +--+-----------+----------------------------------------------------------------+
-   |29|0          |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7|
-   +--+-----------+----------------------------------------------------------------+
-   |29|0          |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7|
-   +--+-----------+----------------------------------------------------------------+
-   |29|0          |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7|
-   +--+-----------+----------------------------------------------------------------+
-   |29|0          |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7|
-   +--+-----------+----------------------------------------------------------------+
-   |30|0          |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7|
-   +--+-----------+----------------------------------------------------------------+
-   |30|0          |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7|
-   +--+-----------+----------------------------------------------------------------+
-   |30|0          |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7|
-   +--+-----------+----------------------------------------------------------------+
-   |30|0          |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7|
-   +--+-----------+----------------------------------------------------------------+
-   |30|0          |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7|
-   +--+-----------+----------------------------------------------------------------+
-   |30|0          |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7|
-   +--+-----------+----------------------------------------------------------------+
-   |31|1          |1664a6e0ea12d234b4911d011800bb0f8c1101a0f9a49a91ee6e2493e34d8e7b|
-   +--+-----------+----------------------------------------------------------------+
-   |31|1          |0c9f36783b5929d43c97fe4b170d12137e6950ef1b3a8bd254b15bbacbfdee7f|
-   +--+-----------+----------------------------------------------------------------+
-   |31|1          |0c9f36783b5929d43c97fe4b170d12137e6950ef1b3a8bd254b15bbacbfdee7f|
-   +--+-----------+----------------------------------------------------------------+
-   |31|1          |6a169105dcc487dbbae5747a0fd9b1d33a40320cf91cf9a323579139e7ff72aa|
-   +--+-----------+----------------------------------------------------------------+
-   |31|1          |6a169105dcc487dbbae5747a0fd9b1d33a40320cf91cf9a323579139e7ff72aa|
-   +--+-----------+----------------------------------------------------------------+
-   |32|1          |0c9f36783b5929d43c97fe4b170d12137e6950ef1b3a8bd254b15bbacbfdee7f|
-   +--+-----------+----------------------------------------------------------------+
-   |32|1          |0c9f36783b5929d43c97fe4b170d12137e6950ef1b3a8bd254b15bbacbfdee7f|
-   +--+-----------+----------------------------------------------------------------+
-   |32|1          |6a169105dcc487dbbae5747a0fd9b1d33a40320cf91cf9a323579139e7ff72aa|
-   +--+-----------+----------------------------------------------------------------+
-   |32|1          |6a169105dcc487dbbae5747a0fd9b1d33a40320cf91cf9a323579139e7ff72aa|
-   +--+-----------+----------------------------------------------------------------+
-   |33|1          |0c9f36783b5929d43c97fe4b170d12137e6950ef1b3a8bd254b15bbacbfdee7f|
-   +--+-----------+----------------------------------------------------------------+
-   |33|1          |0c9f36783b5929d43c97fe4b170d12137e6950ef1b3a8bd254b15bbacbfdee7f|
-   +--+-----------+----------------------------------------------------------------+
-   |33|1          |6a169105dcc487dbbae5747a0fd9b1d33a40320cf91cf9a323579139e7ff72aa|
-   +--+-----------+----------------------------------------------------------------+
-   |33|1          |6a169105dcc487dbbae5747a0fd9b1d33a40320cf91cf9a323579139e7ff72aa|
-   +--+-----------+----------------------------------------------------------------+
-   |34|2          |4d75f61869104baa4ccff5be73311be9bdd6cc31779301dfc699479403c8a786|
-   +--+-----------+----------------------------------------------------------------+
-   |34|1          |6a169105dcc487dbbae5747a0fd9b1d33a40320cf91cf9a323579139e7ff72aa|
-   +--+-----------+----------------------------------------------------------------+
-   |34|1          |6a169105dcc487dbbae5747a0fd9b1d33a40320cf91cf9a323579139e7ff72aa|
-   +--+-----------+----------------------------------------------------------------+
-   |35|1          |6a169105dcc487dbbae5747a0fd9b1d33a40320cf91cf9a323579139e7ff72aa|
-   +--+-----------+----------------------------------------------------------------+
-   |35|1          |6a169105dcc487dbbae5747a0fd9b1d33a40320cf91cf9a323579139e7ff72aa|
-   +--+-----------+----------------------------------------------------------------+
-   |36|1          |6a169105dcc487dbbae5747a0fd9b1d33a40320cf91cf9a323579139e7ff72aa|
-   +--+-----------+----------------------------------------------------------------+
-   |36|1          |6a169105dcc487dbbae5747a0fd9b1d33a40320cf91cf9a323579139e7ff72aa|
-   +--+-----------+----------------------------------------------------------------+
-   |37|1          |6a169105dcc487dbbae5747a0fd9b1d33a40320cf91cf9a323579139e7ff72aa|
-   +--+-----------+----------------------------------------------------------------+
-   |37|1          |6a169105dcc487dbbae5747a0fd9b1d33a40320cf91cf9a323579139e7ff72aa|
-   +--+-----------+----------------------------------------------------------------+
-   |38|2          |e9a5f5201eb3c3c856e0a224527af5ac7eb1767fb1aff9bd53ba41a60cde9785|
-   +--+-----------+----------------------------------------------------------------+
+   +==================================================================+
+   | 0 in mmr's 1 - 39                                                |
+   +==================================================================+
+   | ad104051c516812ea5874ca3ff06d0258303623d04307c41ec80a7a18b332ef8 |
+   +------------------------------------------------------------------+
+   | ad104051c516812ea5874ca3ff06d0258303623d04307c41ec80a7a18b332ef8 |
+   +------------------------------------------------------------------+
+   | 827f3213c1de0d4c6277caccc1eeca325e45dfe2c65adce1943774218db61f88 |
+   +------------------------------------------------------------------+
+   | 827f3213c1de0d4c6277caccc1eeca325e45dfe2c65adce1943774218db61f88 |
+   +------------------------------------------------------------------+
+   | 827f3213c1de0d4c6277caccc1eeca325e45dfe2c65adce1943774218db61f88 |
+   +------------------------------------------------------------------+
+   | 827f3213c1de0d4c6277caccc1eeca325e45dfe2c65adce1943774218db61f88 |
+   +------------------------------------------------------------------+
+   | 78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112 |
+   +------------------------------------------------------------------+
+   | 78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112 |
+   +------------------------------------------------------------------+
+   | 78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112 |
+   +------------------------------------------------------------------+
+   | 78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112 |
+   +------------------------------------------------------------------+
+   | 78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112 |
+   +------------------------------------------------------------------+
+   | 78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112 |
+   +------------------------------------------------------------------+
+   | 78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112 |
+   +------------------------------------------------------------------+
+   | 78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112 |
+   +------------------------------------------------------------------+
+   | d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7 |
+   +------------------------------------------------------------------+
+   | d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7 |
+   +------------------------------------------------------------------+
+   | d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7 |
+   +------------------------------------------------------------------+
+   | d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7 |
+   +------------------------------------------------------------------+
+   | d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7 |
+   +------------------------------------------------------------------+
+   | d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7 |
+   +------------------------------------------------------------------+
 
-                                  Table 10
+                                 Table 10
 
-Appendix E.  References
+   +==================================================================+
+   | 1 in mmr's 2 - 39                                                |
+   +==================================================================+
+   | ad104051c516812ea5874ca3ff06d0258303623d04307c41ec80a7a18b332ef8 |
+   +------------------------------------------------------------------+
+   | ad104051c516812ea5874ca3ff06d0258303623d04307c41ec80a7a18b332ef8 |
+   +------------------------------------------------------------------+
+   | 827f3213c1de0d4c6277caccc1eeca325e45dfe2c65adce1943774218db61f88 |
+   +------------------------------------------------------------------+
+   | 827f3213c1de0d4c6277caccc1eeca325e45dfe2c65adce1943774218db61f88 |
+   +------------------------------------------------------------------+
+   | 827f3213c1de0d4c6277caccc1eeca325e45dfe2c65adce1943774218db61f88 |
+   +------------------------------------------------------------------+
+   | 827f3213c1de0d4c6277caccc1eeca325e45dfe2c65adce1943774218db61f88 |
+   +------------------------------------------------------------------+
+   | 78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112 |
+   +------------------------------------------------------------------+
+   | 78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112 |
+   +------------------------------------------------------------------+
+   | 78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112 |
+   +------------------------------------------------------------------+
+   | 78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112 |
+   +------------------------------------------------------------------+
+   | 78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112 |
+   +------------------------------------------------------------------+
+   | 78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112 |
+   +------------------------------------------------------------------+
+   | 78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112 |
+   +------------------------------------------------------------------+
+   | 78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112 |
+   +------------------------------------------------------------------+
+   | d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7 |
+   +------------------------------------------------------------------+
+   | d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7 |
+   +------------------------------------------------------------------+
+   | d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7 |
+   +------------------------------------------------------------------+
+   | d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7 |
+   +------------------------------------------------------------------+
+   | d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7 |
+   +------------------------------------------------------------------+
+   | d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7 |
+   +------------------------------------------------------------------+
 
-E.1.  Normative References
+                                 Table 11
 
-   *  RFC9162 (https://datatracker.ietf.org/doc/html/rfc9162)
+   +==================================================================+
+   | 2 in mmr's 3 - 39                                                |
+   +==================================================================+
+   | ad104051c516812ea5874ca3ff06d0258303623d04307c41ec80a7a18b332ef8 |
+   +------------------------------------------------------------------+
+   | 827f3213c1de0d4c6277caccc1eeca325e45dfe2c65adce1943774218db61f88 |
+   +------------------------------------------------------------------+
+   | 827f3213c1de0d4c6277caccc1eeca325e45dfe2c65adce1943774218db61f88 |
+   +------------------------------------------------------------------+
+   | 827f3213c1de0d4c6277caccc1eeca325e45dfe2c65adce1943774218db61f88 |
+   +------------------------------------------------------------------+
+   | 827f3213c1de0d4c6277caccc1eeca325e45dfe2c65adce1943774218db61f88 |
+   +------------------------------------------------------------------+
+   | 78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112 |
+   +------------------------------------------------------------------+
+   | 78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112 |
+   +------------------------------------------------------------------+
+   | 78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112 |
+   +------------------------------------------------------------------+
+   | 78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112 |
+   +------------------------------------------------------------------+
+   | 78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112 |
+   +------------------------------------------------------------------+
+   | 78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112 |
+   +------------------------------------------------------------------+
+   | 78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112 |
+   +------------------------------------------------------------------+
+   | 78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112 |
+   +------------------------------------------------------------------+
+   | d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7 |
+   +------------------------------------------------------------------+
+   | d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7 |
+   +------------------------------------------------------------------+
+   | d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7 |
+   +------------------------------------------------------------------+
+   | d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7 |
+   +------------------------------------------------------------------+
+   | d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7 |
+   +------------------------------------------------------------------+
+   | d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7 |
+   +------------------------------------------------------------------+
 
-   *  RFC9162_VerInc (https://datatracker.ietf.org/doc/html/
-      rfc9162#name-verifying-an-inclusion-proo) 2.1.3.1 Generating an
-      Inclusion Proof
+                                 Table 12
 
-   *  RFC9162_VerCon (https://datatracker.ietf.org/doc/html/
-      rfc9162#name-verifying-consistency-betwe) 2.1.4.2 Verifying
-      Consistency between Two Tree Heads
+   +==================================================================+
+   | 3 in mmr's 4 - 39                                                |
+   +==================================================================+
+   | 827f3213c1de0d4c6277caccc1eeca325e45dfe2c65adce1943774218db61f88 |
+   +------------------------------------------------------------------+
+   | 827f3213c1de0d4c6277caccc1eeca325e45dfe2c65adce1943774218db61f88 |
+   +------------------------------------------------------------------+
+   | 827f3213c1de0d4c6277caccc1eeca325e45dfe2c65adce1943774218db61f88 |
+   +------------------------------------------------------------------+
+   | 827f3213c1de0d4c6277caccc1eeca325e45dfe2c65adce1943774218db61f88 |
+   +------------------------------------------------------------------+
+   | 78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112 |
+   +------------------------------------------------------------------+
+   | 78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112 |
+   +------------------------------------------------------------------+
+   | 78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112 |
+   +------------------------------------------------------------------+
+   | 78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112 |
+   +------------------------------------------------------------------+
+   | 78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112 |
+   +------------------------------------------------------------------+
+   | 78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112 |
+   +------------------------------------------------------------------+
+   | 78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112 |
+   +------------------------------------------------------------------+
+   | 78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112 |
+   +------------------------------------------------------------------+
+   | d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7 |
+   +------------------------------------------------------------------+
+   | d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7 |
+   +------------------------------------------------------------------+
+   | d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7 |
+   +------------------------------------------------------------------+
+   | d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7 |
+   +------------------------------------------------------------------+
+   | d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7 |
+   +------------------------------------------------------------------+
+   | d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7 |
+   +------------------------------------------------------------------+
 
-E.2.  Informative References
+                                 Table 13
 
-   *  PeterTodd (https://lists.linuxfoundation.org/pipermail/bitcoin-
-      dev/2016-May/012715.html)
+   +==================================================================+
+   | 4 in mmr's 5 - 39                                                |
+   +==================================================================+
+   | 827f3213c1de0d4c6277caccc1eeca325e45dfe2c65adce1943774218db61f88 |
+   +------------------------------------------------------------------+
+   | 827f3213c1de0d4c6277caccc1eeca325e45dfe2c65adce1943774218db61f88 |
+   +------------------------------------------------------------------+
+   | 827f3213c1de0d4c6277caccc1eeca325e45dfe2c65adce1943774218db61f88 |
+   +------------------------------------------------------------------+
+   | 827f3213c1de0d4c6277caccc1eeca325e45dfe2c65adce1943774218db61f88 |
+   +------------------------------------------------------------------+
+   | 78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112 |
+   +------------------------------------------------------------------+
+   | 78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112 |
+   +------------------------------------------------------------------+
+   | 78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112 |
+   +------------------------------------------------------------------+
+   | 78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112 |
+   +------------------------------------------------------------------+
+   | 78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112 |
+   +------------------------------------------------------------------+
+   | 78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112 |
+   +------------------------------------------------------------------+
+   | 78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112 |
+   +------------------------------------------------------------------+
+   | 78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112 |
+   +------------------------------------------------------------------+
+   | d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7 |
+   +------------------------------------------------------------------+
+   | d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7 |
+   +------------------------------------------------------------------+
+   | d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7 |
+   +------------------------------------------------------------------+
+   | d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7 |
+   +------------------------------------------------------------------+
+   | d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7 |
+   +------------------------------------------------------------------+
+   | d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7 |
+   +------------------------------------------------------------------+
 
-   *  CrosbyWallach
-      (https://static.usenix.org/event/sec09/tech/full_papers/
-      crosby.pdf)
+                                 Table 14
 
-   *  CrosbySecondaryStorage
-      (https://static.usenix.org/event/sec09/tech/full_papers/
-      crosby.pdf) 3.3 Storing the log on secondary storage
+   +==================================================================+
+   | 5 in mmr's 6 - 39                                                |
+   +==================================================================+
+   | 827f3213c1de0d4c6277caccc1eeca325e45dfe2c65adce1943774218db61f88 |
+   +------------------------------------------------------------------+
+   | 827f3213c1de0d4c6277caccc1eeca325e45dfe2c65adce1943774218db61f88 |
+   +------------------------------------------------------------------+
+   | 827f3213c1de0d4c6277caccc1eeca325e45dfe2c65adce1943774218db61f88 |
+   +------------------------------------------------------------------+
+   | 827f3213c1de0d4c6277caccc1eeca325e45dfe2c65adce1943774218db61f88 |
+   +------------------------------------------------------------------+
+   | 78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112 |
+   +------------------------------------------------------------------+
+   | 78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112 |
+   +------------------------------------------------------------------+
+   | 78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112 |
+   +------------------------------------------------------------------+
+   | 78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112 |
+   +------------------------------------------------------------------+
+   | 78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112 |
+   +------------------------------------------------------------------+
+   | 78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112 |
+   +------------------------------------------------------------------+
+   | 78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112 |
+   +------------------------------------------------------------------+
+   | 78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112 |
+   +------------------------------------------------------------------+
+   | d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7 |
+   +------------------------------------------------------------------+
+   | d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7 |
+   +------------------------------------------------------------------+
+   | d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7 |
+   +------------------------------------------------------------------+
+   | d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7 |
+   +------------------------------------------------------------------+
+   | d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7 |
+   +------------------------------------------------------------------+
+   | d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7 |
+   +------------------------------------------------------------------+
 
-   *  PostOrderTlog (https://research.swtch.com/tlog#appendix_a)
+                                 Table 15
 
-   *  KnuthTBT (https://www-cs-faculty.stanford.edu/~knuth/taocp.html)
-      2.3.1 Traversing Binary Trees
+   +==================================================================+
+   | 6 in mmr's 7 - 39                                                |
+   +==================================================================+
+   | 827f3213c1de0d4c6277caccc1eeca325e45dfe2c65adce1943774218db61f88 |
+   +------------------------------------------------------------------+
+   | 827f3213c1de0d4c6277caccc1eeca325e45dfe2c65adce1943774218db61f88 |
+   +------------------------------------------------------------------+
+   | 827f3213c1de0d4c6277caccc1eeca325e45dfe2c65adce1943774218db61f88 |
+   +------------------------------------------------------------------+
+   | 78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112 |
+   +------------------------------------------------------------------+
+   | 78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112 |
+   +------------------------------------------------------------------+
+   | 78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112 |
+   +------------------------------------------------------------------+
+   | 78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112 |
+   +------------------------------------------------------------------+
+   | 78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112 |
+   +------------------------------------------------------------------+
+   | 78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112 |
+   +------------------------------------------------------------------+
+   | 78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112 |
+   +------------------------------------------------------------------+
+   | 78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112 |
+   +------------------------------------------------------------------+
+   | d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7 |
+   +------------------------------------------------------------------+
+   | d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7 |
+   +------------------------------------------------------------------+
+   | d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7 |
+   +------------------------------------------------------------------+
+   | d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7 |
+   +------------------------------------------------------------------+
+   | d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7 |
+   +------------------------------------------------------------------+
+   | d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7 |
+   +------------------------------------------------------------------+
 
-   *  BNT (https://eprint.iacr.org/2021/038.pdf)
+                                 Table 16
 
-   *  ReyzinYakoubov (https://eprint.iacr.org/2015/718.pdf)
+   +==================================================================+
+   | 7 in mmr's 8 - 39                                                |
+   +==================================================================+
+   | b8faf5f748f149b04018491a51334499fd8b6060c42a835f361fa9665562d12d |
+   +------------------------------------------------------------------+
+   | b8faf5f748f149b04018491a51334499fd8b6060c42a835f361fa9665562d12d |
+   +------------------------------------------------------------------+
+   | 78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112 |
+   +------------------------------------------------------------------+
+   | 78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112 |
+   +------------------------------------------------------------------+
+   | 78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112 |
+   +------------------------------------------------------------------+
+   | 78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112 |
+   +------------------------------------------------------------------+
+   | 78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112 |
+   +------------------------------------------------------------------+
+   | 78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112 |
+   +------------------------------------------------------------------+
+   | 78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112 |
+   +------------------------------------------------------------------+
+   | 78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112 |
+   +------------------------------------------------------------------+
+   | d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7 |
+   +------------------------------------------------------------------+
+   | d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7 |
+   +------------------------------------------------------------------+
+   | d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7 |
+   +------------------------------------------------------------------+
+   | d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7 |
+   +------------------------------------------------------------------+
+   | d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7 |
+   +------------------------------------------------------------------+
+   | d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7 |
+   +------------------------------------------------------------------+
 
-   *  ProjectSilica (https://www.tomshardware.com/news/microsoft-
-      repositions-7tb-project-silica-glass-media-as-a-cloud-storage-
-      solution)
+                                 Table 17
+
+   +==================================================================+
+   | 8 in mmr's 9 - 39                                                |
+   +==================================================================+
+   | b8faf5f748f149b04018491a51334499fd8b6060c42a835f361fa9665562d12d |
+   +------------------------------------------------------------------+
+   | b8faf5f748f149b04018491a51334499fd8b6060c42a835f361fa9665562d12d |
+   +------------------------------------------------------------------+
+   | 78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112 |
+   +------------------------------------------------------------------+
+   | 78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112 |
+   +------------------------------------------------------------------+
+   | 78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112 |
+   +------------------------------------------------------------------+
+   | 78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112 |
+   +------------------------------------------------------------------+
+   | 78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112 |
+   +------------------------------------------------------------------+
+   | 78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112 |
+   +------------------------------------------------------------------+
+   | 78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112 |
+   +------------------------------------------------------------------+
+   | 78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112 |
+   +------------------------------------------------------------------+
+   | d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7 |
+   +------------------------------------------------------------------+
+   | d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7 |
+   +------------------------------------------------------------------+
+   | d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7 |
+   +------------------------------------------------------------------+
+   | d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7 |
+   +------------------------------------------------------------------+
+   | d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7 |
+   +------------------------------------------------------------------+
+   | d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7 |
+   +------------------------------------------------------------------+
+
+                                 Table 18
+
+   +==================================================================+
+   | 9 in mmr's 10 - 39                                               |
+   +==================================================================+
+   | b8faf5f748f149b04018491a51334499fd8b6060c42a835f361fa9665562d12d |
+   +------------------------------------------------------------------+
+   | 78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112 |
+   +------------------------------------------------------------------+
+   | 78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112 |
+   +------------------------------------------------------------------+
+   | 78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112 |
+   +------------------------------------------------------------------+
+   | 78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112 |
+   +------------------------------------------------------------------+
+   | 78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112 |
+   +------------------------------------------------------------------+
+   | 78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112 |
+   +------------------------------------------------------------------+
+   | 78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112 |
+   +------------------------------------------------------------------+
+   | 78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112 |
+   +------------------------------------------------------------------+
+   | d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7 |
+   +------------------------------------------------------------------+
+   | d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7 |
+   +------------------------------------------------------------------+
+   | d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7 |
+   +------------------------------------------------------------------+
+   | d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7 |
+   +------------------------------------------------------------------+
+   | d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7 |
+   +------------------------------------------------------------------+
+   | d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7 |
+   +------------------------------------------------------------------+
+
+                                 Table 19
+
+   +==================================================================+
+   | 10 in mmr's 11 - 39                                              |
+   +==================================================================+
+   | 78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112 |
+   +------------------------------------------------------------------+
+   | 78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112 |
+   +------------------------------------------------------------------+
+   | 78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112 |
+   +------------------------------------------------------------------+
+   | 78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112 |
+   +------------------------------------------------------------------+
+   | 78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112 |
+   +------------------------------------------------------------------+
+   | 78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112 |
+   +------------------------------------------------------------------+
+   | 78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112 |
+   +------------------------------------------------------------------+
+   | 78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112 |
+   +------------------------------------------------------------------+
+   | d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7 |
+   +------------------------------------------------------------------+
+   | d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7 |
+   +------------------------------------------------------------------+
+   | d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7 |
+   +------------------------------------------------------------------+
+   | d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7 |
+   +------------------------------------------------------------------+
+   | d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7 |
+   +------------------------------------------------------------------+
+   | d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7 |
+   +------------------------------------------------------------------+
+
+                                 Table 20
+
+   +==================================================================+
+   | 11 in mmr's 12 - 39                                              |
+   +==================================================================+
+   | 78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112 |
+   +------------------------------------------------------------------+
+   | 78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112 |
+   +------------------------------------------------------------------+
+   | 78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112 |
+   +------------------------------------------------------------------+
+   | 78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112 |
+   +------------------------------------------------------------------+
+   | 78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112 |
+   +------------------------------------------------------------------+
+   | 78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112 |
+   +------------------------------------------------------------------+
+   | 78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112 |
+   +------------------------------------------------------------------+
+   | 78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112 |
+   +------------------------------------------------------------------+
+   | d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7 |
+   +------------------------------------------------------------------+
+   | d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7 |
+   +------------------------------------------------------------------+
+   | d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7 |
+   +------------------------------------------------------------------+
+   | d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7 |
+   +------------------------------------------------------------------+
+   | d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7 |
+   +------------------------------------------------------------------+
+   | d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7 |
+   +------------------------------------------------------------------+
+
+                                 Table 21
+
+   +==================================================================+
+   | 12 in mmr's 13 - 39                                              |
+   +==================================================================+
+   | 78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112 |
+   +------------------------------------------------------------------+
+   | 78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112 |
+   +------------------------------------------------------------------+
+   | 78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112 |
+   +------------------------------------------------------------------+
+   | 78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112 |
+   +------------------------------------------------------------------+
+   | 78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112 |
+   +------------------------------------------------------------------+
+   | 78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112 |
+   +------------------------------------------------------------------+
+   | 78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112 |
+   +------------------------------------------------------------------+
+   | 78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112 |
+   +------------------------------------------------------------------+
+   | d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7 |
+   +------------------------------------------------------------------+
+   | d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7 |
+   +------------------------------------------------------------------+
+   | d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7 |
+   +------------------------------------------------------------------+
+   | d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7 |
+   +------------------------------------------------------------------+
+   | d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7 |
+   +------------------------------------------------------------------+
+   | d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7 |
+   +------------------------------------------------------------------+
+
+                                 Table 22
+
+   +==================================================================+
+   | 13 in mmr's 14 - 39                                              |
+   +==================================================================+
+   | 78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112 |
+   +------------------------------------------------------------------+
+   | 78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112 |
+   +------------------------------------------------------------------+
+   | 78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112 |
+   +------------------------------------------------------------------+
+   | 78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112 |
+   +------------------------------------------------------------------+
+   | 78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112 |
+   +------------------------------------------------------------------+
+   | 78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112 |
+   +------------------------------------------------------------------+
+   | 78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112 |
+   +------------------------------------------------------------------+
+   | 78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112 |
+   +------------------------------------------------------------------+
+   | d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7 |
+   +------------------------------------------------------------------+
+   | d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7 |
+   +------------------------------------------------------------------+
+   | d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7 |
+   +------------------------------------------------------------------+
+   | d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7 |
+   +------------------------------------------------------------------+
+   | d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7 |
+   +------------------------------------------------------------------+
+   | d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7 |
+   +------------------------------------------------------------------+
+
+                                 Table 23
+
+   +==================================================================+
+   | 14 in mmr's 15 - 39                                              |
+   +==================================================================+
+   | 78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112 |
+   +------------------------------------------------------------------+
+   | 78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112 |
+   +------------------------------------------------------------------+
+   | 78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112 |
+   +------------------------------------------------------------------+
+   | 78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112 |
+   +------------------------------------------------------------------+
+   | 78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112 |
+   +------------------------------------------------------------------+
+   | 78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112 |
+   +------------------------------------------------------------------+
+   | 78b2b4162eb2c58b229288bbcb5b7d97c7a1154eed3161905fb0f180eba6f112 |
+   +------------------------------------------------------------------+
+   | d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7 |
+   +------------------------------------------------------------------+
+   | d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7 |
+   +------------------------------------------------------------------+
+   | d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7 |
+   +------------------------------------------------------------------+
+   | d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7 |
+   +------------------------------------------------------------------+
+   | d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7 |
+   +------------------------------------------------------------------+
+   | d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7 |
+   +------------------------------------------------------------------+
+
+                                 Table 24
+
+   +==================================================================+
+   | 15 in mmr's 16 - 39                                              |
+   +==================================================================+
+   | f4a0db79de0fee128fbe95ecf3509646203909dc447ae911aa29416bf6fcba21 |
+   +------------------------------------------------------------------+
+   | f4a0db79de0fee128fbe95ecf3509646203909dc447ae911aa29416bf6fcba21 |
+   +------------------------------------------------------------------+
+   | 61b3ff808934301578c9ed7402e3dd7dfe98b630acdf26d1fd2698a3c4a22710 |
+   +------------------------------------------------------------------+
+   | 61b3ff808934301578c9ed7402e3dd7dfe98b630acdf26d1fd2698a3c4a22710 |
+   +------------------------------------------------------------------+
+   | 61b3ff808934301578c9ed7402e3dd7dfe98b630acdf26d1fd2698a3c4a22710 |
+   +------------------------------------------------------------------+
+   | 61b3ff808934301578c9ed7402e3dd7dfe98b630acdf26d1fd2698a3c4a22710 |
+   +------------------------------------------------------------------+
+   | d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7 |
+   +------------------------------------------------------------------+
+   | d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7 |
+   +------------------------------------------------------------------+
+   | d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7 |
+   +------------------------------------------------------------------+
+   | d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7 |
+   +------------------------------------------------------------------+
+   | d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7 |
+   +------------------------------------------------------------------+
+   | d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7 |
+   +------------------------------------------------------------------+
+
+                                 Table 25
+
+   +==================================================================+
+   | 16 in mmr's 17 - 39                                              |
+   +==================================================================+
+   | f4a0db79de0fee128fbe95ecf3509646203909dc447ae911aa29416bf6fcba21 |
+   +------------------------------------------------------------------+
+   | f4a0db79de0fee128fbe95ecf3509646203909dc447ae911aa29416bf6fcba21 |
+   +------------------------------------------------------------------+
+   | 61b3ff808934301578c9ed7402e3dd7dfe98b630acdf26d1fd2698a3c4a22710 |
+   +------------------------------------------------------------------+
+   | 61b3ff808934301578c9ed7402e3dd7dfe98b630acdf26d1fd2698a3c4a22710 |
+   +------------------------------------------------------------------+
+   | 61b3ff808934301578c9ed7402e3dd7dfe98b630acdf26d1fd2698a3c4a22710 |
+   +------------------------------------------------------------------+
+   | 61b3ff808934301578c9ed7402e3dd7dfe98b630acdf26d1fd2698a3c4a22710 |
+   +------------------------------------------------------------------+
+   | d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7 |
+   +------------------------------------------------------------------+
+   | d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7 |
+   +------------------------------------------------------------------+
+   | d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7 |
+   +------------------------------------------------------------------+
+   | d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7 |
+   +------------------------------------------------------------------+
+   | d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7 |
+   +------------------------------------------------------------------+
+   | d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7 |
+   +------------------------------------------------------------------+
+
+                                 Table 26
+
+   +==================================================================+
+   | 17 in mmr's 18 - 39                                              |
+   +==================================================================+
+   | f4a0db79de0fee128fbe95ecf3509646203909dc447ae911aa29416bf6fcba21 |
+   +------------------------------------------------------------------+
+   | 61b3ff808934301578c9ed7402e3dd7dfe98b630acdf26d1fd2698a3c4a22710 |
+   +------------------------------------------------------------------+
+   | 61b3ff808934301578c9ed7402e3dd7dfe98b630acdf26d1fd2698a3c4a22710 |
+   +------------------------------------------------------------------+
+   | 61b3ff808934301578c9ed7402e3dd7dfe98b630acdf26d1fd2698a3c4a22710 |
+   +------------------------------------------------------------------+
+   | 61b3ff808934301578c9ed7402e3dd7dfe98b630acdf26d1fd2698a3c4a22710 |
+   +------------------------------------------------------------------+
+   | d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7 |
+   +------------------------------------------------------------------+
+   | d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7 |
+   +------------------------------------------------------------------+
+   | d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7 |
+   +------------------------------------------------------------------+
+   | d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7 |
+   +------------------------------------------------------------------+
+   | d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7 |
+   +------------------------------------------------------------------+
+   | d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7 |
+   +------------------------------------------------------------------+
+
+                                 Table 27
+
+   +==================================================================+
+   | 18 in mmr's 19 - 39                                              |
+   +==================================================================+
+   | 61b3ff808934301578c9ed7402e3dd7dfe98b630acdf26d1fd2698a3c4a22710 |
+   +------------------------------------------------------------------+
+   | 61b3ff808934301578c9ed7402e3dd7dfe98b630acdf26d1fd2698a3c4a22710 |
+   +------------------------------------------------------------------+
+   | 61b3ff808934301578c9ed7402e3dd7dfe98b630acdf26d1fd2698a3c4a22710 |
+   +------------------------------------------------------------------+
+   | 61b3ff808934301578c9ed7402e3dd7dfe98b630acdf26d1fd2698a3c4a22710 |
+   +------------------------------------------------------------------+
+   | d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7 |
+   +------------------------------------------------------------------+
+   | d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7 |
+   +------------------------------------------------------------------+
+   | d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7 |
+   +------------------------------------------------------------------+
+   | d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7 |
+   +------------------------------------------------------------------+
+   | d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7 |
+   +------------------------------------------------------------------+
+   | d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7 |
+   +------------------------------------------------------------------+
+
+                                 Table 28
+
+   +==================================================================+
+   | 19 in mmr's 20 - 39                                              |
+   +==================================================================+
+   | 61b3ff808934301578c9ed7402e3dd7dfe98b630acdf26d1fd2698a3c4a22710 |
+   +------------------------------------------------------------------+
+   | 61b3ff808934301578c9ed7402e3dd7dfe98b630acdf26d1fd2698a3c4a22710 |
+   +------------------------------------------------------------------+
+   | 61b3ff808934301578c9ed7402e3dd7dfe98b630acdf26d1fd2698a3c4a22710 |
+   +------------------------------------------------------------------+
+   | 61b3ff808934301578c9ed7402e3dd7dfe98b630acdf26d1fd2698a3c4a22710 |
+   +------------------------------------------------------------------+
+   | d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7 |
+   +------------------------------------------------------------------+
+   | d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7 |
+   +------------------------------------------------------------------+
+   | d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7 |
+   +------------------------------------------------------------------+
+   | d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7 |
+   +------------------------------------------------------------------+
+   | d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7 |
+   +------------------------------------------------------------------+
+   | d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7 |
+   +------------------------------------------------------------------+
+
+                                 Table 29
+
+   +==================================================================+
+   | 20 in mmr's 21 - 39                                              |
+   +==================================================================+
+   | 61b3ff808934301578c9ed7402e3dd7dfe98b630acdf26d1fd2698a3c4a22710 |
+   +------------------------------------------------------------------+
+   | 61b3ff808934301578c9ed7402e3dd7dfe98b630acdf26d1fd2698a3c4a22710 |
+   +------------------------------------------------------------------+
+   | 61b3ff808934301578c9ed7402e3dd7dfe98b630acdf26d1fd2698a3c4a22710 |
+   +------------------------------------------------------------------+
+   | 61b3ff808934301578c9ed7402e3dd7dfe98b630acdf26d1fd2698a3c4a22710 |
+   +------------------------------------------------------------------+
+   | d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7 |
+   +------------------------------------------------------------------+
+   | d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7 |
+   +------------------------------------------------------------------+
+   | d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7 |
+   +------------------------------------------------------------------+
+   | d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7 |
+   +------------------------------------------------------------------+
+   | d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7 |
+   +------------------------------------------------------------------+
+   | d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7 |
+   +------------------------------------------------------------------+
+
+                                 Table 30
+
+   +==================================================================+
+   | 21 in mmr's 22 - 39                                              |
+   +==================================================================+
+   | 61b3ff808934301578c9ed7402e3dd7dfe98b630acdf26d1fd2698a3c4a22710 |
+   +------------------------------------------------------------------+
+   | 61b3ff808934301578c9ed7402e3dd7dfe98b630acdf26d1fd2698a3c4a22710 |
+   +------------------------------------------------------------------+
+   | 61b3ff808934301578c9ed7402e3dd7dfe98b630acdf26d1fd2698a3c4a22710 |
+   +------------------------------------------------------------------+
+   | d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7 |
+   +------------------------------------------------------------------+
+   | d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7 |
+   +------------------------------------------------------------------+
+   | d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7 |
+   +------------------------------------------------------------------+
+   | d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7 |
+   +------------------------------------------------------------------+
+   | d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7 |
+   +------------------------------------------------------------------+
+   | d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7 |
+   +------------------------------------------------------------------+
+
+                                 Table 31
+
+   +==================================================================+
+   | 22 in mmr's 23 - 39                                              |
+   +==================================================================+
+   | dd7efba5f1824103f1fa820a5c9e6cd90a82cf123d88bd035c7e5da0aba8a9ae |
+   +------------------------------------------------------------------+
+   | dd7efba5f1824103f1fa820a5c9e6cd90a82cf123d88bd035c7e5da0aba8a9ae |
+   +------------------------------------------------------------------+
+   | d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7 |
+   +------------------------------------------------------------------+
+   | d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7 |
+   +------------------------------------------------------------------+
+   | d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7 |
+   +------------------------------------------------------------------+
+   | d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7 |
+   +------------------------------------------------------------------+
+   | d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7 |
+   +------------------------------------------------------------------+
+   | d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7 |
+   +------------------------------------------------------------------+
+
+                                 Table 32
+
+   +==================================================================+
+   | 23 in mmr's 24 - 39                                              |
+   +==================================================================+
+   | dd7efba5f1824103f1fa820a5c9e6cd90a82cf123d88bd035c7e5da0aba8a9ae |
+   +------------------------------------------------------------------+
+   | dd7efba5f1824103f1fa820a5c9e6cd90a82cf123d88bd035c7e5da0aba8a9ae |
+   +------------------------------------------------------------------+
+   | d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7 |
+   +------------------------------------------------------------------+
+   | d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7 |
+   +------------------------------------------------------------------+
+   | d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7 |
+   +------------------------------------------------------------------+
+   | d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7 |
+   +------------------------------------------------------------------+
+   | d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7 |
+   +------------------------------------------------------------------+
+   | d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7 |
+   +------------------------------------------------------------------+
+
+                                 Table 33
+
+   +==================================================================+
+   | 24 in mmr's 25 - 39                                              |
+   +==================================================================+
+   | dd7efba5f1824103f1fa820a5c9e6cd90a82cf123d88bd035c7e5da0aba8a9ae |
+   +------------------------------------------------------------------+
+   | d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7 |
+   +------------------------------------------------------------------+
+   | d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7 |
+   +------------------------------------------------------------------+
+   | d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7 |
+   +------------------------------------------------------------------+
+   | d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7 |
+   +------------------------------------------------------------------+
+   | d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7 |
+   +------------------------------------------------------------------+
+   | d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7 |
+   +------------------------------------------------------------------+
+
+                                 Table 34
+
+   +==================================================================+
+   | 25 in mmr's 26 - 39                                              |
+   +==================================================================+
+   | d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7 |
+   +------------------------------------------------------------------+
+   | d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7 |
+   +------------------------------------------------------------------+
+   | d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7 |
+   +------------------------------------------------------------------+
+   | d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7 |
+   +------------------------------------------------------------------+
+   | d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7 |
+   +------------------------------------------------------------------+
+   | d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7 |
+   +------------------------------------------------------------------+
+
+                                 Table 35
+
+   +==================================================================+
+   | 26 in mmr's 27 - 39                                              |
+   +==================================================================+
+   | d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7 |
+   +------------------------------------------------------------------+
+   | d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7 |
+   +------------------------------------------------------------------+
+   | d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7 |
+   +------------------------------------------------------------------+
+   | d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7 |
+   +------------------------------------------------------------------+
+   | d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7 |
+   +------------------------------------------------------------------+
+   | d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7 |
+   +------------------------------------------------------------------+
+
+                                 Table 36
+
+   +==================================================================+
+   | 27 in mmr's 28 - 39                                              |
+   +==================================================================+
+   | d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7 |
+   +------------------------------------------------------------------+
+   | d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7 |
+   +------------------------------------------------------------------+
+   | d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7 |
+   +------------------------------------------------------------------+
+   | d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7 |
+   +------------------------------------------------------------------+
+   | d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7 |
+   +------------------------------------------------------------------+
+   | d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7 |
+   +------------------------------------------------------------------+
+
+                                 Table 37
+
+   +==================================================================+
+   | 28 in mmr's 29 - 39                                              |
+   +==================================================================+
+   | d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7 |
+   +------------------------------------------------------------------+
+   | d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7 |
+   +------------------------------------------------------------------+
+   | d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7 |
+   +------------------------------------------------------------------+
+   | d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7 |
+   +------------------------------------------------------------------+
+   | d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7 |
+   +------------------------------------------------------------------+
+   | d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7 |
+   +------------------------------------------------------------------+
+
+                                 Table 38
+
+   +==================================================================+
+   | 29 in mmr's 30 - 39                                              |
+   +==================================================================+
+   | d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7 |
+   +------------------------------------------------------------------+
+   | d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7 |
+   +------------------------------------------------------------------+
+   | d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7 |
+   +------------------------------------------------------------------+
+   | d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7 |
+   +------------------------------------------------------------------+
+   | d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7 |
+   +------------------------------------------------------------------+
+   | d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7 |
+   +------------------------------------------------------------------+
+
+                                 Table 39
+
+   +==================================================================+
+   | 30 in mmr's 31 - 39                                              |
+   +==================================================================+
+   | d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7 |
+   +------------------------------------------------------------------+
+   | d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7 |
+   +------------------------------------------------------------------+
+   | d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7 |
+   +------------------------------------------------------------------+
+   | d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7 |
+   +------------------------------------------------------------------+
+   | d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7 |
+   +------------------------------------------------------------------+
+
+                                 Table 40
+
+   +==================================================================+
+   | 31 in mmr's 32 - 39                                              |
+   +==================================================================+
+   | 0c9f36783b5929d43c97fe4b170d12137e6950ef1b3a8bd254b15bbacbfdee7f |
+   +------------------------------------------------------------------+
+   | 0c9f36783b5929d43c97fe4b170d12137e6950ef1b3a8bd254b15bbacbfdee7f |
+   +------------------------------------------------------------------+
+   | 6a169105dcc487dbbae5747a0fd9b1d33a40320cf91cf9a323579139e7ff72aa |
+   +------------------------------------------------------------------+
+   | 6a169105dcc487dbbae5747a0fd9b1d33a40320cf91cf9a323579139e7ff72aa |
+   +------------------------------------------------------------------+
+
+                                 Table 41
+
+   +==================================================================+
+   | 32 in mmr's 33 - 39                                              |
+   +==================================================================+
+   | 0c9f36783b5929d43c97fe4b170d12137e6950ef1b3a8bd254b15bbacbfdee7f |
+   +------------------------------------------------------------------+
+   | 0c9f36783b5929d43c97fe4b170d12137e6950ef1b3a8bd254b15bbacbfdee7f |
+   +------------------------------------------------------------------+
+   | 6a169105dcc487dbbae5747a0fd9b1d33a40320cf91cf9a323579139e7ff72aa |
+   +------------------------------------------------------------------+
+   | 6a169105dcc487dbbae5747a0fd9b1d33a40320cf91cf9a323579139e7ff72aa |
+   +------------------------------------------------------------------+
+
+                                 Table 42
+
+   +==================================================================+
+   | 33 in mmr's 34 - 39                                              |
+   +==================================================================+
+   | 0c9f36783b5929d43c97fe4b170d12137e6950ef1b3a8bd254b15bbacbfdee7f |
+   +------------------------------------------------------------------+
+   | 6a169105dcc487dbbae5747a0fd9b1d33a40320cf91cf9a323579139e7ff72aa |
+   +------------------------------------------------------------------+
+   | 6a169105dcc487dbbae5747a0fd9b1d33a40320cf91cf9a323579139e7ff72aa |
+   +------------------------------------------------------------------+
+
+                                 Table 43
+
+   +==================================================================+
+   | 34 in mmr's 35 - 39                                              |
+   +==================================================================+
+   | 6a169105dcc487dbbae5747a0fd9b1d33a40320cf91cf9a323579139e7ff72aa |
+   +------------------------------------------------------------------+
+   | 6a169105dcc487dbbae5747a0fd9b1d33a40320cf91cf9a323579139e7ff72aa |
+   +------------------------------------------------------------------+
+
+                                 Table 44
+
+   +==================================================================+
+   | 35 in mmr's 36 - 39                                              |
+   +==================================================================+
+   | 6a169105dcc487dbbae5747a0fd9b1d33a40320cf91cf9a323579139e7ff72aa |
+   +------------------------------------------------------------------+
+   | 6a169105dcc487dbbae5747a0fd9b1d33a40320cf91cf9a323579139e7ff72aa |
+   +------------------------------------------------------------------+
+
+                                 Table 45
+
+   +==================================================================+
+   | 36 in mmr's 37 - 39                                              |
+   +==================================================================+
+   | 6a169105dcc487dbbae5747a0fd9b1d33a40320cf91cf9a323579139e7ff72aa |
+   +------------------------------------------------------------------+
+   | 6a169105dcc487dbbae5747a0fd9b1d33a40320cf91cf9a323579139e7ff72aa |
+   +------------------------------------------------------------------+
+
+                                 Table 46
+
+   +==================================================================+
+   | 37 in mmr's 38 - 39                                              |
+   +==================================================================+
+   | 6a169105dcc487dbbae5747a0fd9b1d33a40320cf91cf9a323579139e7ff72aa |
+   +------------------------------------------------------------------+
+
+                                 Table 47
 
 Acknowledgments
 
