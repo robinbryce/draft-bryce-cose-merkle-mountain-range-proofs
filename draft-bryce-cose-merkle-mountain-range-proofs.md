@@ -37,7 +37,8 @@ informative:
 
 This specification describes a protocol for the COSE encoding of verifiable commitments to data,
 providing immediate verifiability and immediate, safe, replicability of these commitments.
-Using this scheme, any replicated copies are permanently verifiable and are permanently consistent with the complete data set.
+Using this scheme, any replicated copy of the data, or a sub range thereof,
+is permanently verifiable and is permanently consistent with the complete data set.
 The specification allows for historic commitments and the original data, if desired,
 to be pruned without impacting the verifiability of subsequent data or any replicated copies.
 Verifiers and auditors may be off line indefinitely, and yet, once back online,
@@ -51,43 +52,56 @@ against any future state they encounter.
 The term "Merkle Mountain Range" is due to [PeterTodd] and has wide acceptance as the identifier for the approach to managing Merkle trees described by this specification.
 This is typically abbreviated as MMR.
 
-The MMR can also be seen as the node visitation order obtained by the post-order traversal of a series of complete binary trees.
 
-This specification defines the how to produce and consume the proof types for inclusion and consistency,
-in CBOR, for a Verifiable Data Structure based on the MMR construction.
-It additionally defines a small number of primitive operations commonly useful in the context of MMR's.
+An MMR is the unique series of perfect binary merkle trees required to commit its leaves.
+The nodes, including the leaves are stored linearly.
+
+       6
+     2   5
+    0 1 3 4 7
+
+This illustrates `MMR(8)`, which is comprised of two perfect trees.
+The first is rooted at 6, and the second is the single leaf element 7.
+As leaves are added to an MMR, additional nodes are appended to "merge" with the
+preceding tree if the height of the new node matches the height of that tree.
+This process repeats as the interior nodes are added until all trees are complete and are of different heights.
+
+Nodes in an MMR are organized linearly in storage, and are strictly write once and append only.
+The MMR can also be seen as the node visitation order obtained by the post-order traversal of a series of complete binary trees.
+This specification defines how to create, verify and encode proofs of inclusion and consistency for MMR's in CBOR.
 
 Proving and verifying is defined in terms of the cryptographic, asynchronous, accumulator described by [ReyzinYakoubov]
 
+Algorithms for leaf addition and for proving and verifying inclusion and consistency are defined.
+Additionally a small number of primitive operations commonly useful in the context of MMR's are provided.
 The format of the underlying storage is outside the scope of this document, however some minimal requirements are established for interfacing with it.
 
 There are distinct advantages for maintainers of verifiable data and for parties relying on the verifiability of that data when using this approach:
 
-- Updates to the persistent tree data are co-ordination free. Competing writers
+- Updates to the persistent MMR data can be co-ordination free. Competing writers
   can safely use [Optimistic Concurrency Control](https://en.wikipedia.org/wiki/Optimistic_concurrency_control)
-- Tree data does not change once written.
+- MMR data does not change once written.
   This makes additions immediately available for replication and caching with mechanisms such as [HTTP_ETag](https://en.wikipedia.org/wiki/HTTP_ETag)
-- Proofs of inclusion for a specific element are permanently consistent with all future states of the tree.
-  And, a tree state which fails this property is provably inconsistent.
+- Proofs of inclusion for a specific element are permanently consistent with all future states of the MMR.
+  And, an MMR state which fails this property is provably inconsistent.
 - A proof of inclusion can be verified against any historic accumulator,
-  provided the element being verified was included in the tree at the time the accumulator was obtained.
+  provided the element being verified was included in the MMR at the time the accumulator was obtained.
+- Proof of consistency can be defined as the proof of inclusion for each old accumulator entry, and so inherit all the properties of the inclusion proofs.
 - For a previously saved inclusion proof,
-  there are at most log 2 (n) future accumulator states required to show its validity against any future tree.
+  there are at most log 2 (n) future accumulator states required to show its validity against any future MMR.
   Where n is the count of additions made after the entry was added.
 - MMR's can be pruned without breaking these properties of inclusion and consistency.
-- The accumulator states naturally emerge from the MMR and are also permanently consistent with future states of the tree.
-- Any MMR state which fails to satisfy these properties is provably inconsistent.
-- For both proofs of inclusion and proofs of consistency,
-  the verification paths are strict prefixes of all future verification paths for those same items.
+- The accumulator states naturally emerge from the MMR and are also permanently consistent with future states of the MMR.
 
 The above advantages mostly follow from:
 
 - A post order traversal of a binary tree results in a naturally linear storage organization. As observed  in [CrosbySecondaryStorage].
-- An asynchronous cryptographic accumulator naturally emerges when maintaining a tree in this way.
-  [ReyzinYakoubov] defines the properties of these, which are particularly relevant here, as "Low update frequency" and "Old-Accumulator Compatibility".
+- An asynchronous cryptographic accumulator naturally emerges when maintaining an MMR in this way.
+  [ReyzinYakoubov] defines the properties of these,
+  which are particularly relevant here, as "Low update frequency" and "Old-Accumulator Compatibility".
 - As the post order traversal index is permanently identifying for any elements siblings and parents,
-  the authentication path element indices is known and permanent.
-  It can be easily computed without needing to materialize the tree in whole or in part.
+  the verification path element indices is known and permanent.
+  It can be easily computed without needing to materialize the MMR in whole or in part.
 
 Further work in [BNT] defines additional advantages for contexts in which "stream" processing of verifiable data is desirable.
 Post-order, Pre-order and in-order tree traversal are defined by [KnuthTBT]
@@ -96,12 +110,12 @@ Post-order, Pre-order and in-order tree traversal are defined by [KnuthTBT]
 
 {::boilerplate bcp14-tagged}
 
-- `i` shall be the index of a node in the MMR
-- `pos` shall be `i+1`
-- `e` shall be the zero based index of leaf entry in the MMR
+- `i` shall be the index of any node, including leaf nodes, in the MMR
+- `pos` shall be `i+1` and is important only in the implementation of some algorithms.
+- `e` shall be the zero based index of leaf entry in the MMR (where only leaves are considered, and interiors are excluded)
 - `f` shall be a leaf value, which is `H(x)`
 - `h` shall be the 1 based tree height
-- `g` shall be the 0 based height, `h-1`
+- `g` shall be the 0 based tree height, `h-1`
 - `v` shall be any node, including a leaf node value, which will be the result of `H(x)`.
 - `S` shall be any valid MMR size, and is uniquely identifying for an MMR state
 - `C` shall be the last node index of any complete MMR.
@@ -109,43 +123,45 @@ Post-order, Pre-order and in-order tree traversal are defined by [KnuthTBT]
 - `R` shall be the the sparse accumulator, of [ReyzinYakoubov], for any complete MMR `C`
 - `H(x)` shall be the SHA-256 digest of any value x
 - `||` shall mean concatenation of raw byte representations of the referenced values.
+- `D` shall mean the linear array storing all node in the MMR.
+
+In this specification, all numbers are unsigned 64 bit integers. The maximum height of a single tree is 64 (which will have `g=63` for its peak).
+
+Were an MMR to accept a new addition once every 10 milliseconds, it would take roughly 4.6 million millennia to over flow.
+
+Should a system exist that can extend an MMR fast enough for this to be a limitation,
+the same advantages that make MMR's convenient to work with also accrue to combinations of MMR's.
 
 # Accumulator Structure
 
-In this section we describe and define the asynchronous cryptographic accumulator naturally available in an MMR,
+In this section we introduce the asynchronous cryptographic accumulator naturally available in an MMR,
 and which is crucial to to a number of the benefits of this approach.
 
-An MMR is a series of binary trees maintained logically in descending order of height.
-Only the last tree may be incomplete.
-The roots of each complete tree are described as peaks.
+The set of peaks for an MMR of any size is a naturally forming cryptographic accumulator.
+This uniquely and succinctly commits the complete history of the MMR. For its formal definition see [ReyzinYakoubov]
 
+As discussed above, an MMR is a series of binary trees maintained logically in descending order of height.
 Given only the preceding peaks, and the leaf nodes of the last tree,
 it is always possible to complete the last tree.
+By fully exploiting this property in the organization of persistent storage,
+new entries can be appended without co-ordination between competing writers.
 
 An algorithm to add a single leaf to an MMR is given in [add_leaf_hash](#addleafhash)
 
-For every even numbered node addition, this process will always "burry" at least one preceding peak,
-by absorbing the newly complete peak under its predecessor.
-This process proceeds until there are no more "completable" predecessors,
-needing only the previous peak at each step.
-
-The set of peaks for an MMR of any size is a naturally forming cryptographic accumulator (see [ReyzinYakoubov]).
-And this uniquely and succinctly commits the complete history of the MMR.
-
-The notable distinction from more traditional "mono" roots approach to merkle tree proofs is that, as the tree grows,
+The notable distinction from more traditional "mono" roots approach to merkle tree proofs is that, as the MMR grows,
 elements in the accumulator change with low frequency, while a mono root is unique for each individual addition.
 This frequency is defined as $$\log_2(n)$$ in the number of subsequent leaf additions after the element in question.
 
-It is important to note that while the accumulator state evolves, all nodes in the tree are write once.
-The accumulator simply comprises the nodes at the "peaks" for the current MMR state.
+It is important to note that while the accumulator state evolves, all nodes in the MMR are write once.
+The accumulator simply comprises the nodes at the peaks for the current MMR state.
 All paths for proofs of inclusion lead to an accumulator peak, rather than a single "mono" root.
 
-Therefore many proofs of inclusion are committed by a single entry in an accumulator state.
+This means many proofs of inclusion are committed by a single entry in an accumulator state, and so share the same root.
 
-Because of this, the inclusion path for any element is strictly append only,
+The inclusion path for any element is strictly append only,
 in addition to the data structure itself being append only.
-Consistency proofs *are* the inclusion proofs for the old-accumulator peaks against the accumulator for the future tree state consistency is being shown for.
-An accumulator is at most tree height long, which is also the maximum length of any single proof of inclusion + 1.
+Consistency proofs *are* the inclusion proofs for the old-accumulator peaks against the accumulator for the future MMR state consistency is being shown for.
+An accumulator is at most MMR height long, which is also the maximum length of any single proof of inclusion + 1.
 
 For illustration, consider `MMR(8)` which is a complete MMR with two peaks at node indices 6 and 7.
 
@@ -154,7 +170,6 @@ For illustration, consider `MMR(8)` which is a complete MMR with two peaks at no
     0 1 3 4 7
 
 The node indices match their location in storage.
-When constructing the tree, addition of nodes is strictly append only.
 
 MMR's are identified uniquely by their size. Above we have `MMR(8)`, because there are 8 nodes.
 
@@ -164,14 +179,17 @@ An incomplete MMR may still be identified. Here we have `MMR(9)`.
      2   5
     0 1 3 4 7 8
 
-An MMR is said to be "complete" when all possible ancestors have been "filled in".
-The value for node 9 is `H(7 || 8)`, and adding that node completes the previous MMR.
+However, its accumulator is that of the most recent complete MMR.
+
+An MMR is said to be complete when all peaks have a distinct height.
+The value for node 9 is `H(7 || 8)`,
+and adding 8 merges the two, single element, binary trees represented by 7 and 8..
 
        6
      2   5   9
     0 1 3 4 7 8
 
-The accumulator, described by [ReyzinYakoubov] is the set of peaks, with "gaps" reserved for the missing peaks.
+The accumulator, described by [ReyzinYakoubov] is the set of peaks, with gaps reserved for the missing peaks.
 MMR(8), where a gap is indicated by _ would be:
 
     [6, _, 7]
@@ -180,11 +198,15 @@ The packed form would be:
 
     [6, 7]
 
+The accumulator for `MMR(10)` is:
+
+    [6, 9, _]
+
 The accumulator, packed or padded, lists the peaks strictly descending order of height.
 Given this fact, straight forward primitives for selecting the desired peak can be derived from both packed and un-packed form.
 The algorithms in this document work with the packed form exclusively.
 
-Given any index `i` in the tree, the accumulator for the previous `D[0:i)` nodes
+Given any index `i` in the MMR, the accumulator for the previous `D[0:i)` nodes
 satisfies the sibling dependencies of the inclusion paths of all subsequent `D[i:n]` nodes.
 
 And the accumulator is itself only dependent, for proof of inclusion or consistency, on nodes in `D[i:n]`
@@ -217,24 +239,24 @@ The path for node `1` in `MMR(7)` becomes `[0, 5]`, because `H(0, 1)` is the val
 
 The path for node `1` in `MMR(8)` and `MMR(10)` remains unchanged.
 
-It can be seen that the older the tree item is,
+It can be seen that the older the MMR node is,
 the less frequently its verification path will be extended to reach a new accumulator entry.
 
 An algorithm to produce the verifying path for any node `i` is given in [inclusion_proof_path](#inclusionproofpath)
 
 In general, given the height `g` of the accumulator peak currently authenticating a node `i`,
-the verification path for `i` will not change until the count of tree leaves reaches $$2^{g+1}$$
+the verification path for `i` will not change until the count of MMR leaves reaches $$2^{g+1}$$
 
 The old inclusion path will be a strict prefix of the new inclusion path.
 
-An algorithm defining the packed accumulator for any MMR size `S` is given by [peaks](#peaks)
+An algorithm defining the packed accumulator for any MMR size `S` is given by [ peaks](#peaks)
 
 An algorithm which sets a bit for each present accumulator peaks in an MMR of size `S` is given by [leaf_count](#leafcount),
 the produced value is also the count of leaves present in that MMR.
 
-Lastly, many primitives for working with MMR's rely on a property of the *position* tree form of an MMR.
+Lastly, many primitives for working with MMR's rely on a property of the *position* form of an MMR.
 
-The position tree for the complete MMR with size 8 MMR(8) is
+The position form for the complete MMR with size 8 MMR(8) is
 
        7
      3   6
@@ -255,10 +277,10 @@ The CBOR representation of an inclusion proof for MMRIVER is
 ~~~~ cddl
     inclusion-proof = bstr .cbor [
 
-        ; zero based index of any node in the tree
+        ; zero based index of any node in the MMR
         index: uint
 
-        ; path from the node to its accumulator peak in MMR(tree-size)
+        ; path from the node to its accumulator peak in MMR(mmr-size)
         inclusion-path: [ + bstr ]
     ]
 ~~~~
@@ -270,20 +292,25 @@ The CBOR representation of an inclusion proof for MMRIVER is
 When a path is produced for the purposes of verifying or creating proofs, including the `inclusion-path` referenced above,
 the path elements MUST be resolved to the referenced node values.
 
-The [add_leaf_hash](#addleafhash) algorithm illustrates the use of the
-
-Implementation defined storage methods
-
-`Get` to accomplish this.
+The [add_leaf_hash](#addleafhash) algorithm illustrates the use of the implementation define storage
+method [ get](#get) to accomplish this.
 For a pruned MMR, the referenced nodes are either present directly or are present in the accumulator.
-Managing the availability of the accumulator is the callers responsibility, and SHOULD typically be accomplished in the implementation specific `Get` method.
+Managing the availability of the accumulator is the callers responsibility, and SHOULD typically be accomplished in the implementation specific [ get](#get) method.
 
-Given
+Given:
 
 - `C` the index of the last node in any complete MMR which contains `i`.
 - `i` the index of the mmr node whose verification path is required.
 
-The pseudo code describing the algorithm relies on the supporting algorithm [index_height](#indexheight)
+And the methods:
+
+- [index_height](#indexheight) which obtains the zero based height `g` of any node.
+
+And the constraints:
+
+- `i <= C`
+
+We define `inclusion_proof_path` as:
 
     def inclusion_proof_path(i, c):
 
@@ -297,13 +324,14 @@ The pseudo code describing the algorithm relies on the supporting algorithm [ind
             siblingoffset = (2 << g)
 
             # If the index after i is higher, it is the left parent,
-            # and i is the right sibling.
+            # and i is the right sibling
             if index_height(i+1) > g:
 
                 # The witness to the right sibling is offset behind i
                 isibling = i - siblingoffset + 1
 
-                # The parent of a right sibling is stored immediately after.
+                # The parent of a right sibling is stored immediately
+                # after
                 i += 1
             else:
 
@@ -311,11 +339,11 @@ The pseudo code describing the algorithm relies on the supporting algorithm [ind
                 isibling = i + siblingoffset - 1
 
                 # The parent of a left sibling is stored immediately after
-                # its right sibling.
+                # its right sibling
                 i += siblingoffset
 
-            # When the computed sibling exceedes the range of MMR(C+1), we have
-            # completed the path.
+            # When the computed sibling exceedes the range of MMR(C+1),
+            # we have completed the path
             if isibling > c:
                 return path
 
@@ -325,20 +353,29 @@ The pseudo code describing the algorithm relies on the supporting algorithm [ind
             g += 1
 
 
-The proof can be verified against any tree size which includes `index`,
-as it is a prefix of any future proof produced by a consistent future log state.
+## Forward consistency of inclusion proofs
 
-Specifically, where `i < c0`; `c0 < c1`; and where [parent](#parent) obtains the parent node index of any node,
-the following hold for all MMR's `>= MMR(c1+1)`:
+The proof obtained by [inclusion_proof_path](#inclusionproofpath) can be verified against any MMR size which includes `i`,
+as it is a prefix of any proof produced by a consistent future log state.
+
+Assuming the constraints:
+
+- `i < c0`
+- `c0 < c1`
+
+And the methods:
+
+- [ parent](#parent) which obtains the parent node index of any node
+
+The following hold for all MMR(c0) and MMR(c1):
 
     path_c0 = inclusion_proof_path(i, c0)
     path_c1 = inclusion_proof_path(parent(path_c0[-1]), c1)
     path = inclusion_proof_path(i, c1) == path_c0 + path_c1
 
+Note: the python specific list access syntax `path_c0[-1]` obtains the last element of the array `path_c0`.
 
 This is the basis on which consistent inclusion, or otherwise, can be show for any individually proven node `i`.
-
-Note: the python specific list access syntax `path_c0[-1]` obtains the last element of the array `path_c0`.
 
 # Receipt of Inclusion
 
@@ -371,17 +408,21 @@ unprotected-header-map = {
 }
 ~~~~
 
-The payload of an MMRIVER inclusion proof signature is the accumulator peak committing to the nodes inclusion, or the node itself where the proof path is empty. When the path is non-empty, the parent of the last witness node in the proof is also the accumulator peak.
+The payload of an MMRIVER inclusion proof signature is the accumulator peak committing to the nodes inclusion,
+or the node itself where the proof path is empty. When the path is non-empty,
+the parent of the last witness node in the proof is also the accumulator peak.
+The algorithm [included_root](#includedroot) obtains this value.
 
 The payload MUST be detached.
-Detaching the payload forces verifiers to recompute the root from the inclusion proof signature, this protects against implementation errors where the signature is verified but the merkle root does not match the inclusion proof.
-The EDN for a Receipt containing an inclusion proof for RFC9162_SHA256 is:
-
+Detaching the payload forces verifiers to recompute the root from the inclusion proof signature,
+this protects against implementation errors where the signature is verified but the merkle root does not match the inclusion proof.
 
 ## Verifying the Receipt of inclusion
 
 1. Recompute the root from the path and the element for which inclusion is being shown using [included_root](#includedroot).
-   For a leaf node, this is obtained via `H(x)` as defined by the application. For an interior node, this is read directly from the log using `Get`.
+   For a leaf node, this is obtained via `H(x)` as defined by the application.
+   For an interior node, this is read directly from the log, or a replicated portion of it,
+   using the implementation define storage method [ get](#get).
 1. Verify the signature using the obtained root as the detached payload.
 
 ## included_root
@@ -389,16 +430,19 @@ The EDN for a Receipt containing an inclusion proof for RFC9162_SHA256 is:
 The algorithm `included_root` calculates the accumulator peak for the provided proof and node value.
 Note that both interior and leaf nodes are handled identically.
 
-Given
+Given:
 
 - `i` is the index the `nodeHash` is to be shown at
 - `nodehash` the value whose inclusion is to be shown
 - `proof` is the path of ibling values committing i. They recreate the unique
   accumulator peak that committed i to the MMR state from which the proof was produced.
 
+And the methods:
 
-Note: It is a property of the accumulator that the committing peak changes with low frequency. Each time it changes for any element i, the number of leaves that can be added without it changing again doubles.
+- [index_height](#indexheight) which obtains the zero based height `g` of any node.
+- [hash_pospair64](#hashpospair64) which applies `H` to the new node position and its children.
 
+We define `included_root` as:
 
     def included_root(i, nodehash, proof):
 
@@ -409,11 +453,11 @@ Note: It is a property of the accumulator that the committing peak changes with 
         for sibling in proof:
 
             # If the index after i is higher, it is the left parent,
-            # and i is the right sibling.
+            # and i is the right sibling
 
             if index_height(i + 1) > g:
 
-                # The parent of a right sibling is stored immediately after.
+                # The parent of a right sibling is stored immediately after
 
                 i = i + 1
 
@@ -437,19 +481,23 @@ Note: It is a property of the accumulator that the committing peak changes with 
 
 # Consistency Proof
 
-The cbor representation of a consistency proof for MMRIVER_SHA256 is:
+The cbor representation of a consistency proof for MMRIVER is:
 
 ~~~~ cddl
+
+consistency-path = [ * bstr ]
+
 consistency-proof =  bstr .cbor [
 
-    ; previous merkle root tree size
-    tree-size-1: uint
+    ; previous MMR size
+    mmr-size-1: uint
 
-    ; latest merkle root tree size
-    tree-size-2: uint
+    ; latest MMR size
+    mmr-size-2: uint
 
-    ; the inclusion path from each accumulator peak in MMR(tree-size-1) to its new accumulator peak in MMR(tree-size-2).
-    consistency-path: [+ [ + bstr ] ]
+    ; the inclusion path from each accumulator peak in MMR(mmr-size-1)
+    ; to its new accumulator peak in MMR(mmr-size-2).
+    consistency-paths: [ + consistency-path ]
 ]
 ~~~~
 
@@ -458,23 +506,30 @@ consistency-proof =  bstr .cbor [
 Creates a proof of consistency between the identified MMR's.
 
 The returned value is a list containing a single proof of inclusion for each peak
-defining the first MMR state in the second MMR state.
+from the first MMR state in the second MMR state.
 
 When a path is produced for the purposes of verifying or creating proofs,
 including the `inclusion-path` referenced above,
 the path elements MUST be resolved to the referenced node values.
 
-[inclusion_proof_path](#inclusionproofpath) describes how this can be accomplished.
+The [add_leaf_hash](#addleafhash) algorithm illustrates the use of the implementation define
+storage method [ get](#get) to accomplish this.
 
+Given:
 
-Given,
 - `ifrom` is the last node of the complete `MMR(ifrom + 1)`
 - `ito` is the last node of the complete `MMR(ito + 1)`
 
-And `ito >= ifrom`
+And the methods:
 
-The pseudo code relies on [inclusion_proof_path](#inclusionproofpath)
-and the supporting algorithm [peaks](#peaks)
+- [inclusion_proof_path](#inclusionproofpath)
+- [ peaks](#peaks)
+
+And the constraints:
+
+- `ifrom <= ito`
+
+We define `consistency_proof_paths` as:
 
     def consistency_proof_paths(ifrom, ito):
 
@@ -522,41 +577,52 @@ This protects against implementation errors where the signature is verified but 
 
 ## Verifying the Receipt of consistency
 
-1. Recompute the prefix of the accumulator for `MMR(tree-size-2)` from the proofs in the receipt
+1. Recompute the prefix of the accumulator for `MMR(mmr-size-2)` from the proofs in the receipt
    using the algorithm [consistent_roots](#consistentroots)
 2. Verify the signature using the obtained prefix as the detached payload.
 
 ### consistent_roots
 
-The prefix may be the full list of peaks in the accumulator for `MMR(tree-size-2)`.
-The order of the roots returned by `consistent_roots` matches the order of the nodes in the accumulator.
+`consistent_roots` is supplied with the accumulator from which consistency is being shown,
+and an inclusion proof for each accumulator entry in a future MMR state.
+The algorithm recovers the necessary prefix (peaks) of the future accumulator against which the proofs were obtained.
 
-
-The pseudo code describing the algorithm relies on the algorithm [included_root](#includedroot), which is also used when verifying receipts of inclusion, and the supporting algorithm [peaks](#peaks)
-
-Given,
-
-- `ifrom` the last node index in the complete MMR from which consistency was proven.
-- `accumulatorfrom` the node values correponding to the peaks of the accumulator at `MMR(tree-size-1 - 1)`
-- `proofs` the inclusion proofs for each node in `accumulatorfrom` in `MMR(tree-size-1 - 1)`
+It is typical that many nodes in the original accumulator share the same peak in the new accumulator.
 
 The returned list will be a descending height ordered list of elements from the accumulator
 for the consistent future state.
 It may be *exactly* the future accumulator or it may be a prefix of it.
+The order of the roots returned by `consistent_roots` matches the order of the nodes in the accumulator.
 
-Implementations MUST require that the number of peaks returned by [peaks](#peaks)`(ifrom)` equals the number of entries in `accumulatorfrom`.
+Implementations MUST require that the number of peaks returned by [ peaks](#peaks)`(ifrom)` equals the number of entries in `accumulatorfrom`.
 
+Given:
+
+- `ifrom` the last node index in the complete MMR from which consistency was proven.
+- `accumulatorfrom` the node values correponding to the peaks of the accumulator at `MMR(mmr-size-1)`
+- `proofs` the inclusion proofs for each node in `accumulatorfrom` in `MMR(mmr-size-2)`
+
+And the methods:
+
+- [included_root](#includedroot)
+- [ peaks](#peaks)
+
+We define `consistent_roots` as:
 
     def consistent_roots(ifrom, accumulatorfrom, proofs):
 
         frompeaks = peaks(ifrom)
 
+        # if length(frompeaks) != length(proofs) -> ERROR
+
         roots = []
         for i in range(len(accumulatorfrom)):
-            root = included_root(frompeaks[i], accumulatorfrom[i], proofs[i])
+            root = included_root(
+                frompeaks[i], accumulatorfrom[i], proofs[i])
 
             # The nature of MMR's is that many nodes are committed by the
-            # same accumulator peak, and that peak changes with low frequency.
+            # same accumulator peak, and that peak changes with
+            # low frequency.
             if roots and roots[-1] == root:
                 continue
             roots.append(root)
@@ -568,39 +634,36 @@ Implementations MUST require that the number of peaks returned by [peaks](#peaks
 
 ## Leaf Node Addition
 
-All numbers are unsigned 64 bit integers. The maximum height of a single tree is 64.
+When a new node is appended, if its height matches the height of its immediate predecessor,
+then we can complete a larger tree by merging the adjacent peaks,
+which we do by appending a new node which takes the adjacent peaks as its left and right children.
+This process proceeds until there are no more completable sub trees,
+needing only the previous peak at each step.
+For every even numbered node addition, adding a new leaf will always merge at least one preceding peak.
 
-Were a tree to accept a new addition once every 10 milliseconds, it would take roughly 4.6 million milenia to over flow.
-
-Should a system exist that can extend a tree fast enough for this to be a limitation,
-the same advantages that make MMR's convenient to work with also accrue to combinations of trees.
-
-The algorithms are offered in both a python like informal pseudo code, and structured english.
 
 ### add_leaf_hash
 
-`add_leaf_hash(f)` Adds the leaf hash value f to the MMR. The resulting MMR is always complete.
+`add_leaf_hash(f)` adds the leaf hash value f to the MMR. The resulting MMR is always complete.
 
-Note: it is assumed that the algorithm terminates and returns on any transient error.
+As defined in [Node values](#node-values), the interior nodes each commit the
+size of the MMR, which is just the node index + 1.
+This makes it impossible to create a leaf whose value collides with an interior node.
+This protects the MMR against second pre-image attacks.
 
-Given,
+It is assumed that the algorithm terminates and returns on any transient error.
 
-`f` the leaf value resulting from `H(x)` for the caller defined leaf value `x`
+Given:
 
-The caller MUST account for 2nd pre-image attacks on the MMR.
+- `f` the leaf value resulting from `H(x)` for the caller defined leaf value `x`
+- `db` an interface supporting the [ append](#append) and [ get](#get) implementation defined storage methods.
 
-The caller SHOULD take into account the defined [Node values](#node-values) scheme when satisfying this requirement.
+And the methods:
 
-Because the interior nodes commit the position of their children, including the case where the child is a leaf,
-no special steps are required of the application or implementation to account for duplicate values of `x`.
+- [index_height](#indexheight)
+- [hashpospair64](#hashpospair64)
 
-In the following pseudo code `db` is an interface supporting the `Append` and `Get`
-methods described in
-
-
-Implementation defined storage methods
-
-The example relies on the supporting algorithms [index_height](#indexheight) and [hashpospair64](#hashpospair64)
+We define `add_leaf_hash` as
 
     def add_leaf_hash(db, f: bytes):
 
@@ -613,15 +676,21 @@ The example relies on the supporting algorithms [index_height](#indexheight) and
         # If index_height(i) is greater than g (#looptarget)
         while index_height(i) > g:
 
-            # Set ileft to the index of the left child of i, which is i - 2^(g+1)
+            # Set ileft to the index of the left child of i,
+            # which is i - 2^(g+1)
+
             ileft = i - (2 << g)
 
-            # Set iright to the index of the the right child of i, which is i - 1
+            # Set iright to the index of the the right child of i,
+            # which is i - 1
+
             iright = i - 1
 
             # Set v to H(i + 1 || Get(ileft) || Get(iright))
             # Set i to the result of invoking Append(v)
-            i = db.append(hash_pospair64(i+1, db.get(ileft), db.get(iright)))
+
+            i = db.append(
+                hash_pospair64(i+1, db.get(ileft), db.get(iright)))
 
             1. Set g to the height of the new i, which is g + 1`
             g += 1
@@ -658,7 +727,7 @@ There MUST be a 1 to 1 correspondence between the MMR node index and the storage
 
 The implementation MUST guarantee that the storage organization is linear and non-sparse.
 
-Implementations MAY rely on the verifiable properties of the tree,
+Implementations MAY rely on the verifiable properties of the MMR,
 or optimistic concurrency control, to afford detection of accidental or competing overwrites.
 
 Used only by [add_leaf_hash](#addleafhash)
@@ -669,7 +738,7 @@ Append MAY fail for transient reasons.
 
 ## Node values
 
-Interior nodes in the tree SHALL prefix the value provided to `H(x)` with `pos`.
+Interior nodes in the MMR SHALL prefix the value provided to `H(x)` with `pos`.
 
 The value `v` for any interior node MUST be `H(pos || Get(LEFT_CHILD) || Get(RIGHT_CHILD))`
 
@@ -682,20 +751,24 @@ The application MUST define how it produces `x` such that parties reliant on the
 
 ### hash_pospair64
 
+Returns `H(pos || a || b)`, which is the value for the node identified by index `pos - 1`
+
 All interior nodes MUST commit the size of the MMR created by their addition by pre-pending the size to its child hashes.
 
 Editors note: How this draft accommodates hash alg agility is tbd.
 
-Given,
+Given:
 
 - `pos` the size of the MMR whose last node index is `pos - 1`
 - `a` the first value to include in the hash after `pos`
 - `b` the second value to include in the hash after `pos`
 
-`pos` MUST be < 2^64
-`a` and `b` MUST be hashes produced by the appropriate hash alg.
+And the constraints:
 
-Returns `H(pos || a || b)`, which is the value for the node identified by index `pos - 1`
+- `pos < 2^64`
+- `a` and `b` MUST be hashes produced by the appropriate hash alg.
+
+We define `hash_pospair64` as:
 
     def hash_pospair64(pos, a, b):
 
@@ -715,7 +788,11 @@ Returns `H(pos || a || b)`, which is the value for the node identified by index 
 
 `index_height(i)` returns the zero based height `g` of the node index `i`
 
-The pseudo code describing the algorithm relies on the bit primitive [bit_length](#bitlength)
+Given:
+
+- `i` the index of any mmr node.
+
+We define `index_height` as:
 
     def index_height(i) -> int:
         pos = i + 1
@@ -726,13 +803,17 @@ The pseudo code describing the algorithm relies on the bit primitive [bit_length
 
 ## peaks
 
-`peaks(i)` returns the peak positions for `MMR(i+1)` (Note: these are just the
-corresponding storage indices + 1)
+`peaks(i)` returns the peak indices for `MMR(i+1)`, which is also its accumulator.
 
-Returns the peak indices for MMR(i+1).
 
 Assumes MMR(i+1) is complete, implementations can check for this condition by
 testing the height of i+1
+
+Given:
+
+- `i` the index of any mmr node.
+
+We define `peaks` as:
 
 
     def peaks(i):
@@ -748,38 +829,62 @@ testing the height of i+1
 
         return peaks
 
+# Security Considerations
+
+TODO Security
+
+# IANA Considerations
+
+Editors note: Hash agility is desired. We can start with SHA-256. Two of the referenced implementations use BLAKE2b-256,
+We would like to add support for SHA3-256, SHA3-512, and possibly Keccak and Pedersen.
+
+## Additions to Existing Registries
+
+Editors note: we will require an addition to the CoMETER spec once it is accepted.
+
+## New Registries
+
+
+--- back
 
 # Supplemental, commonly useful, supporting algorithms
 
 ## leaf_count
 
-`leaf_count(i)` Returns a mask with a bit set for each peak,
-interpreted as an integer this is also the count of leaves in `MMR(i+1)`
+`leaf_count(i)` Returns a the count of leaves in `MMR(i+1)`
 
 The bits of the count also form a mask, where a single bit is set for each
-"peak" present in the accumulator. The bit position is the height of the
+peak present in the accumulator. The bit position is the height of the
 binary tree committing the elements to the corresponding accumulator entry.
 
-The (sparse) accumulator entry is also derived from the height as accummulator[len(accumulator) - bitpos]
+The (sparse) accumulator entry is also derived from the height as `accummulator[len(accumulator) - bitpos]`
 
 Where accumulator is the list of accumulator peak indices in descending order of
 height and bitpos is any bit set in the leaf count.
 
-The pseudo code describing the algorithm relies on the bit primitive [bit_length](#bitlength)
+Given:
+
+- `i` the index of any mmr node.
+
+And the methods:
+
+- [bit_length](#bitlength) which returns the number of bits required to represent the argument.
+
+We define `leaf_count` as:
 
     def leaf_count(i):
 
         s = i + 1
 
-        # Establish the largest relevant complete tree as our starting point.
+        # Establish the largest relevant complete tree as our starting point
         peaksize = (1 << bit_length(s)) - 1
         peakmap = 0
         while peaksize > 0:
             peakmap <<= 1
 
-            # At each round we halve peak size, if doing so causes our current
-            # value for s to excede the remaining peak size, we need the peak in
-            # the accumulator.
+            # At each round we halve peak size, if doing so causes our
+            # current value for s to excede the remaining peak size, we need
+            # the peak in the accumulator.
             if s >= peaksize:
                 s -= peaksize
                 peakmap |= 1
@@ -790,13 +895,17 @@ The pseudo code describing the algorithm relies on the bit primitive [bit_length
 
 ## mmr_index
 
-Given,
+Returns the node index `i` locating the leaf in the MMR
+
+Given:
 
 - `e` the index of a leaf (where the leaves are considered in isolation)
 
-Return the node index `i` locating its location in the MMR
+And the methods:
 
-The pseudo code describing the algorithm relies on the bit primitive [bit_length](#bitlength)
+- [bit_length](#bitlength) which returns the number of bits required to represent the argument.
+
+We define `mmr_index` as:
 
     def mmr_index(e):
         sum = 0
@@ -808,16 +917,20 @@ The pseudo code describing the algorithm relies on the bit primitive [bit_length
             e -= half
         return sum
 
-
 ## parent
 
-Given,
+Returns the parent of the supplied node index.
 
-- `i` a node index
+Given:
 
-Return its parent node index.
+- `i` the index of any mmr node.
 
-The pseudo code describing the algorithm relies on  [index_height](#indexheight)
+And the methods:
+
+- [index_height](#indexheight)
+
+
+We define `parent` as:
 
     def parent(i):
         g = index_height(i)
@@ -833,19 +946,23 @@ The pseudo code describing the algorithm relies on  [index_height](#indexheight)
 
 ## complete_mmr
 
+Return `i` if `MMR(i+1)` is complete, and the next complete node index otherwise.
+
 Many of the algorithms specify dealing with _complete_ mmr's.
 
 This algorithm returns i if it is complete, and the index of the next node
 corresponding to a complete mmr otherwise.
 
-Given,
+Given:
 
 - `i` a node index
 
-Return `i` if `MMR(i+1)` is complete, and the next complete node index otherwise.
+And the methods:
+
+- [index_height](#indexheight)
 
 
-The pseudo code describing the algorithm relies on  [index_height](#indexheight)
+We define `complate_mmr` as:
 
     def complete_mmr(i):
 
@@ -858,14 +975,13 @@ The pseudo code describing the algorithm relies on  [index_height](#indexheight)
 
         return i
 
-
 # Assumed bit primitives
 
 ## A Note On Hardware Sympathy
 
 MMR's are a series of complete binary trees followed by at most one incomplete tree. This is sometimes referred to as a flat base tree. In these constructions many operations are formally $$\log_2(n)$$
 
-However, precisely because of the binary nature of the tree, most benefit from single-cycle assembly level optimizations, assuming a counter limit of $$2^{64}$$ Which as discussed above, is a _lot_ of tree.
+However, precisely because of the binary nature of the MMR construction, most benefit from single-cycle assembly level optimizations, assuming a counter limit of $$2^{64}$$ Which as discussed above, is a _lot_ of MMR.
 
 Finding the position of the first non-zero bit or counting the number of bits that are set are both primitives necessary for some of the algorithms.
 [CLZ](https://developer.arm.com/documentation/dui0802/b/A32-and-T32-Instructions/CLZ) has single-cycle implementations on most architectures. Similarly, `POPCNT` exists.
@@ -874,6 +990,13 @@ AMD defined some useful [binary manipulation](https://en.wikipedia.org/wiki/X86_
 Sympathetic instructions, or compact look up table implementations exist for other fundamental operations too.
 Most languages have sensible standard wrappers.
 While these operations are not strictly O(1) complexity, this has little impact in practice.
+
+## log2floor
+
+Returns the floor of log base 2 x
+
+    def log2floor(x):
+        return x.bit_length() - 1
 
 
 ## most_sig_bit
@@ -921,23 +1044,6 @@ In python,
 
     (v & -v).bit_length() - 1
 
-# Security Considerations
-
-TODO Security
-
-
-# IANA Considerations
-
-## Additions to Existing Registries
-
-Editors note: we will require an addition to the CoMETER spec once it is accepted.
-
-## New Registries
-
-Editors note: We can start with SHA-256. Two of the referenced implementations use BLAKE2b-256,
-We would like to add support for SHA3-256 (and possibly SHA3-512)
-
---- back
 
 # Implementation Status
 
@@ -978,7 +1084,8 @@ Used in production. SEMVER unstable (no backwards compat declared yet)
 
 ### Peter Todd
 
-Almost compatible, where here the leaf hash is not defined, in Peter Todd's formal description, all nodes, including the leaves include the position in the hash. In this specification, leaf hashes are added 'as is'. Interior nodes commit to the size of the balanced tree rooted at the node.
+Almost compatible, where here the leaf hash is not defined, in Peter Todd's formal description, all nodes, including the leaves include the position in the hash.
+In this specification, leaf hashes are added 'as is'. Interior nodes commit to the size of the entire MMR including the interior node.
 
 #### Implementation URL
 
@@ -1003,7 +1110,9 @@ Reference only
 
 ### Mimblewimble ?
 
-Is specifically committing to positions as we describe, but is committing zero based indices, and uses BLAKE2B as the HASH-ALG. Accounting for those differences, their commitment trees would be compatible with this draft.
+Is specifically committing to positions as we describe, but is committing zero based indices,
+and uses BLAKE2B as the HASH-ALG.
+Accounting for those differences, their commitment trees would be compatible with this draft.
 
 #### Implementation URL
 
@@ -1049,7 +1158,7 @@ In this section we provide known answer outputs for the various algorithms for t
 
 ## MMR(39)
 
-The node index tree for `MMR(39)` is
+The node indices for `MMR(39)` is
 
     g
 
@@ -1070,9 +1179,9 @@ The node index tree for `MMR(39)` is
 
     .   0   1 2   3  4   5  6   7  8   9 10  11 12  13   14   15  16  17   18  19   20 e
 
-The vertical axis is `g`, the zero based height of the tree.
+The vertical axis is `g`, the zero based height of the MMR.
 
-The horizontal axis is `e`, the leaf indices corresponding to the `g=0` nodes in the tree
+The horizontal axis is `e`, the leaf indices corresponding to the `g=0` nodes in the MMR
 
 ## MMR(39) leaf values (excluding interior nodes)
 
@@ -1240,10 +1349,10 @@ These tables cover the outputs of `index_height` and `leaf_count`.
 - The accumulator root index shows the output of PeakIndex
 - The root column shows the value in the storage corresponding to the index in accumulator selected by the accumulator_root_index. Eg `storage[]
 
-This table illustrates the low, and predictably reducing, rate with which the authentication root changes for any single entry in the MMR.
+This table illustrates the low, and predictably reducing, rate with which the root changes for any single entry in the MMR.
 Each time the root for a leaf changes, the validity period doubles.
 
-This table also ilustrates that the authentication path for any single entry only ever grows.
+This table also ilustrates that the verification path for any single entry only ever grows.
 It is therefore guaranteed to be a prefix of any future path for the same entry.
 
 | i  | MMR  |inclusion path       |accumulator|accumulator root index|
