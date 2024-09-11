@@ -2,8 +2,9 @@ This is a call for the adoption of this draft:
 
 https://datatrails.github.io/draft-bryce-cose-merkle-mountain-range-proofs/
 
-The primary goal of this draft is to meet the extension point registration requirements defined in the [Cose-Merkle-Tree-Proofs](https://www.ietf.org/archive/id/draft-ietf-cose-merkle-tree-proofs-05.html#name-registration-requirements) I-D
-for verifiable logs based on the flat-based Merkle tree scheme, popularly known as a "Merkle Mountain Range" (MMR).
+The primary goal of this draft is to meet the extension point registration requirements defined in the [Cose-Merkle-Tree-Proofs](https://www.ietf.org/archive/id/draft-ietf-cose-merkle-tree-proofs-05.html#name-registration-requirements) I-D.
+The extension supports verifiable logs based on the flat-based Merkle tree scheme, popularly known as a "Merkle Mountain Range" (MMR).
+Encoding of the proof types in CBOR, the necessary algorithms for producing and consuming those proofs, and test vectors are specified.
 
 Why do we need something other than the binary Merkle tree construction of RFC 6962, as updated by RFC 9162?
 
