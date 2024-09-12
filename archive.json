@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2024-09-10T00:28:15.136418+00:00",
+  "timestamp": "2024-09-12T00:27:56.055830+00:00",
   "repo": "datatrails/draft-bryce-cose-merkle-mountain-range-proofs",
   "labels": [
     {
@@ -115,5 +115,53 @@
       "comments": []
     }
   ],
-  "pulls": []
+  "pulls": [
+    {
+      "number": 4,
+      "id": "PR_kwDOMMUelc57KK7r",
+      "title": "working up an email to call for adoption",
+      "url": "https://github.com/datatrails/draft-bryce-cose-merkle-mountain-range-proofs/pull/4",
+      "state": "OPEN",
+      "author": "robinbryce",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "I wont ever merge this, but I figure its a great way to get input from people before I send to the cose group.\r\n\r\nIts understood that the email is a personal contribution, but help and advice appreciated!",
+      "createdAt": "2024-09-11T12:56:47Z",
+      "updatedAt": "2024-09-11T16:00:06Z",
+      "baseRepository": "datatrails/draft-bryce-cose-merkle-mountain-range-proofs",
+      "baseRefName": "main",
+      "baseRefOid": "c845e555e0ac103e4724c923b9c87ef831afbafc",
+      "headRepository": "datatrails/draft-bryce-cose-merkle-mountain-range-proofs",
+      "headRefName": "robin/addoption-call",
+      "headRefOid": "afe9803e58db480e2b866807c30a9246c116a97b",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOMMUelc6I6t4l",
+          "commit": {
+            "abbreviatedOid": "cd460f0"
+          },
+          "author": "robinbryce",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2024-09-11T13:40:27Z",
+          "updatedAt": "2024-09-11T13:40:27Z",
+          "comments": [
+            {
+              "originalPosition": 103,
+              "body": "note to self: don't merge to main",
+              "createdAt": "2024-09-11T13:40:27Z",
+              "updatedAt": "2024-09-11T13:40:27Z"
+            }
+          ]
+        }
+      ]
+    }
+  ]
 }
