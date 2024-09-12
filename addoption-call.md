@@ -64,7 +64,7 @@ An attested replica of the verifiable log can be significantly less cumbersome t
 4. Appending to the log can be coordination-free.
 
 Adding to the log is strictly append-only, and the data organization is linear.
-This means that the HTTP_ETag style of optimistic concurrency, commonly supported by cloud vendor object stores, is sufficient to handle competing writers.
+This means that the [HTTP_ETag](https://docs.datatrails.ai/developers/developer-patterns/3rdparty-verification/) style of optimistic concurrency, commonly supported by cloud vendor object stores, is sufficient to handle competing writers.
 
 5. Old proofs remain consistent with all future proofs.
 
@@ -73,16 +73,16 @@ This property (related to the "old accumulator compatibility" in the paper menti
 Upon returning, they can request a new proof of inclusion for the same element to confirm that it remains in the same position.
 If the old proof data is not a strict prefix of the new proof data, the log has been inconsistently updated, and the element has moved.
 
-With MMRs, this is particularly convenient and requires no specialized actions to achieve this.
+With MMRs, this is particularly convenient and requires no specialized actions to achieve.
 
 6. Elements can be verified without revealing the item of interest.
 
 When bounded replication is simple, the verifier can maintain a local window on the log, eliminating the need to contact the log operator for every verification. Because the verifiable log is highly replicable, elements can be verified without disclosing the item of interest to the log operator. The linear, addition-ordered nature of the log allows the verifier to maintain a local "window" on the replicated log, discarding sections as they are no longer needed.
 
 These points are not exhaustive, but hopefully they are enough to spark interest in discussing the merits of this draft.
-Given that this is an "author's first draft," there is undoubtedly room for improvement in terms of form, content, and syntax. I’m very open to feedback and contributions on that front.
+Especially given that this is an "author's first draft" there is undoubtedly room for improvement in form, content, and syntax.
 
-In the meantime, do you think there’s enough here to justify the time and attention needed to take it forward?
+In the meantime, do people think there’s enough here to justify the time and attention needed to take it forward?
 
 Best Regards,
 Robin Bryce
