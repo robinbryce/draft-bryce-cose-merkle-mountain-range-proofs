@@ -18,7 +18,7 @@ In heterogeneous situations, such as digital supply chains, the incentives to ch
 
 Yet, transparency logs are trustworthy only when they are independently checked and monitored.
 
-I believe that by specifying a verifiable data structure that minimizes the costs and complexities of replicating, auditing, and verifying, the adoption of transparency techniques can be encouraged.
+I believe that by specifying a verifiable data structure that minimizes the costs and complexities of replicating, auditing, and verifying, adoption bariers for ransparency techniques are usefuly reduced.
 This is especially so in "just in case" situations where the value often becomes evident when it’s already too late.
 
 In the draft, I've highlighted the properties of MMRs that, in my view, have led to their wide adoption in systems that benefit from a highly replicable, prunable, and permanently stable VDS.
