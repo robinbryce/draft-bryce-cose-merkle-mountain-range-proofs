@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2024-09-12T00:27:56.055830+00:00",
+  "timestamp": "2024-09-15T00:32:04.962463+00:00",
   "repo": "datatrails/draft-bryce-cose-merkle-mountain-range-proofs",
   "labels": [
     {
@@ -128,13 +128,13 @@
       "labels": [],
       "body": "I wont ever merge this, but I figure its a great way to get input from people before I send to the cose group.\r\n\r\nIts understood that the email is a personal contribution, but help and advice appreciated!",
       "createdAt": "2024-09-11T12:56:47Z",
-      "updatedAt": "2024-09-11T16:00:06Z",
+      "updatedAt": "2024-09-12T18:15:48Z",
       "baseRepository": "datatrails/draft-bryce-cose-merkle-mountain-range-proofs",
       "baseRefName": "main",
       "baseRefOid": "c845e555e0ac103e4724c923b9c87ef831afbafc",
       "headRepository": "datatrails/draft-bryce-cose-merkle-mountain-range-proofs",
       "headRefName": "robin/addoption-call",
-      "headRefOid": "afe9803e58db480e2b866807c30a9246c116a97b",
+      "headRefOid": "4166049edb7fc6f5c34a0216104c65c0c9d9e344",
       "closedAt": null,
       "mergedAt": null,
       "mergedBy": null,
@@ -158,6 +158,26 @@
               "body": "note to self: don't merge to main",
               "createdAt": "2024-09-11T13:40:27Z",
               "updatedAt": "2024-09-11T13:40:27Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOMMUelc6JJ6O2",
+          "commit": {
+            "abbreviatedOid": "4166049"
+          },
+          "author": "SteveLasker",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2024-09-12T18:15:48Z",
+          "updatedAt": "2024-09-12T18:15:48Z",
+          "comments": [
+            {
+              "originalPosition": 43,
+              "body": "I believe you're talking about the MMR comparison, which wasn't as obvious. Suggest you include \"MMR\", to remove ambiguity of which \"this\" or assumption of which you're referring to\r\n```suggestion\r\nSince each replicated (and attested) MMR log is as reliable as the original, <this> can also significantly improve scalability.\r\n```",
+              "createdAt": "2024-09-12T18:15:48Z",
+              "updatedAt": "2024-09-12T18:15:48Z"
             }
           ]
         }
