@@ -74,7 +74,7 @@ Algorithms for leaf addition and for proving and verifying inclusion and consist
 In this specification, all numbers are unsigned 64 bit integers.
 The maximum height of a single tree is 64 (which will have `g=63` for its peak).
 
-## Verifiable Data Structure
+# Verifiable Data Structure
 
 The integer identifier for this Verifiable Data Structure is TBD_0.
 The string identifier for this Verifiable Data Structure is TBD.
