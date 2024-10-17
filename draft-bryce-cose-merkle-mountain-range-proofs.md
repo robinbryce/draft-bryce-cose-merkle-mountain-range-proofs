@@ -336,9 +336,8 @@ This protects against implementation errors where the signature is verified but 
 
 ## Verifying the Receipt of consistency
 
-1. Recompute the prefix of the accumulator for tree size-2 from the proofs in the receipt
-   using the algorithm [consistent_roots](#consistentroots)
-1. Obtain the remaining peaks directly from tree size-2.
+1. Apply the algorithm [consistent_roots](#consistentroots) using the peaks for tree size-1 as input.
+1. Obtain the remaining peaks directly from tree size-2 using the `peaks` algorithm, appending to the peaks produced by consistent roots.
 1. Verify the signature using the obtained roots as the detached payload.
 
 ### consistent_roots
@@ -378,15 +377,16 @@ We define `consistent_roots` as:
         return roots
 
 
-# Appending to an MMR
+# Appending a leaf
 
-## Leaf Node Addition
+An algorithm for appending to a tree maintained in post order layout is provided.
+Implementation defined methods for interacting with storage are specified.
+
+## add_leaf_hash
 
 When a new node is appended, if its height matches the height of its immediate predecessor, then we can complete a larger tree by merging the adjacent peaks.
 To merge, append a new node which takes the adjacent peaks as its left and right children.
 This process proceeds until there are no more completable sub trees, needing only the previous peak at each step.
-
-### add_leaf_hash
 
 `add_leaf_hash(f)` adds the leaf hash value f to the tree.
 
