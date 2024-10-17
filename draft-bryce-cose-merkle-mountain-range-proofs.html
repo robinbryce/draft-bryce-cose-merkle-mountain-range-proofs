@@ -1792,9 +1792,9 @@ Implementation defined methods for interacting with storage are specified.<a hre
         <h3 id="name-add_leaf_hash">
 <a href="#section-8.1" class="section-number selfRef">8.1. </a><a href="#name-add_leaf_hash" class="section-name selfRef">add_leaf_hash</a>
         </h3>
-<p id="section-8.1-1">When a new node is appended, if its height matches the height of its immediate predecessor, then we can complete a larger tree by merging the adjacent peaks.
-To merge, append a new node which takes the adjacent peaks as its left and right children.
-This process proceeds until there are no more completable sub trees, needing only the previous peak at each step.<a href="#section-8.1-1" class="pilcrow">¶</a></p>
+<p id="section-8.1-1">When a new node is appended, if its height matches the height of its immediate predecessor, then the two equal height siblings <span class="bcp14">MUST</span> be merged.
+Merging is defined as the append of a new node which takes the adjacent peaks as its left and right children.
+This process <span class="bcp14">MUST</span> proceed until there are no more completable sub trees.<a href="#section-8.1-1" class="pilcrow">¶</a></p>
 <p id="section-8.1-2"><code>add_leaf_hash(f)</code> adds the leaf hash value f to the tree.<a href="#section-8.1-2" class="pilcrow">¶</a></p>
 <p id="section-8.1-3">Given:<a href="#section-8.1-3" class="pilcrow">¶</a></p>
 <ul class="normal">
