@@ -384,9 +384,9 @@ Implementation defined methods for interacting with storage are specified.
 
 ## add_leaf_hash
 
-When a new node is appended, if its height matches the height of its immediate predecessor, then we can complete a larger tree by merging the adjacent peaks.
-To merge, append a new node which takes the adjacent peaks as its left and right children.
-This process proceeds until there are no more completable sub trees, needing only the previous peak at each step.
+When a new node is appended, if its height matches the height of its immediate predecessor, then the two equal height siblings MUST be merged.
+Merging is defined as the append of a new node which takes the adjacent peaks as its left and right children.
+This process MUST proceed until there are no more completable sub trees.
 
 `add_leaf_hash(f)` adds the leaf hash value f to the tree.
 
