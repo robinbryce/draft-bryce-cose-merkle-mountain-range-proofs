@@ -1343,8 +1343,7 @@ Also known as binary numeral trees, history trees and merkle mountain ranges.<a 
 7 is the root of a tree comprised of a single node.<a href="#section-1-4" class="pilcrow">¶</a></p>
 <p id="section-1-5">In this document proving and verifying is defined in terms of the cryptographic, asynchronous, accumulator described by <a href="https://eprint.iacr.org/2015/718.pdf">ReyzinYakoubov</a>
 The peaks of the perfect trees form the accumulator.<a href="#section-1-5" class="pilcrow">¶</a></p>
-<p id="section-1-6">Algorithms for leaf addition and for proving and verifying inclusion and consistency are defined.
-Additionally a small number of primitive operations commonly useful in the context of MMR's are provided.<a href="#section-1-6" class="pilcrow">¶</a></p>
+<p id="section-1-6">Algorithms for leaf addition and for proving and verifying inclusion and consistency are defined.<a href="#section-1-6" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="conventions-and-definitions">
@@ -1361,49 +1360,26 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
           <p id="section-2-2.1.1"><code>i</code> shall be the index of any node, including leaf nodes, in the MMR<a href="#section-2-2.1.1" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="section-2-2.2">
-          <p id="section-2-2.2.1"><code>pos</code> shall be <code>i+1</code> and is important only in the implementation of some algorithms.<a href="#section-2-2.2.1" class="pilcrow">¶</a></p>
+          <p id="section-2-2.2.1"><code>f</code> shall be a leaf value, which is <code>H(x)</code><a href="#section-2-2.2.1" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="section-2-2.3">
-          <p id="section-2-2.3.1"><code>e</code> shall be the zero based index of leaf entry in the MMR (where only leaves are considered, and interiors are excluded)<a href="#section-2-2.3.1" class="pilcrow">¶</a></p>
+          <p id="section-2-2.3.1"><code>h</code> shall be the 1 based tree height<a href="#section-2-2.3.1" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="section-2-2.4">
-          <p id="section-2-2.4.1"><code>f</code> shall be a leaf value, which is <code>H(x)</code><a href="#section-2-2.4.1" class="pilcrow">¶</a></p>
+          <p id="section-2-2.4.1"><code>g</code> shall be the 0 based tree height, <code>h-1</code><a href="#section-2-2.4.1" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="section-2-2.5">
-          <p id="section-2-2.5.1"><code>h</code> shall be the 1 based tree height<a href="#section-2-2.5.1" class="pilcrow">¶</a></p>
+          <p id="section-2-2.5.1"><code>H(x)</code> shall be the SHA-256 digest of any value x<a href="#section-2-2.5.1" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="section-2-2.6">
-          <p id="section-2-2.6.1"><code>g</code> shall be the 0 based tree height, <code>h-1</code><a href="#section-2-2.6.1" class="pilcrow">¶</a></p>
+          <p id="section-2-2.6.1"><code>||</code> shall mean concatenation of raw byte representations of the referenced values.<a href="#section-2-2.6.1" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="section-2-2.7">
-          <p id="section-2-2.7.1"><code>v</code> shall be any node, including a leaf node value, which will be the result of <code>H(x)</code>.<a href="#section-2-2.7.1" class="pilcrow">¶</a></p>
-</li>
-        <li class="normal" id="section-2-2.8">
-          <p id="section-2-2.8.1"><code>S</code> shall be any valid MMR size, and is uniquely identifying for an MMR state<a href="#section-2-2.8.1" class="pilcrow">¶</a></p>
-</li>
-        <li class="normal" id="section-2-2.9">
-          <p id="section-2-2.9.1"><code>C</code> shall be the last node index of any complete MMR.<a href="#section-2-2.9.1" class="pilcrow">¶</a></p>
-</li>
-        <li class="normal" id="section-2-2.10">
-          <p id="section-2-2.10.1"><code>A</code> shall be the the accumulator for any complete MMR <code>C</code><a href="#section-2-2.10.1" class="pilcrow">¶</a></p>
-</li>
-        <li class="normal" id="section-2-2.11">
-          <p id="section-2-2.11.1"><code>R</code> shall be the the sparse accumulator, of <a href="https://eprint.iacr.org/2015/718.pdf">ReyzinYakoubov</a>, for any complete MMR <code>C</code><a href="#section-2-2.11.1" class="pilcrow">¶</a></p>
-</li>
-        <li class="normal" id="section-2-2.12">
-          <p id="section-2-2.12.1"><code>H(x)</code> shall be the SHA-256 digest of any value x<a href="#section-2-2.12.1" class="pilcrow">¶</a></p>
-</li>
-        <li class="normal" id="section-2-2.13">
-          <p id="section-2-2.13.1"><code>||</code> shall mean concatenation of raw byte representations of the referenced values.<a href="#section-2-2.13.1" class="pilcrow">¶</a></p>
-</li>
-        <li class="normal" id="section-2-2.14">
-          <p id="section-2-2.14.1"><code>D</code> shall mean the linear array storing all node in the MMR.<a href="#section-2-2.14.1" class="pilcrow">¶</a></p>
-</li>
-        <li class="normal" id="section-2-2.15">
-          <p id="section-2-2.15.1">A complete MMR is an MMR where no equal height sibling trees exist.<a href="#section-2-2.15.1" class="pilcrow">¶</a></p>
+          <p id="section-2-2.7.1">A complete MMR is an MMR where no equal height sibling trees exist.<a href="#section-2-2.7.1" class="pilcrow">¶</a></p>
 </li>
       </ul>
-<p id="section-2-3">In this specification, all numbers are unsigned 64 bit integers. The maximum height of a single tree is 64 (which will have <code>g=63</code> for its peak).<a href="#section-2-3" class="pilcrow">¶</a></p>
+<p id="section-2-3">In this specification, all numbers are unsigned 64 bit integers.
+The maximum height of a single tree is 64 (which will have <code>g=63</code> for its peak).<a href="#section-2-3" class="pilcrow">¶</a></p>
 <div id="verifiable-data-structure">
 <section id="section-2.1">
         <h3 id="name-verifiable-data-structure">

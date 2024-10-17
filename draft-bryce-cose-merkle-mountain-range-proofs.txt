@@ -141,9 +141,7 @@ Table of Contents
    form the accumulator.
 
    Algorithms for leaf addition and for proving and verifying inclusion
-   and consistency are defined.  Additionally a small number of
-   primitive operations commonly useful in the context of MMR's are
-   provided.
+   and consistency are defined.
 
 2.  Conventions and Definitions
 
@@ -155,37 +153,16 @@ Table of Contents
 
    *  i shall be the index of any node, including leaf nodes, in the MMR
 
-   *  pos shall be i+1 and is important only in the implementation of
-      some algorithms.
-
-   *  e shall be the zero based index of leaf entry in the MMR (where
-      only leaves are considered, and interiors are excluded)
-
    *  f shall be a leaf value, which is H(x)
 
    *  h shall be the 1 based tree height
 
    *  g shall be the 0 based tree height, h-1
 
-   *  v shall be any node, including a leaf node value, which will be
-      the result of H(x).
-
-   *  S shall be any valid MMR size, and is uniquely identifying for an
-      MMR state
-
-   *  C shall be the last node index of any complete MMR.
-
-   *  A shall be the the accumulator for any complete MMR C
-
-   *  R shall be the the sparse accumulator, of ReyzinYakoubov
-      (https://eprint.iacr.org/2015/718.pdf), for any complete MMR C
-
    *  H(x) shall be the SHA-256 digest of any value x
 
    *  || shall mean concatenation of raw byte representations of the
       referenced values.
-
-   *  D shall mean the linear array storing all node in the MMR.
 
    *  A complete MMR is an MMR where no equal height sibling trees
       exist.
