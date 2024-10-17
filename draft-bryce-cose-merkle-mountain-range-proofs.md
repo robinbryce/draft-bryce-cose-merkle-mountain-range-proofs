@@ -63,13 +63,10 @@ Algorithms for leaf addition and for proving and verifying inclusion and consist
 
 {::boilerplate bcp14-tagged}
 
+- A complete MMR(n) defines an mmr with n nodes where no equal height sibling trees exist.
 - `i` shall be the index of any node, including leaf nodes, in the MMR
-- `f` shall be a leaf value, which is `H(x)`
-- `h` shall be the 1 based tree height
-- `g` shall be the 0 based tree height, `h-1`
 - `H(x)` shall be the SHA-256 digest of any value x
 - `||` shall mean concatenation of raw byte representations of the referenced values.
-- A complete MMR is an MMR where no equal height sibling trees exist.
 
 In this specification, all numbers are unsigned 64 bit integers.
 The maximum height of a single tree is 64 (which will have `g=63` for its peak).
