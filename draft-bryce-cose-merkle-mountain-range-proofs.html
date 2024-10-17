@@ -1172,15 +1172,10 @@ Also known as binary numeral trees, history trees and merkle mountain ranges.<a 
             </ul>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.8">
-            <p id="section-toc.1-1.8.1"><a href="#section-8" class="auto internal xref">8</a>.  <a href="#name-appending-to-an-mmr" class="internal xref">Appending to an MMR</a></p>
+            <p id="section-toc.1-1.8.1"><a href="#section-8" class="auto internal xref">8</a>.  <a href="#name-appending-a-leaf" class="internal xref">Appending a leaf</a></p>
 <ul class="compact toc ulBare ulEmpty">
 <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.8.2.1">
-                <p id="section-toc.1-1.8.2.1.1"><a href="#section-8.1" class="auto internal xref">8.1</a>.  <a href="#name-leaf-node-addition" class="internal xref">Leaf Node Addition</a></p>
-<ul class="compact toc ulBare ulEmpty">
-<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.8.2.1.2.1">
-                    <p id="section-toc.1-1.8.2.1.2.1.1"><a href="#section-8.1.1" class="auto internal xref">8.1.1</a>.  <a href="#name-add_leaf_hash" class="internal xref">add_leaf_hash</a></p>
-</li>
-                </ul>
+                <p id="section-toc.1-1.8.2.1.1"><a href="#section-8.1" class="auto internal xref">8.1</a>.  <a href="#name-add_leaf_hash" class="internal xref">add_leaf_hash</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.8.2.2">
                 <p id="section-toc.1-1.8.2.2.1"><a href="#section-8.2" class="auto internal xref">8.2</a>.  <a href="#name-implementation-defined-stor" class="internal xref">Implementation defined storage methods</a></p>
@@ -1721,11 +1716,10 @@ This protects against implementation errors where the signature is verified but 
         </h3>
 <ol start="1" type="1" class="normal type-1" id="section-7.1-1">
 <li id="section-7.1-1.1">
-            <p id="section-7.1-1.1.1">Recompute the prefix of the accumulator for tree size-2 from the proofs in the receipt
-using the algorithm <span><a href="#consistentroots" class="internal xref">consistent_roots</a> (<a href="#consistentroots" class="auto internal xref">Section 7.1.1</a>)</span><a href="#section-7.1-1.1.1" class="pilcrow">¶</a></p>
+            <p id="section-7.1-1.1.1">Apply the algorithm <span><a href="#consistentroots" class="internal xref">consistent_roots</a> (<a href="#consistentroots" class="auto internal xref">Section 7.1.1</a>)</span> using the peaks for tree size-1 as input.<a href="#section-7.1-1.1.1" class="pilcrow">¶</a></p>
 </li>
           <li id="section-7.1-1.2">
-            <p id="section-7.1-1.2.1">Obtain the remaining peaks directly from tree size-2.<a href="#section-7.1-1.2.1" class="pilcrow">¶</a></p>
+            <p id="section-7.1-1.2.1">Obtain the remaining peaks directly from tree size-2 using the <code>peaks</code> algorithm, appending to the peaks produced by consistent roots.<a href="#section-7.1-1.2.1" class="pilcrow">¶</a></p>
 </li>
           <li id="section-7.1-1.3">
             <p id="section-7.1-1.3.1">Verify the signature using the obtained roots as the detached payload.<a href="#section-7.1-1.3.1" class="pilcrow">¶</a></p>
@@ -1786,45 +1780,42 @@ def consistent_roots(ifrom, accumulatorfrom, proofs):
 </div>
 </section>
 </div>
-<div id="appending-to-an-mmr">
+<div id="appending-a-leaf">
 <section id="section-8">
-      <h2 id="name-appending-to-an-mmr">
-<a href="#section-8" class="section-number selfRef">8. </a><a href="#name-appending-to-an-mmr" class="section-name selfRef">Appending to an MMR</a>
+      <h2 id="name-appending-a-leaf">
+<a href="#section-8" class="section-number selfRef">8. </a><a href="#name-appending-a-leaf" class="section-name selfRef">Appending a leaf</a>
       </h2>
-<div id="leaf-node-addition">
+<p id="section-8-1">An algorithm for appending to a tree maintained in post order layout is provided.
+Implementation defined methods for interacting with storage are specified.<a href="#section-8-1" class="pilcrow">¶</a></p>
+<div id="addleafhash">
 <section id="section-8.1">
-        <h3 id="name-leaf-node-addition">
-<a href="#section-8.1" class="section-number selfRef">8.1. </a><a href="#name-leaf-node-addition" class="section-name selfRef">Leaf Node Addition</a>
+        <h3 id="name-add_leaf_hash">
+<a href="#section-8.1" class="section-number selfRef">8.1. </a><a href="#name-add_leaf_hash" class="section-name selfRef">add_leaf_hash</a>
         </h3>
 <p id="section-8.1-1">When a new node is appended, if its height matches the height of its immediate predecessor, then we can complete a larger tree by merging the adjacent peaks.
 To merge, append a new node which takes the adjacent peaks as its left and right children.
 This process proceeds until there are no more completable sub trees, needing only the previous peak at each step.<a href="#section-8.1-1" class="pilcrow">¶</a></p>
-<div id="addleafhash">
-<section id="section-8.1.1">
-          <h4 id="name-add_leaf_hash">
-<a href="#section-8.1.1" class="section-number selfRef">8.1.1. </a><a href="#name-add_leaf_hash" class="section-name selfRef">add_leaf_hash</a>
-          </h4>
-<p id="section-8.1.1-1"><code>add_leaf_hash(f)</code> adds the leaf hash value f to the tree.<a href="#section-8.1.1-1" class="pilcrow">¶</a></p>
-<p id="section-8.1.1-2">Given:<a href="#section-8.1.1-2" class="pilcrow">¶</a></p>
+<p id="section-8.1-2"><code>add_leaf_hash(f)</code> adds the leaf hash value f to the tree.<a href="#section-8.1-2" class="pilcrow">¶</a></p>
+<p id="section-8.1-3">Given:<a href="#section-8.1-3" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-8.1.1-3.1">
-              <p id="section-8.1.1-3.1.1"><code>f</code> the leaf value resulting from <code>H(x)</code> for the caller defined leaf value <code>x</code><a href="#section-8.1.1-3.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-8.1-4.1">
+            <p id="section-8.1-4.1.1"><code>f</code> the leaf value resulting from <code>H(x)</code> for the caller defined leaf value <code>x</code><a href="#section-8.1-4.1.1" class="pilcrow">¶</a></p>
 </li>
-            <li class="normal" id="section-8.1.1-3.2">
-              <p id="section-8.1.1-3.2.1"><code>db</code> an interface supporting the <span><a href="#append" class="internal xref">append</a> (<a href="#append" class="auto internal xref">Section 8.2.2</a>)</span> and <span><a href="#get" class="internal xref">get</a> (<a href="#get" class="auto internal xref">Section 8.2.1</a>)</span> implementation defined storage methods.<a href="#section-8.1.1-3.2.1" class="pilcrow">¶</a></p>
+          <li class="normal" id="section-8.1-4.2">
+            <p id="section-8.1-4.2.1"><code>db</code> an interface supporting the <span><a href="#append" class="internal xref">append</a> (<a href="#append" class="auto internal xref">Section 8.2.2</a>)</span> and <span><a href="#get" class="internal xref">get</a> (<a href="#get" class="auto internal xref">Section 8.2.1</a>)</span> implementation defined storage methods.<a href="#section-8.1-4.2.1" class="pilcrow">¶</a></p>
 </li>
-          </ul>
-<p id="section-8.1.1-4">And the methods:<a href="#section-8.1.1-4" class="pilcrow">¶</a></p>
+        </ul>
+<p id="section-8.1-5">And the methods:<a href="#section-8.1-5" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-8.1.1-5.1">
-              <p id="section-8.1.1-5.1.1"><span><a href="#indexheight" class="internal xref">index_height</a> (<a href="#indexheight" class="auto internal xref">Section 9.1</a>)</span><a href="#section-8.1.1-5.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-8.1-6.1">
+            <p id="section-8.1-6.1.1"><span><a href="#indexheight" class="internal xref">index_height</a> (<a href="#indexheight" class="auto internal xref">Section 9.1</a>)</span><a href="#section-8.1-6.1.1" class="pilcrow">¶</a></p>
 </li>
-            <li class="normal" id="section-8.1.1-5.2">
-              <p id="section-8.1.1-5.2.1"><a href="#hashpospair64" class="auto internal xref">Section 8.3.1</a><a href="#section-8.1.1-5.2.1" class="pilcrow">¶</a></p>
+          <li class="normal" id="section-8.1-6.2">
+            <p id="section-8.1-6.2.1"><a href="#hashpospair64" class="auto internal xref">Section 8.3.1</a><a href="#section-8.1-6.2.1" class="pilcrow">¶</a></p>
 </li>
-          </ul>
-<p id="section-8.1.1-6">We define <code>add_leaf_hash</code> as<a href="#section-8.1.1-6" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="section-8.1.1-7">
+        </ul>
+<p id="section-8.1-7">We define <code>add_leaf_hash</code> as<a href="#section-8.1-7" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-8.1-8">
 <pre>
 def add_leaf_hash(db, f: bytes):
 
@@ -1857,9 +1848,7 @@ def add_leaf_hash(db, f: bytes):
         g += 1
 
     return i
-</pre><a href="#section-8.1.1-7" class="pilcrow">¶</a>
-</div>
-</section>
+</pre><a href="#section-8.1-8" class="pilcrow">¶</a>
 </div>
 </section>
 </div>
