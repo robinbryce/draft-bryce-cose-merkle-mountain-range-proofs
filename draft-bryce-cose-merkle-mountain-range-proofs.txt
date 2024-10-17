@@ -65,33 +65,33 @@ Table of Contents
 
    1.  Introduction
    2.  Conventions and Definitions
-     2.1.  Verifiable Data Structure
-   3.  Inclusion Proof
-     3.1.  inclusion_proof_path
-   4.  Receipt of Inclusion
-     4.1.  Verifying the Receipt of inclusion
-     4.2.  included_root
-   5.  Consistency Proof
-     5.1.  consistency_proof_path
-   6.  Receipt of Consistency
-     6.1.  Verifying the Receipt of consistency
-       6.1.1.  consistent_roots
-   7.  Appending to an MMR
-     7.1.  Leaf Node Addition
-       7.1.1.  add_leaf_hash
-     7.2.  Implementation defined storage methods
-       7.2.1.  Get
-       7.2.2.  Append
-     7.3.  Node values
-       7.3.1.  hash_pospair64
-   8.  Essential supporting algorithms
-     8.1.  index_height
-     8.2.  peaks
-   9.  Security Considerations
-   10. IANA Considerations
-     10.1.  Additions to Existing Registries
-     10.2.  New Registries
-   11. Normative References
+   3.  Verifiable Data Structure
+   4.  Inclusion Proof
+     4.1.  inclusion_proof_path
+   5.  Receipt of Inclusion
+     5.1.  Verifying the Receipt of inclusion
+     5.2.  included_root
+   6.  Consistency Proof
+     6.1.  consistency_proof_path
+   7.  Receipt of Consistency
+     7.1.  Verifying the Receipt of consistency
+       7.1.1.  consistent_roots
+   8.  Appending to an MMR
+     8.1.  Leaf Node Addition
+       8.1.1.  add_leaf_hash
+     8.2.  Implementation defined storage methods
+       8.2.1.  Get
+       8.2.2.  Append
+     8.3.  Node values
+       8.3.1.  hash_pospair64
+   9.  Essential supporting algorithms
+     9.1.  index_height
+     9.2.  peaks
+   10. Security Considerations
+   11. IANA Considerations
+     11.1.  Additions to Existing Registries
+     11.2.  New Registries
+   12. Normative References
    Appendix A.  References
      A.1.  Informative References
    Appendix B.  Assumed bit primitives
@@ -171,12 +171,12 @@ Table of Contents
    maximum height of a single tree is 64 (which will have g=63 for its
    peak).
 
-2.1.  Verifiable Data Structure
+3.  Verifiable Data Structure
 
    The integer identifier for this Verifiable Data Structure is TBD_0.
    The string identifier for this Verifiable Data Structure is TBD.
 
-3.  Inclusion Proof
+4.  Inclusion Proof
 
    The CBOR representation of an inclusion proof is
 
@@ -193,7 +193,7 @@ Table of Contents
    Note that the inclusion proof is valid for all trees sizes containing
    the produced peak.
 
-3.1.  inclusion_proof_path
+4.1.  inclusion_proof_path
 
    inclusion_proof_path(i, C) is used to produce the verification paths
    for inclusion proofs and consistency proofs.
@@ -206,7 +206,7 @@ Table of Contents
 
    And the methods:
 
-   *  index_height (Section 8.1) which obtains the zero based height g
+   *  index_height (Section 9.1) which obtains the zero based height g
       of any node.
 
    And the constraints:
@@ -255,7 +255,7 @@ Table of Contents
           # Set g to the height of the next item in the path.
           g += 1
 
-4.  Receipt of Inclusion
+5.  Receipt of Inclusion
 
    The cbor representation of an inclusion proof is:
 
@@ -286,7 +286,7 @@ Table of Contents
 
    The payload of an MMRIVER inclusion proof signature is the tree peak
    committing to the nodes inclusion, or the node itself where the proof
-   path is empty.  The algorithm included_root (Section 4.2) obtains
+   path is empty.  The algorithm included_root (Section 5.2) obtains
    this value.
 
    The payload MUST be detached.  Detaching the payload forces verifiers
@@ -294,15 +294,15 @@ Table of Contents
    implementation errors where the signature is verified but the payload
    merkle root does not match the inclusion proof.
 
-4.1.  Verifying the Receipt of inclusion
+5.1.  Verifying the Receipt of inclusion
 
    1.  Recompute the root from the path and the element for which
-       inclusion is being shown using included_root (Section 4.2).
+       inclusion is being shown using included_root (Section 5.2).
 
    2.  Verify the signature using the obtained root as the detached
        payload.
 
-4.2.  included_root
+5.2.  included_root
 
    The algorithm included_root calculates the accumulator peak for the
    provided proof and node value.
@@ -317,10 +317,10 @@ Table of Contents
 
    And the methods:
 
-   *  index_height (Section 8.1) which obtains the zero based height g
+   *  index_height (Section 9.1) which obtains the zero based height g
       of any node.
 
-   *  hash_pospair64 (Section 7.3.1) which applies H to the new node
+   *  hash_pospair64 (Section 8.3.1) which applies H to the new node
       position and its children.
 
    We define included_root as:
@@ -360,7 +360,7 @@ Table of Contents
      # If the path length was zero, the original nodehash is returned
      return root
 
-5.  Consistency Proof
+6.  Consistency Proof
 
    The cbor representation of a consistency proof is:
 
@@ -379,7 +379,7 @@ Table of Contents
        consistency-paths: [ + consistency-path ]
    ]
 
-5.1.  consistency_proof_path
+6.1.  consistency_proof_path
 
    Produces the verification paths for inclusion of the peaks of tree
    size-1 under the peaks of tree size-2.
@@ -392,9 +392,9 @@ Table of Contents
 
    And the methods:
 
-   *  inclusion_proof_path (Section 3.1)
+   *  inclusion_proof_path (Section 4.1)
 
-   *  peaks (Section 8.2)
+   *  peaks (Section 9.2)
 
    And the constraints:
 
@@ -411,7 +411,7 @@ Table of Contents
 
        return proof
 
-6.  Receipt of Consistency
+7.  Receipt of Consistency
 
    The cbor representation of an inclusion proof for MMRIVER is:
 
@@ -445,24 +445,24 @@ Table of Contents
    against implementation errors where the signature is verified but the
    payload is not genuinely produced by the included proof.
 
-6.1.  Verifying the Receipt of consistency
+7.1.  Verifying the Receipt of consistency
 
    1.  Recompute the prefix of the accumulator for tree size-2 from the
        proofs in the receipt using the algorithm consistent_roots
-       (Section 6.1.1)
+       (Section 7.1.1)
 
    2.  Obtain the remaining peaks directly from tree size-2.
 
    3.  Verify the signature using the obtained roots as the detached
        payload.
 
-6.1.1.  consistent_roots
+7.1.1.  consistent_roots
 
    consistent_roots returns the descending height ordered list of
    elements from the accumulator for the consistent future state.
 
    Implementations MUST require that the number of peaks returned by
-   peaks (Section 8.2)(ifrom) equals the number of entries in
+   peaks (Section 9.2)(ifrom) equals the number of entries in
    accumulatorfrom.
 
    Given:
@@ -478,9 +478,9 @@ Table of Contents
 
    And the methods:
 
-   *  included_root (Section 4.2)
+   *  included_root (Section 5.2)
 
-   *  peaks (Section 8.2)
+   *  peaks (Section 9.2)
 
    We define consistent_roots as:
 
@@ -501,9 +501,9 @@ Table of Contents
 
        return roots
 
-7.  Appending to an MMR
+8.  Appending to an MMR
 
-7.1.  Leaf Node Addition
+8.1.  Leaf Node Addition
 
    When a new node is appended, if its height matches the height of its
    immediate predecessor, then we can complete a larger tree by merging
@@ -512,7 +512,7 @@ Table of Contents
    until there are no more completable sub trees, needing only the
    previous peak at each step.
 
-7.1.1.  add_leaf_hash
+8.1.1.  add_leaf_hash
 
    add_leaf_hash(f) adds the leaf hash value f to the tree.
 
@@ -521,14 +521,14 @@ Table of Contents
    *  f the leaf value resulting from H(x) for the caller defined leaf
       value x
 
-   *  db an interface supporting the append (Section 7.2.2) and get
-      (Section 7.2.1) implementation defined storage methods.
+   *  db an interface supporting the append (Section 8.2.2) and get
+      (Section 8.2.1) implementation defined storage methods.
 
    And the methods:
 
-   *  index_height (Section 8.1)
+   *  index_height (Section 9.1)
 
-   *  Section 7.3.1
+   *  Section 8.3.1
 
    We define add_leaf_hash as
 
@@ -564,14 +564,14 @@ Table of Contents
 
        return i
 
-7.2.  Implementation defined storage methods
+8.2.  Implementation defined storage methods
 
    The following methods are assumed to be available to the
    implementation.  Very minimal requirements are specified.
 
    Informally, the storage must be array like and have no gaps.
 
-7.2.1.  Get
+8.2.1.  Get
 
    Reads the value from the tree at the supplied index.
 
@@ -580,7 +580,7 @@ Table of Contents
 
    Get MAY fail for transient reasons.
 
-7.2.2.  Append
+8.2.2.  Append
 
    Appends new node to storage and returns the index that will be
    occupied by the node provided to the next call to append.
@@ -597,7 +597,7 @@ Table of Contents
 
    Append MAY fail for transient reasons.
 
-7.3.  Node values
+8.3.  Node values
 
    Interior nodes in the MUST prefix the value provided to H(x) with
    pos.
@@ -608,7 +608,7 @@ Table of Contents
    The algorithm for leaf addition is provided the result of H(x)
    directly.
 
-7.3.1.  hash_pospair64
+8.3.1.  hash_pospair64
 
    Returns H(pos || a || b), which is the value for the node identified
    by index pos - 1
@@ -642,9 +642,9 @@ Table of Contents
        h.update(b)
        return h.digest()
 
-8.  Essential supporting algorithms
+9.  Essential supporting algorithms
 
-8.1.  index_height
+9.1.  index_height
 
    index_height(i) returns the zero based height g of the node index i
 
@@ -661,7 +661,7 @@ Table of Contents
 
        return bit_length(pos) - 1
 
-8.2.  peaks
+9.2.  peaks
 
    peaks(i) returns the peak indices for MMR(i+1), which is also its
    accumulator.
@@ -688,26 +688,26 @@ Table of Contents
 
        return peaks
 
-9.  Security Considerations
+10.  Security Considerations
 
    See the security considerations section of:
 
    *  [RFC9053]
 
-10.  IANA Considerations
+11.  IANA Considerations
 
    Editors note: Hash agility is desired.  We can start with SHA-256.
    Two of the referenced implementations use BLAKE2b-256, We would like
    to add support for SHA3-256, SHA3-512, and possibly Keccak and
    Pedersen.
 
-10.1.  Additions to Existing Registries
+11.1.  Additions to Existing Registries
 
    Editors note: todo registry requests
 
-10.2.  New Registries
+11.2.  New Registries
 
-11.  Normative References
+12.  Normative References
 
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", BCP 14, RFC 2119,
@@ -1277,7 +1277,7 @@ D.5.  node height, leaf count and peak mask
 D.6.  Inclusion proof paths and the associated accumulator states
 
    *  The inclusion path column defines the outputs of
-      inclusion_proof_path (Section 3.1))
+      inclusion_proof_path (Section 4.1))
 
    *  The accumlator column shows the output of [peaks][#peaks], but
       adjusted index the storage.
