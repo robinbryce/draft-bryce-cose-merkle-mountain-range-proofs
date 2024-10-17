@@ -1355,25 +1355,16 @@ described in BCP 14 <span>[<a href="#RFC2119" class="cite xref">RFC2119</a>]</s
 appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-2-2.1">
-          <p id="section-2-2.1.1"><code>i</code> shall be the index of any node, including leaf nodes, in the MMR<a href="#section-2-2.1.1" class="pilcrow">¶</a></p>
+          <p id="section-2-2.1.1">A complete MMR(n) defines an mmr with n nodes where no equal height sibling trees exist.<a href="#section-2-2.1.1" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="section-2-2.2">
-          <p id="section-2-2.2.1"><code>f</code> shall be a leaf value, which is <code>H(x)</code><a href="#section-2-2.2.1" class="pilcrow">¶</a></p>
+          <p id="section-2-2.2.1"><code>i</code> shall be the index of any node, including leaf nodes, in the MMR<a href="#section-2-2.2.1" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="section-2-2.3">
-          <p id="section-2-2.3.1"><code>h</code> shall be the 1 based tree height<a href="#section-2-2.3.1" class="pilcrow">¶</a></p>
+          <p id="section-2-2.3.1"><code>H(x)</code> shall be the SHA-256 digest of any value x<a href="#section-2-2.3.1" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="section-2-2.4">
-          <p id="section-2-2.4.1"><code>g</code> shall be the 0 based tree height, <code>h-1</code><a href="#section-2-2.4.1" class="pilcrow">¶</a></p>
-</li>
-        <li class="normal" id="section-2-2.5">
-          <p id="section-2-2.5.1"><code>H(x)</code> shall be the SHA-256 digest of any value x<a href="#section-2-2.5.1" class="pilcrow">¶</a></p>
-</li>
-        <li class="normal" id="section-2-2.6">
-          <p id="section-2-2.6.1"><code>||</code> shall mean concatenation of raw byte representations of the referenced values.<a href="#section-2-2.6.1" class="pilcrow">¶</a></p>
-</li>
-        <li class="normal" id="section-2-2.7">
-          <p id="section-2-2.7.1">A complete MMR is an MMR where no equal height sibling trees exist.<a href="#section-2-2.7.1" class="pilcrow">¶</a></p>
+          <p id="section-2-2.4.1"><code>||</code> shall mean concatenation of raw byte representations of the referenced values.<a href="#section-2-2.4.1" class="pilcrow">¶</a></p>
 </li>
       </ul>
 <p id="section-2-3">In this specification, all numbers are unsigned 64 bit integers.
