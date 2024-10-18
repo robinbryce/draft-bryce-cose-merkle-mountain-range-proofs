@@ -24,8 +24,6 @@ author:
  -
     fullname: Robin Bryce
     organization: DataTrails
-    # we can't change email once an I-D is accepted, and we have changed company emails twice now.
-    # also, this is the email that I contribute using on github.
     email: robinbryce@gmail.com
 
 normative:
@@ -36,8 +34,9 @@ informative:
 
 --- abstract
 
-This specification describes the COSE encoding of proofs for post order traversal binary merkle trees.
-Also known as binary numeral trees, history trees and merkle mountain ranges.
+This specification describes the COSE encoding of proofs for post order traversal binary merkle trees, also known as history trees and merkle mountain ranges.
+Proving and verifying is defined in terms of the cryptographic asynchronous accumulator described by [ReyzinYakoubov]
+The technical advantages for post order traversial binary merkle trees are discussed in [CrosbyWallach] and [PostOrderTlog]
 
 --- middle
 
@@ -54,10 +53,9 @@ Example,
 This illustrates `MMR(8)`, which is comprised of two perfect trees rooted at 6 and 7.
 7 is the root of a tree comprised of a single node.
 
-In this document proving and verifying is defined in terms of the cryptographic, asynchronous, accumulator described by [ReyzinYakoubov]
 The peaks of the perfect trees form the accumulator.
 
-Algorithms for leaf addition and for proving and verifying inclusion and consistency are defined.
+The storage of a tree maintained in this way is addressed as a linear array, and additions to the tree are always appends.
 
 # Conventions and Definitions
 
