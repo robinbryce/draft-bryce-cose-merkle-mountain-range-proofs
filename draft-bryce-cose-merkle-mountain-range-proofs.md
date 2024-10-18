@@ -1,4 +1,6 @@
 ---
+v: 3
+
 title: "Merkle Mountain Range for Immediately Verifiable and Replicable Commitments"
 abbrev: MMRIVER
 cat: exp
@@ -7,30 +9,26 @@ submissiontype: IETF
 number:
 date:
 consensus: true
-v: 3
 area: "Security"
 workgroup: "CBOR Object Signing and Encryption"
 keyword:
  - Internet-Draft
-# venue:
-#   group: cose
-#   type: Working Group
-#   mail: WG@example.com
-#   arch: https://example.com/WG
-#   github: USER/REPO
-#   latest: https://example.com/LATEST
-#
+venue:
+   group: cose
+   type: Working Group
+   mail: cose@ietf.org
+   github: robinbryce/draft-bryce-cose-merkle-mountain-range-proofs
+
 author:
  -
-    fullname: Robin Bryce
-    organization: DataTrails
-    email: robinbryce@gmail.com
+  fullname: Robin Bryce
+  organization: DataTrails
+  email: robinbryce@gmail.com
 
 normative:
   RFC9053: COSE
 
 informative:
-
 
 --- abstract
 
@@ -79,15 +77,15 @@ The string identifier for this Verifiable Data Structure is TBD.
 The CBOR representation of an inclusion proof is
 
 ~~~~ cddl
-    inclusion-proof = bstr .cbor [
+inclusion-proof = bstr .cbor [
 
 
-        ; zero based index of a tree node
-        index: uint
+    ; zero based index of a tree node
+    index: uint
 
-        ; path from the node to its accumulator peak in tree-size
-        inclusion-path: [ + bstr ]
-    ]
+    ; path from the node to its accumulator peak in tree-size
+    inclusion-path: [ + bstr ]
+]
 ~~~~
 
 Note that the inclusion proof is valid for all trees sizes containing the produced peak.
@@ -111,46 +109,45 @@ And the constraints:
 
 We define `inclusion_proof_path` as:
 
-    def inclusion_proof_path(i, c):
+  def inclusion_proof_path(i, c):
 
-        path = []
+    path = []
 
-        g = index_height(i)
+    g = index_height(i)
 
-        while True:
+    while True:
 
-            # The sibling of i is at i +/- 2^(g+1)
-            siblingoffset = (2 << g)
+      # The sibling of i is at i +/- 2^(g+1)
+      siblingoffset = (2 << g)
 
-            # If the index after i is higher, it is the left parent,
-            # and i is the right sibling
-            if index_height(i+1) > g:
+      # If the index after i is higher, it is the left parent,
+      # and i is the right sibling
+      if index_height(i+1) > g:
 
-                # The witness to the right sibling is offset behind i
-                isibling = i - siblingoffset + 1
+        # The witness to the right sibling is offset behind i
+        isibling = i - siblingoffset + 1
 
-                # The parent of a right sibling is stored immediately
-                # after
-                i += 1
-            else:
+        # The parent of a right sibling is stored immediately
+        # after
+        i += 1
+      else:
 
-                # The witness to a left sibling is offset ahead of i
-                isibling = i + siblingoffset - 1
+        # The witness to a left sibling is offset ahead of i
+        isibling = i + siblingoffset - 1
 
-                # The parent of a left sibling is stored immediately after
-                # its right sibling
-                i += siblingoffset
+        # The parent of a left sibling is stored immediately after
+        # its right sibling
+        i += siblingoffset
 
-            # When the computed sibling exceedes the range of MMR(C+1),
-            # we have completed the path
-            if isibling > c:
-                return path
+      # When the computed sibling exceedes the range of MMR(C+1),
+      # we have completed the path
+      if isibling > c:
+          return path
 
-            path.append(isibling)
+      path.append(isibling)
 
-            # Set g to the height of the next item in the path.
-            g += 1
-
+      # Set g to the height of the next item in the path.
+      g += 1
 
 # Receipt of Inclusion
 
@@ -164,8 +161,8 @@ protected-header-map = {
 }
 ~~~~
 
-* alg (label: 1): REQUIRED. Signature algorithm identifier. Value type: int.
-* vds (label: 395): REQUIRED. verifiable data structure algorithm identifier. Value type: int.
+- alg (label: 1): REQUIRED. Signature algorithm identifier. Value type: int.
+- vds (label: 395): REQUIRED. verifiable data structure algorithm identifier. Value type: int.
 
 The unprotected header for an inclusion proof signature is:
 
@@ -212,40 +209,40 @@ And the methods:
 
 We define `included_root` as:
 
-    def included_root(i, nodehash, proof):
+  def included_root(i, nodehash, proof):
 
-        root = nodehash
+    root = nodehash
 
-        g = index_height(i)
+    g = index_height(i)
 
-        for sibling in proof:
+    for sibling in proof:
 
-            # If the index after i is higher, it is the left parent,
-            # and i is the right sibling
+      # If the index after i is higher, it is the left parent,
+      # and i is the right sibling
 
-            if index_height(i + 1) > g:
+      if index_height(i + 1) > g:
 
-                # The parent of a right sibling is stored immediately after
+        # The parent of a right sibling is stored immediately after
 
-                i = i + 1
+        i = i + 1
 
-                # Set `root` to `H(i+1 || sibling || root)`
-                root = hash_pospair64(i + 1, sibling, root)
-            else:
+        # Set `root` to `H(i+1 || sibling || root)`
+        root = hash_pospair64(i + 1, sibling, root)
+      else:
 
-                # The parent of a left sibling is stored immediately after
-                # its right sibling.
+        # The parent of a left sibling is stored immediately after
+        # its right sibling.
 
-                i = i + (2 << g)
+        i = i + (2 << g)
 
-                # Set `root` to `H(i+1 || root || sibling)`
-                root = hash_pospair64(i + 1, root, sibling)
+        # Set `root` to `H(i+1 || root || sibling)`
+        root = hash_pospair64(i + 1, root, sibling)
 
-            # Set g to the height of the next item in the path.
-            g = g + 1
+      # Set g to the height of the next item in the path.
+      g = g + 1
 
-        # If the path length was zero, the original nodehash is returned
-        return root
+    # If the path length was zero, the original nodehash is returned
+    return root
 
 # Consistency Proof
 
@@ -274,7 +271,8 @@ consistency-proof =  bstr .cbor [
     ; tree size-1 to its new peak in tree size-2.
     consistency-paths: [ + consistency-path ]
 
-    ; the additional peaks that complete the accumulator for tree size-2,
+    ; the additional peaks that
+    ; complete the accumulator for tree size-2,
     ; when appended to those produced by the consistency paths
     right-peaks: [ *bstr ]
 ]
@@ -294,7 +292,7 @@ Given:
 And the methods:
 
 - [inclusion_proof_path](#inclusionproofpath)
-- [ peaks](#peaks)
+- [peaks](#peaks)
 
 And the constraints:
 
@@ -323,13 +321,12 @@ protected-header-map = {
 }
 ~~~~
 
-* alg (label: 1): REQUIRED. Signature algorithm identifier. Value type: int.
-* vds (label: 395): REQUIRED. verifiable data structure algorithm identifier. Value type: int.
+- alg (label: 1): REQUIRED. Signature algorithm identifier. Value type: int.
+- vds (label: 395): REQUIRED. verifiable data structure algorithm identifier. Value type: int.
 
 The unprotected header for an inclusion proof signature is:
 
 ~~~~ cddl
-
 consistency-proofs = [ + consistency-proof ]
 
 verifiable-proofs = {
@@ -347,14 +344,14 @@ This protects against implementation errors where the signature is verified but 
 
 ## Verifying the Receipt of consistency
 
-Verification accomodates verifying the result of a cumulative series of consistency proofs.
+Verification accommodates verifying the result of a cumulative series of consistency proofs.
 
 Perform the following for each consistency-proof in the list, verifying the signature with the output of the last.
 
-1. Initialise current proof as the first consistency-proof.
-1. Initialise accumulatorfrom to the peaks of tree size-1 in the current proof.
+1. Initialize current proof as the first consistency-proof.
+1. Initialize accumulatorfrom to the peaks of tree size-1 in the current proof.
 1. Initialize ifrom to tree size-1 - 1 from the current proof.
-1. Initialise proofs to the consistency-paths from the current proof.
+1. Initialize proofs to the consistency-paths from the current proof.
 1. Apply the algorithm [consistent_roots](#consistentroots)
 1. Apply the peaks algorithm to obtain the accumulator for tree size-2
 1. From the peaks for tres size-2, discard from the left the number of roots returned by consistent_roots.
@@ -365,18 +362,18 @@ Perform the following for each consistency-proof in the list, verifying the sign
 
 `consistent_roots` returns the descending height ordered list of elements from the accumulator for the consistent future state.
 
-Implementations MUST require that the number of peaks returned by [ peaks](#peaks)`(ifrom)` equals the number of entries in `accumulatorfrom`.
+Implementations MUST require that the number of peaks returned by [peaks](#peaks)`(ifrom)` equals the number of entries in `accumulatorfrom`.
 
 Given:
 
 - `ifrom` the last node index in the complete MMR from which consistency was proven.
-- `accumulatorfrom` the node values correponding to the peaks of the accumulator for tree size-1
+- `accumulatorfrom` the node values corresponding to the peaks of the accumulator for tree size-1
 - `proofs` the inclusion proofs for each node in `accumulatorfrom` for tree size-2
 
 And the methods:
 
 - [included_root](#includedroot)
-- [ peaks](#peaks)
+- [peaks](#peaks)
 
 We define `consistent_roots` as:
 
@@ -397,7 +394,6 @@ We define `consistent_roots` as:
 
         return roots
 
-
 # Appending a leaf
 
 An algorithm for appending to a tree maintained in post order layout is provided.
@@ -414,7 +410,7 @@ This process MUST proceed until there are no more completable sub trees.
 Given:
 
 - `f` the leaf value resulting from `H(x)` for the caller defined leaf value `x`
-- `db` an interface supporting the [ append](#append) and [ get](#get) implementation defined storage methods.
+- `db` an interface supporting the [append](#append) and [get](#get) implementation defined storage methods.
 
 And the methods:
 
@@ -454,7 +450,6 @@ We define `add_leaf_hash` as
             g += 1
 
         return i
-
 
 ## Implementation defined storage methods
 
@@ -520,7 +515,6 @@ We define `hash_pospair64` as:
         h.update(b)
         return h.digest()
 
-
 # Essential supporting algorithms
 
 ## index_height
@@ -544,7 +538,6 @@ We define `index_height` as:
 
 `peaks(i)` returns the peak indices for `MMR(i+1)`, which is also its accumulator.
 
-
 Assumes MMR(i+1) is complete, implementations can check for this condition by
 testing the height of i+1
 
@@ -553,7 +546,6 @@ Given:
 - `i` the index of any mmr node.
 
 We define `peaks` as:
-
 
     def peaks(i):
         peak = 0
@@ -585,26 +577,25 @@ Editors note: todo registry requests
 
 ## New Registries
 
-
 --- back
 
 # References
 
 ## Informative References
 
-* [ReyzinYakoubov]: https://eprint.iacr.org/2015/718.pdf
+- [ReyzinYakoubov]: https://eprint.iacr.org/2015/718.pdf
   [ReyzinYakoubov]
-* [CrosbyWallach]: https://static.usenix.org/event/sec09/tech/full_papers/crosby.pdf
+- [CrosbyWallach]: https://static.usenix.org/event/sec09/tech/full_papers/crosby.pdf
   [CrosbyWallach]
-* [CrosbySecondaryStorage]: https://static.usenix.org/event/sec09/tech/full_papers/crosby.pdf
+- [CrosbySecondaryStorage]: https://static.usenix.org/event/sec09/tech/full_papers/crosby.pdf
   [CrosbySecondaryStorage] 3.3 Storing the log on secondary storage
-* [PostOrderTlog]: https://research.swtch.com/tlog#appendix_a
+- [PostOrderTlog]: https://research.swtch.com/tlog#appendix_a
   [PostOrderTlog]
-* [PeterTodd]: https://lists.linuxfoundation.org/pipermail/bitcoin-dev/2016-May/012715.html
+- [PeterTodd]: https://lists.linuxfoundation.org/pipermail/bitcoin-dev/2016-May/012715.html
   [PeterTodd]
-* [KnuthTBT]: https://www-cs-faculty.stanford.edu/~knuth/taocp.html
+- [KnuthTBT]: https://www-cs-faculty.stanford.edu/~knuth/taocp.html
   [KnuthTBT] 2.3.1 Traversing Binary Trees
-* [BNT]: https://eprint.iacr.org/2021/038.pdf
+- [BNT]: https://eprint.iacr.org/2021/038.pdf
   [BNT]
 
 # Assumed bit primitives
@@ -661,7 +652,6 @@ In python,
 
     (v & -v).bit_length() - 1
 
-
 # Implementation Status
 
 Note to RFC Editor: Please remove this section as well as references to BCP205 before AUTH48.
@@ -707,7 +697,6 @@ A minimal reference implementation of this draft. Used to generate the test vect
 
 - https://github.com/robinbryce/merkle-mountain-range-proofs/blob/main/algorithms.py
 
-
 #### Maturity
 
 Reference only
@@ -719,7 +708,6 @@ Reference only
 A minimal tiled log implementation
 
 - https://github.com/robinbryce/mmriver-tiles-ts
-
 
 #### Maturity
 
@@ -760,21 +748,19 @@ The node indices for `MMR(39)` (leaves 0-15) are
 
     4                         30
 
-
     3              14                       29
                   / \
-                 /   \
+                  /   \
                 /     \
-               /       \
+                /       \
               /         \
     2        6           13            21             28
-           /   \        /   \        /    \
+            /   \        /   \        /    \
     1     2     5      9     12     17     20     24       27
-         / \   / \    / \   /  \   /  \   /  \
+          / \   / \    / \   /  \   /  \   /  \
     0   0   1 3   4  7   8 10  11 15  16 18  19 22  23   25   26
 
     .   0   1 2   3  4   5  6   7  8   9 10  11 12  13   14   15 e
-
 
 The node indices for `MMR(39)` (leaves 16 - 20) are
 
@@ -787,7 +773,6 @@ The node indices for `MMR(39)` (leaves 16 - 20) are
     0     31  32   34  35   38
 
     .     16  17   18  19   20 e
-
 
 The vertical axis is `g`, the zero based height of the MMR.
 
@@ -867,7 +852,7 @@ We define `H(v)` for test vector leaf values `f` as the SHA-256 hash of the the 
 
 ## Peak (accumulator) indices and values for all MMR's to MMR(39)
 
-(peaks)[#peaks] will produce the following index lists.
+(peaks)(#peaks) will produce the following index lists.
 
 | i|        accumulator peaks |
 |--|--------------------------|
@@ -920,7 +905,6 @@ starting with 0, are the corresponding mmr node indices 0-38
 |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7, 6a169105dcc487dbbae5747a0fd9b1d33a40320cf91cf9a323579139e7ff72aa|
 |d4fb5649422ff2eaf7b1c0b851585a8cfd14fb08ce11addb30075a96309582a7 6a169105dcc487dbbae5747a0fd9b1d33a40320cf91cf9a323579139e7ff72aa, e9a5f5201eb3c3c856e0a224527af5ac7eb1767fb1aff9bd53ba41a60cde9785|
 
-
 ## node height, leaf count and peak mask
 
 These tables cover the outputs of `index_height` and `leaf_count`.
@@ -940,7 +924,6 @@ These tables cover the outputs of `index_height` and `leaf_count`.
 |e|7    |7    |7    |7    |8    |9    |9    |10   |11   |11   |11   |12   |
 |m|111  |111  |111  |111  |1000 |1001 |1001 |1010 |1011 |1011 |1011 |1100 |
 
-
 |i|22   |23   |24   |25   |26   |27   |28   |29   |30   |31   |32   |33   |
 |-|-----|-----|-----|-----|-----|-----|-----|-----|-----|-----|-----|-----|
 |g|0    |0    |1    |0    |0    |1    |2    |3    |4    |0    |0    |1    |
@@ -956,14 +939,14 @@ These tables cover the outputs of `index_height` and `leaf_count`.
 ## Inclusion proof paths and the associated accumulator states
 
 - The inclusion path column defines the outputs of [inclusion_proof_path](#inclusionproofpath))
-- The accumlator column shows the output of [peaks][#peaks], but adjusted index the storage.
+- The accumulator column shows the output of [peaks](#peaks), but adjusted index the storage.
 - The accumulator root index shows the output of PeakIndex
-- The root column shows the value in the storage corresponding to the index in accumulator selected by the accumulator_root_index. Eg `storage[]
+- The root column shows the value in the storage corresponding to the index in accumulator selected by the accumulator_root_index. Eg `storage'
 
 This table illustrates the low, and predictably reducing, rate with which the root changes for any single entry in the MMR.
 Each time the root for a leaf changes, the validity period doubles.
 
-This table also ilustrates that the verification path for any single entry only ever grows.
+This table also illustrates that the verification path for any single entry only ever grows.
 It is therefore guaranteed to be a prefix of any future path for the same entry.
 
 | i  | MMR  |inclusion path       |accumulator|accumulator root index|
