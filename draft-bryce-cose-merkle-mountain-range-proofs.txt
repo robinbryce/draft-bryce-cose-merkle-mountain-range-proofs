@@ -24,16 +24,21 @@ Abstract
    (https://static.usenix.org/event/sec09/tech/full_papers/crosby.pdf)
    and PostOrderTlog (https://research.swtch.com/tlog#appendix_a)
 
-Discussion Venues
+About This Document
 
    This note is to be removed before publishing as an RFC.
 
-   Discussion of this document takes place on the CBOR Object Signing
-   and Encryption Working Group mailing list (cose@ietf.org), which is
-   archived at https://mailarchive.ietf.org/arch/browse/cose/.
+   Status information for this document may be found at
+   https://datatracker.ietf.org/doc/draft-bryce-cose-merkle-mountain-
+   range-proofs/.
+
+   Discussion of this document takes place on the cose Working Group
+   mailing list (mailto:cose@ietf.org), which is archived at
+   https://mailarchive.ietf.org/arch/browse/cose/.  Subscribe at
+   https://www.ietf.org/mailman/listinfo/cose/.
 
    Source for this draft and an issue tracker can be found at
-   https://github.com/datatrails/draft-bryce-cose-merkle-mountain-range-
+   https://github.com/robinbryce/draft-bryce-cose-merkle-mountain-range-
    proofs.
 
 Status of This Memo
@@ -176,15 +181,15 @@ Table of Contents
 
    The CBOR representation of an inclusion proof is
 
-       inclusion-proof = bstr .cbor [
+   inclusion-proof = bstr .cbor [
 
 
-           ; zero based index of a tree node
-           index: uint
+       ; zero based index of a tree node
+       index: uint
 
-           ; path from the node to its accumulator peak in tree-size
-           inclusion-path: [ + bstr ]
-       ]
+       ; path from the node to its accumulator peak in tree-size
+       inclusion-path: [ + bstr ]
+   ]
 
    Note that the inclusion proof is valid for all trees sizes containing
    the produced peak.
@@ -211,45 +216,45 @@ Table of Contents
 
    We define inclusion_proof_path as:
 
-  def inclusion_proof_path(i, c):
+   def inclusion_proof_path(i, c):
 
-      path = []
+   path = []
 
-      g = index_height(i)
+   g = index_height(i)
 
-      while True:
+   while True:
 
-          # The sibling of i is at i +/- 2^(g+1)
-          siblingoffset = (2 << g)
+     # The sibling of i is at i +/- 2^(g+1)
+     siblingoffset = (2 << g)
 
-          # If the index after i is higher, it is the left parent,
-          # and i is the right sibling
-          if index_height(i+1) > g:
+     # If the index after i is higher, it is the left parent,
+     # and i is the right sibling
+     if index_height(i+1) > g:
 
-              # The witness to the right sibling is offset behind i
-              isibling = i - siblingoffset + 1
+       # The witness to the right sibling is offset behind i
+       isibling = i - siblingoffset + 1
 
-              # The parent of a right sibling is stored immediately
-              # after
-              i += 1
-          else:
+       # The parent of a right sibling is stored immediately
+       # after
+       i += 1
+     else:
 
-              # The witness to a left sibling is offset ahead of i
-              isibling = i + siblingoffset - 1
+       # The witness to a left sibling is offset ahead of i
+       isibling = i + siblingoffset - 1
 
-              # The parent of a left sibling is stored immediately after
-              # its right sibling
-              i += siblingoffset
+       # The parent of a left sibling is stored immediately after
+       # its right sibling
+       i += siblingoffset
 
-          # When the computed sibling exceedes the range of MMR(C+1),
-          # we have completed the path
-          if isibling > c:
-              return path
+     # When the computed sibling exceedes the range of MMR(C+1),
+     # we have completed the path
+     if isibling > c:
+         return path
 
-          path.append(isibling)
+     path.append(isibling)
 
-          # Set g to the height of the next item in the path.
-          g += 1
+     # Set g to the height of the next item in the path.
+     g += 1
 
 5.  Receipt of Inclusion
 
@@ -321,40 +326,40 @@ Table of Contents
 
    We define included_root as:
 
- def included_root(i, nodehash, proof):
+   def included_root(i, nodehash, proof):
 
-     root = nodehash
+   root = nodehash
 
-     g = index_height(i)
+   g = index_height(i)
 
-     for sibling in proof:
+   for sibling in proof:
 
-         # If the index after i is higher, it is the left parent,
-         # and i is the right sibling
+     # If the index after i is higher, it is the left parent,
+     # and i is the right sibling
 
-         if index_height(i + 1) > g:
+     if index_height(i + 1) > g:
 
-             # The parent of a right sibling is stored immediately after
+       # The parent of a right sibling is stored immediately after
 
-             i = i + 1
+       i = i + 1
 
-             # Set `root` to `H(i+1 || sibling || root)`
-             root = hash_pospair64(i + 1, sibling, root)
-         else:
+       # Set `root` to `H(i+1 || sibling || root)`
+       root = hash_pospair64(i + 1, sibling, root)
+     else:
 
-             # The parent of a left sibling is stored immediately after
-             # its right sibling.
+       # The parent of a left sibling is stored immediately after
+       # its right sibling.
 
-             i = i + (2 << g)
+       i = i + (2 << g)
 
-             # Set `root` to `H(i+1 || root || sibling)`
-             root = hash_pospair64(i + 1, root, sibling)
+       # Set `root` to `H(i+1 || root || sibling)`
+       root = hash_pospair64(i + 1, root, sibling)
 
-         # Set g to the height of the next item in the path.
-         g = g + 1
+     # Set g to the height of the next item in the path.
+     g = g + 1
 
-     # If the path length was zero, the original nodehash is returned
-     return root
+   # If the path length was zero, the original nodehash is returned
+   return root
 
 6.  Consistency Proof
 
@@ -385,7 +390,8 @@ Table of Contents
        ; tree size-1 to its new peak in tree size-2.
        consistency-paths: [ + consistency-path ]
 
-       ; the additional peaks that complete the accumulator for tree size-2,
+       ; the additional peaks that
+       ; complete the accumulator for tree size-2,
        ; when appended to those produced by the consistency paths
        right-peaks: [ *bstr ]
    ]
@@ -408,7 +414,7 @@ Table of Contents
 
    *  inclusion_proof_path (Section 4.1)
 
-   *  peaks (Section 9.2)
+   *  Section 9.2
 
    And the constraints:
 
@@ -461,20 +467,20 @@ Table of Contents
 
 7.1.  Verifying the Receipt of consistency
 
-   Verification accomodates verifying the result of a cumulative series
+   Verification accommodates verifying the result of a cumulative series
    of consistency proofs.
 
    Perform the following for each consistency-proof in the list,
    verifying the signature with the output of the last.
 
-   1.  Initialise current proof as the first consistency-proof.
+   1.  Initialize current proof as the first consistency-proof.
 
-   2.  Initialise accumulatorfrom to the peaks of tree size-1 in the
+   2.  Initialize accumulatorfrom to the peaks of tree size-1 in the
        current proof.
 
    3.  Initialize ifrom to tree size-1 - 1 from the current proof.
 
-   4.  Initialise proofs to the consistency-paths from the current
+   4.  Initialize proofs to the consistency-paths from the current
        proof.
 
    5.  Apply the algorithm consistent_roots (Section 7.1.1)
@@ -497,15 +503,14 @@ Table of Contents
    elements from the accumulator for the consistent future state.
 
    Implementations MUST require that the number of peaks returned by
-   peaks (Section 9.2)(ifrom) equals the number of entries in
-   accumulatorfrom.
+   Section 9.2(ifrom) equals the number of entries in accumulatorfrom.
 
    Given:
 
    *  ifrom the last node index in the complete MMR from which
       consistency was proven.
 
-   *  accumulatorfrom the node values correponding to the peaks of the
+   *  accumulatorfrom the node values corresponding to the peaks of the
       accumulator for tree size-1
 
    *  proofs the inclusion proofs for each node in accumulatorfrom for
@@ -515,7 +520,7 @@ Table of Contents
 
    *  included_root (Section 5.2)
 
-   *  peaks (Section 9.2)
+   *  Section 9.2
 
    We define consistent_roots as:
 
@@ -557,8 +562,8 @@ Table of Contents
    *  f the leaf value resulting from H(x) for the caller defined leaf
       value x
 
-   *  db an interface supporting the append (Section 8.2.2) and get
-      (Section 8.2.1) implementation defined storage methods.
+   *  db an interface supporting the Section 8.2.2 and Section 8.2.1
+      implementation defined storage methods.
 
    And the methods:
 
@@ -956,17 +961,16 @@ D.1.  MMR(39)
 
    4                         30
 
-
    3              14                       29
                  / \
-                /   \
+                 /   \
                /     \
-              /       \
+               /       \
              /         \
    2        6           13            21             28
-          /   \        /   \        /    \
+           /   \        /   \        /    \
    1     2     5      9     12     17     20     24       27
-        / \   / \    / \   /  \   /  \   /  \
+         / \   / \    / \   /  \   /  \   /  \
    0   0   1 3   4  7   8 10  11 15  16 18  19 22  23   25   26
 
    .   0   1 2   3  4   5  6   7  8   9 10  11 12  13   14   15 e
@@ -1129,7 +1133,7 @@ D.3.  MMR(39) node values (including leaves)
 
 D.4.  Peak (accumulator) indices and values for all MMR's to MMR(39)
 
-   (peaks)[#peaks] will produce the following index lists.
+   (peaks)(#peaks) will produce the following index lists.
 
                         +====+===================+
                         | i  | accumulator peaks |
@@ -1315,20 +1319,20 @@ D.6.  Inclusion proof paths and the associated accumulator states
    *  The inclusion path column defines the outputs of
       inclusion_proof_path (Section 4.1))
 
-   *  The accumlator column shows the output of [peaks][#peaks], but
+   *  The accumulator column shows the output of Section 9.2, but
       adjusted index the storage.
 
    *  The accumulator root index shows the output of PeakIndex
 
    *  The root column shows the value in the storage corresponding to
       the index in accumulator selected by the accumulator_root_index.
-      Eg `storage[]
+      Eg `storage'
 
    This table illustrates the low, and predictably reducing, rate with
    which the root changes for any single entry in the MMR.  Each time
    the root for a leaf changes, the validity period doubles.
 
-   This table also ilustrates that the verification path for any single
+   This table also illustrates that the verification path for any single
    entry only ever grows.  It is therefore guaranteed to be a prefix of
    any future path for the same entry.
 
