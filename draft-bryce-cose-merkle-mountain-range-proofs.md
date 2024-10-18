@@ -277,7 +277,7 @@ consistency-proof =  bstr .cbor [
     consistency-paths: [ + consistency-path ]
 
     ; the additional peaks that complete the accumulator for tree size-2,
-    ; when appended to those produced by the consistencyu paths
+    ; when appended to those produced by the consistency paths
     right-peaks: [ *bstr ]
 ]
 ~~~~
