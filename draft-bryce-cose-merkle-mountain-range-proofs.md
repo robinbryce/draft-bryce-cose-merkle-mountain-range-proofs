@@ -251,6 +251,13 @@ We define `included_root` as:
 
 # Consistency Proof
 
+A consistency proof shows that the accumulator, defined in [ReyzinYakoubov],
+for tree size-1 is a prefix of the accumulator for tree size-2.
+
+The signature is over the complete accumulator for tree size-2 obtained using the proof and the, supplied, possibly empty, list of `right-peaks` which complete the accumulator for tree size-2.
+
+The receipt of consistency is defined so that a chain of cumulative consistency proofs can be verified together.
+
 The cbor representation of a consistency proof is:
 
 ~~~~ cddl
@@ -268,12 +275,18 @@ consistency-proof =  bstr .cbor [
     ; the inclusion path from each accumulator peak in
     ; tree size-1 to its new peak in tree size-2.
     consistency-paths: [ + consistency-path ]
+
+    ; the additional peaks that complete the accumulator for tree size-2,
+    ; when appended to those produced by the consistencyu paths
+    right-peaks: [ *bstr ]
 ]
 ~~~~
 
 ## consistency_proof_path
 
 Produces the verification paths for inclusion of the peaks of tree size-1 under the peaks of tree size-2.
+
+right-peaks are obtained by invoking `peaks(size-2 - 1)`, and discarding length(proofs) from the left.
 
 Given:
 
@@ -322,7 +335,7 @@ The unprotected header for an inclusion proof signature is:
 consistency-proofs = [ + consistency-proof ]
 
 verifiable-proofs = {
-  &(consistency-proof: -2) => consistency-proofs
+  &(consistency-proof: -2) => consistency-proof
 }
 
 unprotected-header-map = {
@@ -331,14 +344,24 @@ unprotected-header-map = {
 }
 ~~~~
 
-The payload MUST be detached. Detaching the payload forces verifiers to recompute the roots from the consistency proof.
+The payload MUST be detached. Detaching the payload forces verifiers to recompute the roots from the consistency proofs.
 This protects against implementation errors where the signature is verified but the payload is not genuinely produced by the included proof.
 
 ## Verifying the Receipt of consistency
 
-1. Apply the algorithm [consistent_roots](#consistentroots) using the peaks for tree size-1 as input.
-1. Obtain the remaining peaks directly from tree size-2 using the `peaks` algorithm, appending to the peaks produced by consistent roots.
-1. Verify the signature using the obtained roots as the detached payload.
+Verification accomodates verifying the result of a cumulative series of consistency proofs.
+
+Perform the following for each consistency-proof in the list, verifying the signature with the output of the last.
+
+1. Initialise current proof as the first consistency-proof.
+1. Initialise accumulatorfrom to the peaks of tree size-1 in the current proof.
+1. Initialize ifrom to tree size-1 - 1 from the current proof.
+1. Initialise proofs to the consistency-paths from the current proof.
+1. Apply the algorithm [consistent_roots](#consistentroots)
+1. Apply the peaks algorithm to obtain the accumulator for tree size-2
+1. From the peaks for tres size-2, discard from the left the number of roots returned by consistent_roots.
+1. Create the consistent accumulator by appending the remaining peaks to the consistent roots.
+1. If there are no remaining proofs, use the consistent accumulator as the detached payload and verify the signature.
 
 ### consistent_roots
 
