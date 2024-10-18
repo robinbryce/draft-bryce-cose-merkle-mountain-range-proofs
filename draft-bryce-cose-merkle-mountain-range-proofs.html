@@ -1029,7 +1029,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
 </tr></thead>
 <tfoot><tr>
 <td class="left">Bryce</td>
-<td class="center">Expires 20 April 2025</td>
+<td class="center">Expires 21 April 2025</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1042,12 +1042,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="internet-draft">draft-bryce-cose-merkle-mountain-range-proofs-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2024-10-17" class="published">17 October 2024</time>
+<time datetime="2024-10-18" class="published">18 October 2024</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Experimental</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2025-04-20">20 April 2025</time></dd>
+<dd class="expires"><time datetime="2025-04-21">21 April 2025</time></dd>
 <dt class="label-authors">Author:</dt>
 <dd class="authors">
 <div class="author">
@@ -1093,7 +1093,7 @@ Also known as binary numeral trees, history trees and merkle mountain ranges.<a 
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 20 April 2025.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 21 April 2025.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1603,8 +1603,12 @@ def included_root(i, nodehash, proof):
       <h2 id="name-consistency-proof">
 <a href="#section-6" class="section-number selfRef">6. </a><a href="#name-consistency-proof" class="section-name selfRef">Consistency Proof</a>
       </h2>
-<p id="section-6-1">The cbor representation of a consistency proof is:<a href="#section-6-1" class="pilcrow">¶</a></p>
-<div class="lang-cddl sourcecode" id="section-6-2">
+<p id="section-6-1">A consistency proof shows that the accumulator, defined in <a href="https://eprint.iacr.org/2015/718.pdf">ReyzinYakoubov</a>,
+for tree size-1 is a prefix of the accumulator for tree size-2.<a href="#section-6-1" class="pilcrow">¶</a></p>
+<p id="section-6-2">The signature is over the complete accumulator for tree size-2 obtained using the proof and the, supplied, possibly empty, list of <code>right-peaks</code> which complete the accumulator for tree size-2.<a href="#section-6-2" class="pilcrow">¶</a></p>
+<p id="section-6-3">The receipt of consistency is defined so that a chain of cumulative consistency proofs can be verified together.<a href="#section-6-3" class="pilcrow">¶</a></p>
+<p id="section-6-4">The cbor representation of a consistency proof is:<a href="#section-6-4" class="pilcrow">¶</a></p>
+<div class="lang-cddl sourcecode" id="section-6-5">
 <pre>
 consistency-path = [ * bstr ]
 
@@ -1619,8 +1623,12 @@ consistency-proof =  bstr .cbor [
     ; the inclusion path from each accumulator peak in
     ; tree size-1 to its new peak in tree size-2.
     consistency-paths: [ + consistency-path ]
+
+    ; the additional peaks that complete the accumulator for tree size-2,
+    ; when appended to those produced by the consistencyu paths
+    right-peaks: [ *bstr ]
 ]
-</pre><a href="#section-6-2" class="pilcrow">¶</a>
+</pre><a href="#section-6-5" class="pilcrow">¶</a>
 </div>
 <div id="consistencyproofpath">
 <section id="section-6.1">
@@ -1628,32 +1636,33 @@ consistency-proof =  bstr .cbor [
 <a href="#section-6.1" class="section-number selfRef">6.1. </a><a href="#name-consistency_proof_path" class="section-name selfRef">consistency_proof_path</a>
         </h3>
 <p id="section-6.1-1">Produces the verification paths for inclusion of the peaks of tree size-1 under the peaks of tree size-2.<a href="#section-6.1-1" class="pilcrow">¶</a></p>
-<p id="section-6.1-2">Given:<a href="#section-6.1-2" class="pilcrow">¶</a></p>
+<p id="section-6.1-2">right-peaks are obtained by invoking <code>peaks(size-2 - 1)</code>, and discarding length(proofs) from the left.<a href="#section-6.1-2" class="pilcrow">¶</a></p>
+<p id="section-6.1-3">Given:<a href="#section-6.1-3" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-6.1-3.1">
-            <p id="section-6.1-3.1.1"><code>ifrom</code> is the last node of tree size-1`<a href="#section-6.1-3.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-6.1-4.1">
+            <p id="section-6.1-4.1.1"><code>ifrom</code> is the last node of tree size-1`<a href="#section-6.1-4.1.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="normal" id="section-6.1-3.2">
-            <p id="section-6.1-3.2.1"><code>ito</code> is the last node of tree size-2`<a href="#section-6.1-3.2.1" class="pilcrow">¶</a></p>
+          <li class="normal" id="section-6.1-4.2">
+            <p id="section-6.1-4.2.1"><code>ito</code> is the last node of tree size-2`<a href="#section-6.1-4.2.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
-<p id="section-6.1-4">And the methods:<a href="#section-6.1-4" class="pilcrow">¶</a></p>
+<p id="section-6.1-5">And the methods:<a href="#section-6.1-5" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-6.1-5.1">
-            <p id="section-6.1-5.1.1"><span><a href="#inclusionproofpath" class="internal xref">inclusion_proof_path</a> (<a href="#inclusionproofpath" class="auto internal xref">Section 4.1</a>)</span><a href="#section-6.1-5.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-6.1-6.1">
+            <p id="section-6.1-6.1.1"><span><a href="#inclusionproofpath" class="internal xref">inclusion_proof_path</a> (<a href="#inclusionproofpath" class="auto internal xref">Section 4.1</a>)</span><a href="#section-6.1-6.1.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="normal" id="section-6.1-5.2">
-            <p id="section-6.1-5.2.1"><span><a href="#peaks" class="internal xref">peaks</a> (<a href="#peaks" class="auto internal xref">Section 9.2</a>)</span><a href="#section-6.1-5.2.1" class="pilcrow">¶</a></p>
+          <li class="normal" id="section-6.1-6.2">
+            <p id="section-6.1-6.2.1"><span><a href="#peaks" class="internal xref">peaks</a> (<a href="#peaks" class="auto internal xref">Section 9.2</a>)</span><a href="#section-6.1-6.2.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
-<p id="section-6.1-6">And the constraints:<a href="#section-6.1-6" class="pilcrow">¶</a></p>
+<p id="section-6.1-7">And the constraints:<a href="#section-6.1-7" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-6.1-7.1">
-            <p id="section-6.1-7.1.1"><code>ifrom &lt;= ito</code><a href="#section-6.1-7.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-6.1-8.1">
+            <p id="section-6.1-8.1.1"><code>ifrom &lt;= ito</code><a href="#section-6.1-8.1.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
-<p id="section-6.1-8">We define <code>consistency_proof_paths</code> as:<a href="#section-6.1-8" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="section-6.1-9">
+<p id="section-6.1-9">We define <code>consistency_proof_paths</code> as:<a href="#section-6.1-9" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-6.1-10">
 <pre>
 def consistency_proof_paths(ifrom, ito):
 
@@ -1663,7 +1672,7 @@ def consistency_proof_paths(ifrom, ito):
         proof.append(inclusion_proof_path(i, ito))
 
     return proof
-</pre><a href="#section-6.1-9" class="pilcrow">¶</a>
+</pre><a href="#section-6.1-10" class="pilcrow">¶</a>
 </div>
 </section>
 </div>
@@ -1698,7 +1707,7 @@ protected-header-map = {
 consistency-proofs = [ + consistency-proof ]
 
 verifiable-proofs = {
-  &amp;(consistency-proof: -2) =&gt; consistency-proofs
+  &amp;(consistency-proof: -2) =&gt; consistency-proof
 }
 
 unprotected-header-map = {
@@ -1707,22 +1716,42 @@ unprotected-header-map = {
 }
 </pre><a href="#section-7-5" class="pilcrow">¶</a>
 </div>
-<p id="section-7-6">The payload <span class="bcp14">MUST</span> be detached. Detaching the payload forces verifiers to recompute the roots from the consistency proof.
+<p id="section-7-6">The payload <span class="bcp14">MUST</span> be detached. Detaching the payload forces verifiers to recompute the roots from the consistency proofs.
 This protects against implementation errors where the signature is verified but the payload is not genuinely produced by the included proof.<a href="#section-7-6" class="pilcrow">¶</a></p>
 <div id="verifying-the-receipt-of-consistency">
 <section id="section-7.1">
         <h3 id="name-verifying-the-receipt-of-co">
 <a href="#section-7.1" class="section-number selfRef">7.1. </a><a href="#name-verifying-the-receipt-of-co" class="section-name selfRef">Verifying the Receipt of consistency</a>
         </h3>
-<ol start="1" type="1" class="normal type-1" id="section-7.1-1">
-<li id="section-7.1-1.1">
-            <p id="section-7.1-1.1.1">Apply the algorithm <span><a href="#consistentroots" class="internal xref">consistent_roots</a> (<a href="#consistentroots" class="auto internal xref">Section 7.1.1</a>)</span> using the peaks for tree size-1 as input.<a href="#section-7.1-1.1.1" class="pilcrow">¶</a></p>
+<p id="section-7.1-1">Verification accomodates verifying the result of a cumulative series of consistency proofs.<a href="#section-7.1-1" class="pilcrow">¶</a></p>
+<p id="section-7.1-2">Perform the following for each consistency-proof in the list, verifying the signature with the output of the last.<a href="#section-7.1-2" class="pilcrow">¶</a></p>
+<ol start="1" type="1" class="normal type-1" id="section-7.1-3">
+<li id="section-7.1-3.1">
+            <p id="section-7.1-3.1.1">Initialise current proof as the first consistency-proof.<a href="#section-7.1-3.1.1" class="pilcrow">¶</a></p>
 </li>
-          <li id="section-7.1-1.2">
-            <p id="section-7.1-1.2.1">Obtain the remaining peaks directly from tree size-2 using the <code>peaks</code> algorithm, appending to the peaks produced by consistent roots.<a href="#section-7.1-1.2.1" class="pilcrow">¶</a></p>
+          <li id="section-7.1-3.2">
+            <p id="section-7.1-3.2.1">Initialise accumulatorfrom to the peaks of tree size-1 in the current proof.<a href="#section-7.1-3.2.1" class="pilcrow">¶</a></p>
 </li>
-          <li id="section-7.1-1.3">
-            <p id="section-7.1-1.3.1">Verify the signature using the obtained roots as the detached payload.<a href="#section-7.1-1.3.1" class="pilcrow">¶</a></p>
+          <li id="section-7.1-3.3">
+            <p id="section-7.1-3.3.1">Initialize ifrom to tree size-1 - 1 from the current proof.<a href="#section-7.1-3.3.1" class="pilcrow">¶</a></p>
+</li>
+          <li id="section-7.1-3.4">
+            <p id="section-7.1-3.4.1">Initialise proofs to the consistency-paths from the current proof.<a href="#section-7.1-3.4.1" class="pilcrow">¶</a></p>
+</li>
+          <li id="section-7.1-3.5">
+            <p id="section-7.1-3.5.1">Apply the algorithm <span><a href="#consistentroots" class="internal xref">consistent_roots</a> (<a href="#consistentroots" class="auto internal xref">Section 7.1.1</a>)</span><a href="#section-7.1-3.5.1" class="pilcrow">¶</a></p>
+</li>
+          <li id="section-7.1-3.6">
+            <p id="section-7.1-3.6.1">Apply the peaks algorithm to obtain the accumulator for tree size-2<a href="#section-7.1-3.6.1" class="pilcrow">¶</a></p>
+</li>
+          <li id="section-7.1-3.7">
+            <p id="section-7.1-3.7.1">From the peaks for tres size-2, discard from the left the number of roots returned by consistent_roots.<a href="#section-7.1-3.7.1" class="pilcrow">¶</a></p>
+</li>
+          <li id="section-7.1-3.8">
+            <p id="section-7.1-3.8.1">Create the consistent accumulator by appending the remaining peaks to the consistent roots.<a href="#section-7.1-3.8.1" class="pilcrow">¶</a></p>
+</li>
+          <li id="section-7.1-3.9">
+            <p id="section-7.1-3.9.1">If there are no remaining proofs, use the consistent accumulator as the detached payload and verify the signature.<a href="#section-7.1-3.9.1" class="pilcrow">¶</a></p>
 </li>
         </ol>
 <div id="consistentroots">
