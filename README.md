@@ -2,7 +2,7 @@
 
 This is the working area for the individual Internet-Draft, "Merkle Mountain Range for Immediately Verifiable and Efficiently Replicable Commitments".
 
-* [Editor's Copy](https://datatrails.github.io/draft-bryce-cose-merkle-mountain-range-proofs/#go.draft-bryce-cose-merkle-mountain-range-proofs.html)
+* [Editor's Copy](https://robinbryce.github.io/draft-bryce-cose-merkle-mountain-range-proofs/#go.draft-bryce-cose-merkle-mountain-range-proofs.html)
 * [Datatracker Page](https://datatracker.ietf.org/doc/draft-bryce-cose-merkle-mountain-range-proofs)
 * [Individual Draft](https://datatracker.ietf.org/doc/html/draft-bryce-cose-merkle-mountain-range-proofs)
 * [Compare Editor's Copy to Individual Draft](https://datatrails.github.io/draft-bryce-cose-merkle-mountain-range-proofs/#go.draft-bryce-cose-merkle-mountain-range-proofs.diff)
