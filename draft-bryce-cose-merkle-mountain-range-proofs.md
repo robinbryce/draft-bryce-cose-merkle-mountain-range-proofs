@@ -32,9 +32,9 @@ informative:
 
 --- abstract
 
-This specification describes the COSE encoding of proofs for post order traversal binary merkle trees, also known as history trees and merkle mountain ranges.
-Proving and verifying is defined in terms of the cryptographic asynchronous accumulator described by [ReyzinYakoubov]
-The technical advantages for post order traversial binary merkle trees are discussed in [CrosbyWallach] and [PostOrderTlog]
+This specification describes the COSE encoding of proofs for post-order traversal binary Merkle trees, also known as history trees and Merkle mountain ranges.
+Proving and verifying are defined in terms of the cryptographic asynchronous accumulator described by [ReyzinYakoubov].
+The technical advantages of post-order traversal binary Merkle trees are discussed in [CrosbyWallachStorage] and [PostOrderTlog].
 
 --- middle
 
@@ -908,9 +908,8 @@ starting with 0, are the corresponding mmr node indices 0-38
 ## node height, leaf count and peak mask
 
 These tables cover the outputs of `index_height` and `leaf_count`.
-`g=index_height`, `e` & `m` are the decimal and binary representations of `leaf_count`
-
-`m` is the bit map of peaks, and also the binary representation of `e`
+`g=index_height`, `e` is the result of `leaf_count`.
+`m` is the bit map of peaks, and also the binary representation of `e`.
 
 |i|0    |1    |2    |3    |4    |5    |6    |7    |8    |9    |
 |-|-----|-----|-----|-----|-----|-----|-----|-----|-----|-----|
@@ -939,15 +938,8 @@ These tables cover the outputs of `index_height` and `leaf_count`.
 ## Inclusion proof paths and the associated accumulator states
 
 - The inclusion path column defines the outputs of [inclusion_proof_path](#inclusionproofpath))
-- The accumulator column shows the output of [peaks](#peaks), but adjusted index the storage.
-- The accumulator root index shows the output of PeakIndex
-- The root column shows the value in the storage corresponding to the index in accumulator selected by the accumulator_root_index. Eg `storage'
-
-This table illustrates the low, and predictably reducing, rate with which the root changes for any single entry in the MMR.
-Each time the root for a leaf changes, the validity period doubles.
-
-This table also illustrates that the verification path for any single entry only ever grows.
-It is therefore guaranteed to be a prefix of any future path for the same entry.
+- The accumulator column shows the output of [peaks](#peaks).
+- The accumulator root index identifies the peak in the accumulator which is produced by the path.
 
 | i  | MMR  |inclusion path       |accumulator|accumulator root index|
 |   0|in MMR(1)|[]                  |[0]                 |0   |
