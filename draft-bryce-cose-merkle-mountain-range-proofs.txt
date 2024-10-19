@@ -154,6 +154,8 @@ Table of Contents
 
    *  i shall be the index of any node, including leaf nodes, in the MMR
 
+   *  g shall be the zero based height of a node in the tree.
+
    *  H(x) shall be the SHA-256 digest of any value x
 
    *  || shall mean concatenation of raw byte representations of the
@@ -165,8 +167,7 @@ Table of Contents
 
 3.  Verifiable Data Structure
 
-   The integer identifier for this Verifiable Data Structure is TBD_0.
-   The string identifier for this Verifiable Data Structure is TBD.
+   The integer identifier for this Verifiable Data Structure is 2.
 
 4.  Inclusion Proof
 
@@ -174,20 +175,22 @@ Table of Contents
 
    inclusion-proof = bstr .cbor [
 
+     ; zero based index of a tree node
+     index: uint
 
-       ; zero based index of a tree node
-       index: uint
-
-       ; path from the node to its accumulator peak in tree-size
-       inclusion-path: [ + bstr ]
+     ; path from the node to its accumulator peak in tree-size
+     inclusion-path: [ + bstr ]
    ]
 
-   Note that the inclusion proof is valid for all trees sizes containing
-   the produced peak.
+   Note that the inclusion path for the index leads to a single
+   permanent node in the tree.  This node will initially be a member of
+   the accumulator, as the tree grows it will eventually be "buried".
+   However the future path of inclusion will continue to include the
+   proven node.
 
 4.1.  inclusion_proof_path
 
-   inclusion_proof_path(i, C) is used to produce the verification paths
+   inclusion_proof_path(i, c) is used to produce the verification paths
    for inclusion proofs and consistency proofs.
 
    Given:
@@ -203,49 +206,49 @@ Table of Contents
 
    And the constraints:
 
-   *  i <= C
+   *  i <= c
 
-   We define inclusion_proof_path as:
+   We define inclusion_proof_path as
 
-   def inclusion_proof_path(i, c):
+     def inclusion_proof_path(i, c):
 
-   path = []
+       path = []
 
-   g = index_height(i)
+       g = index_height(i)
 
-   while True:
+       while True:
 
-     # The sibling of i is at i +/- 2^(g+1)
-     siblingoffset = (2 << g)
+         # The sibling of i is at i +/- 2^(g+1)
+         siblingoffset = (2 << g)
 
-     # If the index after i is higher, it is the left parent,
-     # and i is the right sibling
-     if index_height(i+1) > g:
+         # If the index after i is higher, it is the left parent,
+         # and i is the right sibling
+         if index_height(i+1) > g:
 
-       # The witness to the right sibling is offset behind i
-       isibling = i - siblingoffset + 1
+           # The witness to the right sibling is offset behind i
+           isibling = i - siblingoffset + 1
 
-       # The parent of a right sibling is stored immediately
-       # after
-       i += 1
-     else:
+           # The parent of a right sibling is stored immediately
+           # after
+           i += 1
+         else:
 
-       # The witness to a left sibling is offset ahead of i
-       isibling = i + siblingoffset - 1
+           # The witness to a left sibling is offset ahead of i
+           isibling = i + siblingoffset - 1
 
-       # The parent of a left sibling is stored immediately after
-       # its right sibling
-       i += siblingoffset
+           # The parent of a left sibling is stored immediately after
+           # its right sibling
+           i += siblingoffset
 
-     # When the computed sibling exceedes the range of MMR(C+1),
-     # we have completed the path
-     if isibling > c:
-         return path
+         # When the computed sibling exceedes the range of MMR(C+1),
+         # we have completed the path
+         if isibling > c:
+             return path
 
-     path.append(isibling)
+         path.append(isibling)
 
-     # Set g to the height of the next item in the path.
-     g += 1
+         # Set g to the height of the next item in the path.
+         g += 1
 
 5.  Receipt of Inclusion
 
@@ -288,11 +291,23 @@ Table of Contents
 
 5.1.  Verifying the Receipt of inclusion
 
-   1.  Recompute the root from the path and the element for which
-       inclusion is being shown using included_root (Section 5.2).
+   The inclusion proof and signature are verified in order.  First the
+   verifiers applies the inclusion proof to a possible entry (set
+   member) bytes.  If this process fails, the inclusion proof may have
+   been tampered with.  If this process succeeds, the result is a merkle
+   root, which in the attached as the COSE Sign1 payload.  Second the
+   verifier checks the signature of the COSE Sign1.  If the resulting
+   signature verifies, the Receipt has proved inclusion of the entry in
+   the verifiable data structure.  If the resulting signature does not
+   verify, the signature may have been tampered with.
 
-   2.  Verify the signature using the obtained root as the detached
-       payload.
+   It is recommended that implementations return a single boolean result
+   for Receipt verification operations, to reduce the chance of
+   accepting a valid signature over an invalid inclusion proof.
+
+   As the proof must be processed prior to signature verification the
+   implementation SHOULD check the lengths of the proof paths are
+   appropriate for the provided tree sizes.
 
 5.2.  included_root
 
@@ -315,42 +330,42 @@ Table of Contents
    *  hash_pospair64 (Section 8.3.1) which applies H to the new node
       position and its children.
 
-   We define included_root as:
+   We define included_root as
 
-   def included_root(i, nodehash, proof):
+     def included_root(i, nodehash, proof):
 
-   root = nodehash
+       root = nodehash
 
-   g = index_height(i)
+       g = index_height(i)
 
-   for sibling in proof:
+       for sibling in proof:
 
-     # If the index after i is higher, it is the left parent,
-     # and i is the right sibling
+         # If the index after i is higher, it is the left parent,
+         # and i is the right sibling
 
-     if index_height(i + 1) > g:
+         if index_height(i + 1) > g:
 
-       # The parent of a right sibling is stored immediately after
+           # The parent of a right sibling is stored immediately after
 
-       i = i + 1
+           i = i + 1
 
-       # Set `root` to `H(i+1 || sibling || root)`
-       root = hash_pospair64(i + 1, sibling, root)
-     else:
+           # Set `root` to `H(i+1 || sibling || root)`
+           root = hash_pospair64(i + 1, sibling, root)
+         else:
 
-       # The parent of a left sibling is stored immediately after
-       # its right sibling.
+           # The parent of a left sibling is stored immediately after
+           # its right sibling.
 
-       i = i + (2 << g)
+           i = i + (2 << g)
 
-       # Set `root` to `H(i+1 || root || sibling)`
-       root = hash_pospair64(i + 1, root, sibling)
+           # Set `root` to `H(i+1 || root || sibling)`
+           root = hash_pospair64(i + 1, root, sibling)
 
-     # Set g to the height of the next item in the path.
-     g = g + 1
+         # Set g to the height of the next item in the path.
+         g = g + 1
 
-   # If the path length was zero, the original nodehash is returned
-   return root
+       # If the path length was zero, the original nodehash is returned
+       return root
 
 6.  Consistency Proof
 
@@ -411,16 +426,16 @@ Table of Contents
 
    *  ifrom <= ito
 
-   We define consistency_proof_paths as:
+   We define consistency_proof_paths as
 
-   def consistency_proof_paths(ifrom, ito):
+     def consistency_proof_paths(ifrom, ito):
 
-   proof = []
+       proof = []
 
-   for i in peaks(ifrom):
-     proof.append(inclusion_proof_path(i, ito))
+       for i in peaks(ifrom):
+         proof.append(inclusion_proof_path(i, ito))
 
-   return proof
+       return proof
 
 7.  Receipt of Consistency
 
@@ -486,7 +501,16 @@ Table of Contents
        peaks to the consistent roots.
 
    9.  If there are no remaining proofs, use the consistent accumulator
-       as the detached payload and verify the signature.
+       as the detached payload and verify the signature of the COSE
+       Sign1.
+
+   It is recommended that implementations return a single boolean result
+   for Receipt verification operations, to reduce the chance of
+   accepting a valid signature over an invalid consistency proof.
+
+   As the proof must be processed prior to signature verification the
+   implementation SHOULD check the lengths of the proof paths are
+   appropriate for the provided tree sizes.
 
 7.1.1.  consistent_roots
 
@@ -513,24 +537,24 @@ Table of Contents
 
    *  Section 9.2
 
-   We define consistent_roots as:
+   We define consistent_roots as
 
-   def consistent_roots(ifrom, accumulatorfrom, proofs):
+     def consistent_roots(ifrom, accumulatorfrom, proofs):
 
-   frompeaks = peaks(ifrom)
+       frompeaks = peaks(ifrom)
 
-   # if length(frompeaks) != length(proofs) -> ERROR
+       # if length(frompeaks) != length(proofs) -> ERROR
 
-   roots = []
-   for i in range(len(accumulatorfrom)):
-     root = included_root(
-         frompeaks[i], accumulatorfrom[i], proofs[i])
+       roots = []
+       for i in range(len(accumulatorfrom)):
+         root = included_root(
+             frompeaks[i], accumulatorfrom[i], proofs[i])
 
-     if roots and roots[-1] == root:
-         continue
-     roots.append(root)
+         if roots and roots[-1] == root:
+             continue
+         roots.append(root)
 
-   return roots
+       return roots
 
 8.  Appending a leaf
 
@@ -564,7 +588,7 @@ Table of Contents
 
    We define add_leaf_hash as
 
-   def add_leaf_hash(db, f: bytes):
+     def add_leaf_hash(db, f: bytes):
 
        # Set g to 0, the height of the leaf item f
        g = 0
@@ -575,24 +599,24 @@ Table of Contents
        # If index_height(i) is greater than g (#looptarget)
        while index_height(i) > g:
 
-           # Set ileft to the index of the left child of i,
-           # which is i - 2^(g+1)
+         # Set ileft to the index of the left child of i,
+         # which is i - 2^(g+1)
 
-           ileft = i - (2 << g)
+         ileft = i - (2 << g)
 
-           # Set iright to the index of the the right child of i,
-           # which is i - 1
+         # Set iright to the index of the the right child of i,
+         # which is i - 1
 
-           iright = i - 1
+         iright = i - 1
 
-           # Set v to H(i + 1 || Get(ileft) || Get(iright))
-           # Set i to the result of invoking Append(v)
+         # Set v to H(i + 1 || Get(ileft) || Get(iright))
+         # Set i to the result of invoking Append(v)
 
-           i = db.append(
-               hash_pospair64(i+1, db.get(ileft), db.get(iright)))
+         i = db.append(
+           hash_pospair64(i+1, db.get(ileft), db.get(iright)))
 
-           1. Set g to the height of the new i, which is g + 1`
-           g += 1
+         # Set g to the height of the new i, which is g + 1
+         g += 1
 
        return i
 
@@ -661,9 +685,9 @@ Table of Contents
 
    *  a and b MUST be hashes produced by the appropriate hash alg.
 
-   We define hash_pospair64 as:
+   We define hash_pospair64 as
 
-   def hash_pospair64(pos, a, b):
+     def hash_pospair64(pos, a, b):
 
        # Note: Hash algorithm agility is tbd, this example uses SHA-256
        h = hashlib.sha256()
@@ -684,9 +708,9 @@ Table of Contents
 
    *  i the index of any mmr node.
 
-   We define index_height as:
+   We define index_height as
 
-   def index_height(i) -> int:
+     def index_height(i) -> int:
        pos = i + 1
        while not all_ones(pos):
          pos = pos - most_sig_bit(pos) + 1
@@ -705,18 +729,18 @@ Table of Contents
 
    *  i the index of any mmr node.
 
-   We define peaks as:
+   We define peaks
 
-   def peaks(i):
+     def peaks(i):
        peak = 0
        peaks = []
        s = i+1
        while s != 0:
-           # find the highest peak size in the current MMR(s)
-           highest_size = (1 << log2floor(s+1)) - 1
-           peak = peak + highest_size
-           peaks.append(peak-1)
-           s -= highest_size
+         # find the highest peak size in the current MMR(s)
+         highest_size = (1 << log2floor(s+1)) - 1
+         peak = peak + highest_size
+         peaks.append(peak-1)
+         s -= highest_size
 
        return peaks
 
@@ -784,18 +808,14 @@ B.1.  log2floor
 
    Returns the floor of log base 2 x
 
-   def log2floor(x):
+     def log2floor(x):
        return x.bit_length() - 1
 
 B.2.  most_sig_bit
 
    Returns the mask for the the most significant bit in pos
 
-   1 << (bit_length(pos) - 1)
-
-   Expressed in python
-
-   def most_sig_bit(pos) -> int:
+     def most_sig_bit(pos) -> int:
        return 1 << (pos.bit_length() - 1)
 
    The following primitives are assumed for working with bits as they
@@ -806,9 +826,7 @@ B.3.  bit_length
    The minimum number of bits to represent pos. b011 would be 2, b010
    would be 2, and b001 would be 1.
 
-   In python,
-
-   def bit_length(pos):
+     def bit_length(pos):
        return pos.bit_length()
 
 B.4.  all_ones
@@ -816,9 +834,7 @@ B.4.  all_ones
    Tests if all bits, from the most significant that is set, are 1,
    b0111 would be true, b0101 would be false.
 
-   In python,
-
-   def all_ones(pos) -> bool:
+     def all_ones(pos) -> bool:
        msb = most_sig_bit(pos)
        mask = (1 << (msb + 1)) - 1
        return pos == mask
@@ -831,9 +847,7 @@ B.6.  trailing_zeros
 
    The count of nodes above and to the left of pos
 
-   In python,
-
-   (v & -v).bit_length() - 1
+     (v & -v).bit_length() - 1
 
 Appendix C.  Implementation Status
 
