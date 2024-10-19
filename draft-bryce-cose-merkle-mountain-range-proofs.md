@@ -61,6 +61,7 @@ The storage of a tree maintained in this way is addressed as a linear array, and
 
 - A complete MMR(n) defines an mmr with n nodes where no equal height sibling trees exist.
 - `i` shall be the index of any node, including leaf nodes, in the MMR
+- g shall be the zero based height of a node in the tree.
 - `H(x)` shall be the SHA-256 digest of any value x
 - `||` shall mean concatenation of raw byte representations of the referenced values.
 
@@ -69,8 +70,7 @@ The maximum height of a single tree is 64 (which will have `g=63` for its peak).
 
 # Verifiable Data Structure
 
-The integer identifier for this Verifiable Data Structure is TBD_0.
-The string identifier for this Verifiable Data Structure is TBD.
+The integer identifier for this Verifiable Data Structure is 2.
 
 # Inclusion Proof
 
@@ -79,20 +79,22 @@ The CBOR representation of an inclusion proof is
 ~~~~ cddl
 inclusion-proof = bstr .cbor [
 
+  ; zero based index of a tree node
+  index: uint
 
-    ; zero based index of a tree node
-    index: uint
-
-    ; path from the node to its accumulator peak in tree-size
-    inclusion-path: [ + bstr ]
+  ; path from the node to its accumulator peak in tree-size
+  inclusion-path: [ + bstr ]
 ]
 ~~~~
 
-Note that the inclusion proof is valid for all trees sizes containing the produced peak.
+Note that the inclusion path for the index leads to a single permanent node in
+the tree.
+This node will initially be a member of the accumulator, as the tree grows it will eventually be "buried".
+However the future path of inclusion will continue to include the proven node.
 
 ## inclusion_proof_path
 
-`inclusion_proof_path(i, C)` is used to produce the verification paths for inclusion proofs and consistency proofs.
+`inclusion_proof_path(i, c)` is used to produce the verification paths for inclusion proofs and consistency proofs.
 
 Given:
 
@@ -105,10 +107,11 @@ And the methods:
 
 And the constraints:
 
-- `i <= C`
+- `i <= c`
 
-We define `inclusion_proof_path` as:
+We define `inclusion_proof_path` as
 
+~~~~ python
   def inclusion_proof_path(i, c):
 
     path = []
@@ -148,6 +151,7 @@ We define `inclusion_proof_path` as:
 
       # Set g to the height of the next item in the path.
       g += 1
+~~~~
 
 # Receipt of Inclusion
 
@@ -189,8 +193,18 @@ this protects against implementation errors where the signature is verified but 
 
 ## Verifying the Receipt of inclusion
 
-1. Recompute the root from the path and the element for which inclusion is being shown using [included_root](#includedroot).
-1. Verify the signature using the obtained root as the detached payload.
+The inclusion proof and signature are verified in order.
+First the verifiers applies the inclusion proof to a possible entry (set member) bytes.
+If this process fails, the inclusion proof may have been tampered with.
+If this process succeeds, the result is a merkle root, which in the attached as the COSE Sign1 payload.
+Second the verifier checks the signature of the COSE Sign1.
+If the resulting signature verifies, the Receipt has proved inclusion of the entry in the verifiable data structure.
+If the resulting signature does not verify, the signature may have been tampered with.
+
+It is recommended that implementations return a single boolean result for Receipt verification operations, to reduce the chance of accepting a valid signature over an invalid inclusion proof.
+
+As the proof must be processed prior to signature verification the implementation SHOULD check the lengths of the proof paths are appropriate for the provided tree sizes.
+
 
 ## included_root
 
@@ -207,8 +221,9 @@ And the methods:
 - [index_height](#indexheight) which obtains the zero based height `g` of any node.
 - [hash_pospair64](#hashpospair64) which applies `H` to the new node position and its children.
 
-We define `included_root` as:
+We define `included_root` as
 
+~~~~ python
   def included_root(i, nodehash, proof):
 
     root = nodehash
@@ -243,6 +258,7 @@ We define `included_root` as:
 
     # If the path length was zero, the original nodehash is returned
     return root
+~~~~
 
 # Consistency Proof
 
@@ -298,8 +314,9 @@ And the constraints:
 
 - `ifrom <= ito`
 
-We define `consistency_proof_paths` as:
+We define `consistency_proof_paths` as
 
+~~~~ python
   def consistency_proof_paths(ifrom, ito):
 
     proof = []
@@ -308,6 +325,7 @@ We define `consistency_proof_paths` as:
       proof.append(inclusion_proof_path(i, ito))
 
     return proof
+~~~~
 
 # Receipt of Consistency
 
@@ -356,7 +374,11 @@ Perform the following for each consistency-proof in the list, verifying the sign
 1. Apply the peaks algorithm to obtain the accumulator for tree-size-2
 1. From the peaks for tres-size-2, discard from the left the number of roots returned by consistent_roots.
 1. Create the consistent accumulator by appending the remaining peaks to the consistent roots.
-1. If there are no remaining proofs, use the consistent accumulator as the detached payload and verify the signature.
+1. If there are no remaining proofs, use the consistent accumulator as the detached payload and verify the signature of the COSE Sign1.
+
+It is recommended that implementations return a single boolean result for Receipt verification operations, to reduce the chance of accepting a valid signature over an invalid consistency proof.
+
+As the proof must be processed prior to signature verification the implementation SHOULD check the lengths of the proof paths are appropriate for the provided tree sizes.
 
 ### consistent_roots
 
@@ -375,8 +397,9 @@ And the methods:
 - [included_root](#includedroot)
 - [peaks](#peaks)
 
-We define `consistent_roots` as:
+We define `consistent_roots` as
 
+~~~~ python
   def consistent_roots(ifrom, accumulatorfrom, proofs):
 
     frompeaks = peaks(ifrom)
@@ -393,6 +416,7 @@ We define `consistent_roots` as:
       roots.append(root)
 
     return roots
+~~~~
 
 # Appending a leaf
 
@@ -419,37 +443,39 @@ And the methods:
 
 We define `add_leaf_hash` as
 
-    def add_leaf_hash(db, f: bytes):
+~~~~ python
+  def add_leaf_hash(db, f: bytes):
 
-        # Set g to 0, the height of the leaf item f
-        g = 0
+    # Set g to 0, the height of the leaf item f
+    g = 0
 
-        # Set i to the result of invoking Append(f)
-        i = db.append(f)
+    # Set i to the result of invoking Append(f)
+    i = db.append(f)
 
-        # If index_height(i) is greater than g (#looptarget)
-        while index_height(i) > g:
+    # If index_height(i) is greater than g (#looptarget)
+    while index_height(i) > g:
 
-            # Set ileft to the index of the left child of i,
-            # which is i - 2^(g+1)
+      # Set ileft to the index of the left child of i,
+      # which is i - 2^(g+1)
 
-            ileft = i - (2 << g)
+      ileft = i - (2 << g)
 
-            # Set iright to the index of the the right child of i,
-            # which is i - 1
+      # Set iright to the index of the the right child of i,
+      # which is i - 1
 
-            iright = i - 1
+      iright = i - 1
 
-            # Set v to H(i + 1 || Get(ileft) || Get(iright))
-            # Set i to the result of invoking Append(v)
+      # Set v to H(i + 1 || Get(ileft) || Get(iright))
+      # Set i to the result of invoking Append(v)
 
-            i = db.append(
-                hash_pospair64(i+1, db.get(ileft), db.get(iright)))
+      i = db.append(
+        hash_pospair64(i+1, db.get(ileft), db.get(iright)))
 
-            1. Set g to the height of the new i, which is g + 1`
-            g += 1
+      # Set g to the height of the new i, which is g + 1
+      g += 1
 
-        return i
+    return i
+~~~~
 
 ## Implementation defined storage methods
 
@@ -502,18 +528,20 @@ And the constraints:
 - `pos < 2^64`
 - `a` and `b` MUST be hashes produced by the appropriate hash alg.
 
-We define `hash_pospair64` as:
+We define `hash_pospair64` as
 
-    def hash_pospair64(pos, a, b):
+~~~~ python
+  def hash_pospair64(pos, a, b):
 
-        # Note: Hash algorithm agility is tbd, this example uses SHA-256
-        h = hashlib.sha256()
+    # Note: Hash algorithm agility is tbd, this example uses SHA-256
+    h = hashlib.sha256()
 
-        # Take the big endian representation of pos
-        h.update(pos.to_bytes(8, byteorder="big", signed=False))
-        h.update(a)
-        h.update(b)
-        return h.digest()
+    # Take the big endian representation of pos
+    h.update(pos.to_bytes(8, byteorder="big", signed=False))
+    h.update(a)
+    h.update(b)
+    return h.digest()
+~~~~
 
 # Essential supporting algorithms
 
@@ -525,14 +553,16 @@ Given:
 
 - `i` the index of any mmr node.
 
-We define `index_height` as:
+We define `index_height` as
 
-    def index_height(i) -> int:
-        pos = i + 1
-        while not all_ones(pos):
-          pos = pos - most_sig_bit(pos) + 1
+~~~~ python
+  def index_height(i) -> int:
+    pos = i + 1
+    while not all_ones(pos):
+      pos = pos - most_sig_bit(pos) + 1
 
-        return bit_length(pos) - 1
+    return bit_length(pos) - 1
+~~~~
 
 ## peaks
 
@@ -545,20 +575,22 @@ Given:
 
 - `i` the index of any mmr node.
 
-We define `peaks` as:
+We define `peaks`
 
-    def peaks(i):
-        peak = 0
-        peaks = []
-        s = i+1
-        while s != 0:
-            # find the highest peak size in the current MMR(s)
-            highest_size = (1 << log2floor(s+1)) - 1
-            peak = peak + highest_size
-            peaks.append(peak-1)
-            s -= highest_size
+~~~~ python
+  def peaks(i):
+    peak = 0
+    peaks = []
+    s = i+1
+    while s != 0:
+      # find the highest peak size in the current MMR(s)
+      highest_size = (1 << log2floor(s+1)) - 1
+      peak = peak + highest_size
+      peaks.append(peak-1)
+      s -= highest_size
 
-        return peaks
+    return peaks
+~~~~
 
 # Security Considerations
 
@@ -604,19 +636,19 @@ Editors note: todo registry requests
 
 Returns the floor of log base 2 x
 
-    def log2floor(x):
-        return x.bit_length() - 1
+~~~~ python
+  def log2floor(x):
+    return x.bit_length() - 1
+~~~~
 
 ## most_sig_bit
 
 Returns the mask for the the most significant bit in pos
 
-`1 << (bit_length(pos) - 1)`
-
-Expressed in python
-
-    def most_sig_bit(pos) -> int:
-        return 1 << (pos.bit_length() - 1)
+~~~~ python
+  def most_sig_bit(pos) -> int:
+    return 1 << (pos.bit_length() - 1)
+~~~~
 
 The following primitives are assumed for working with bits as they commonly have library or hardware support.
 
@@ -624,21 +656,21 @@ The following primitives are assumed for working with bits as they commonly have
 
 The minimum number of bits to represent pos. b011 would be 2, b010 would be 2, and b001 would be 1.
 
-In python,
-
-    def bit_length(pos):
-        return pos.bit_length()
+~~~~ python
+  def bit_length(pos):
+    return pos.bit_length()
+~~~~
 
 ## all_ones
 
 Tests if all bits, from the most significant that is set, are 1, b0111 would be true, b0101 would be false.
 
-In python,
-
-    def all_ones(pos) -> bool:
-        msb = most_sig_bit(pos)
-        mask = (1 << (msb + 1)) - 1
-        return pos == mask
+~~~~ python
+  def all_ones(pos) -> bool:
+    msb = most_sig_bit(pos)
+    mask = (1 << (msb + 1)) - 1
+    return pos == mask
+~~~~
 
 ## ones_count
 
@@ -648,9 +680,9 @@ Count of set bits. For example `ones_count(b101)` is 2
 
 The count of nodes above and to the left of `pos`
 
-In python,
-
-    (v & -v).bit_length() - 1
+~~~~ python
+  (v & -v).bit_length() - 1
+~~~~
 
 # Implementation Status
 
