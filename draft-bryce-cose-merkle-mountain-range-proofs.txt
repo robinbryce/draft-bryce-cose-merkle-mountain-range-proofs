@@ -4,8 +4,8 @@
 
 CBOR Object Signing and Encryption                              R. Bryce
 Internet-Draft                                                DataTrails
-Intended status: Experimental                            18 October 2024
-Expires: 21 April 2025
+Intended status: Experimental                            19 October 2024
+Expires: 22 April 2025
 
 
     Merkle Mountain Range for Immediately Verifiable and Replicable
@@ -14,15 +14,14 @@ Expires: 21 April 2025
 
 Abstract
 
-   This specification describes the COSE encoding of proofs for post
-   order traversal binary merkle trees, also known as history trees and
-   merkle mountain ranges.  Proving and verifying is defined in terms of
-   the cryptographic asynchronous accumulator described by
-   ReyzinYakoubov (https://eprint.iacr.org/2015/718.pdf) The technical
-   advantages for post order traversial binary merkle trees are
-   discussed in CrosbyWallach
-   (https://static.usenix.org/event/sec09/tech/full_papers/crosby.pdf)
-   and PostOrderTlog (https://research.swtch.com/tlog#appendix_a)
+   This specification describes the COSE encoding of proofs for post-
+   order traversal binary Merkle trees, also known as history trees and
+   Merkle mountain ranges.  Proving and verifying are defined in terms
+   of the cryptographic asynchronous accumulator described by
+   ReyzinYakoubov (https://eprint.iacr.org/2015/718.pdf).  The technical
+   advantages of post-order traversal binary Merkle trees are discussed
+   in [CrosbyWallachStorage] and PostOrderTlog
+   (https://research.swtch.com/tlog#appendix_a).
 
 About This Document
 
@@ -56,7 +55,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 21 April 2025.
+   This Internet-Draft will expire on 22 April 2025.
 
 Copyright Notice
 
@@ -1261,10 +1260,8 @@ D.4.  Peak (accumulator) indices and values for all MMR's to MMR(39)
 D.5.  node height, leaf count and peak mask
 
    These tables cover the outputs of index_height and leaf_count.
-   g=index_height, e & m are the decimal and binary representations of
-   leaf_count
-
-   m is the bit map of peaks, and also the binary representation of e
+   g=index_height, e is the result of leaf_count. m is the bit map of
+   peaks, and also the binary representation of e.
 
          +===+===+===+====+====+====+====+=====+=====+=====+=====+
          | i | 0 | 1 | 2  | 3  | 4  | 5  | 6   | 7   | 8   | 9   |
@@ -1319,22 +1316,10 @@ D.6.  Inclusion proof paths and the associated accumulator states
    *  The inclusion path column defines the outputs of
       inclusion_proof_path (Section 4.1))
 
-   *  The accumulator column shows the output of Section 9.2, but
-      adjusted index the storage.
+   *  The accumulator column shows the output of Section 9.2.
 
-   *  The accumulator root index shows the output of PeakIndex
-
-   *  The root column shows the value in the storage corresponding to
-      the index in accumulator selected by the accumulator_root_index.
-      Eg `storage'
-
-   This table illustrates the low, and predictably reducing, rate with
-   which the root changes for any single entry in the MMR.  Each time
-   the root for a leaf changes, the validity period doubles.
-
-   This table also illustrates that the verification path for any single
-   entry only ever grows.  It is therefore guaranteed to be a prefix of
-   any future path for the same entry.
+   *  The accumulator root index identifies the peak in the accumulator
+      which is produced by the path.
 
        +====+=========+================+=============+=============+
        | i  | MMR     | inclusion path | accumulator | accumulator |
