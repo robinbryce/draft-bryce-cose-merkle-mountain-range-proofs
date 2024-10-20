@@ -1,7 +1,7 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2024-10-17T00:29:16.470963+00:00",
-  "repo": "datatrails/draft-bryce-cose-merkle-mountain-range-proofs",
+  "timestamp": "2024-10-20T00:32:36.207518+00:00",
+  "repo": "robinbryce/draft-bryce-cose-merkle-mountain-range-proofs",
   "labels": [
     {
       "name": "bug",
@@ -54,10 +54,10 @@
       "number": 1,
       "id": "I_kwDOMMUelc6NR_WY",
       "title": "algorithim description form",
-      "url": "https://github.com/datatrails/draft-bryce-cose-merkle-mountain-range-proofs/issues/1",
+      "url": "https://github.com/robinbryce/draft-bryce-cose-merkle-mountain-range-proofs/issues/1",
       "state": "CLOSED",
       "author": "robinbryce",
-      "authorAssociation": "COLLABORATOR",
+      "authorAssociation": "OWNER",
       "assignees": [],
       "labels": [],
       "body": "For the primary algorithms we have aligned with other specs (notably RFC 9162) in the use of \"plain english\" algorithm descriptions.\r\n\r\nWe have complimented that with python implementations.\r\n\r\nWe currently believe that python + helpful comments is more generaly useful. All things being equal, provided there is no specific process reason to have the plain english only version, we intend move the algorithm specifications to that form.\r\n\r\nThis issue has been created to track the choice we make here",
@@ -67,7 +67,7 @@
       "comments": [
         {
           "author": "robinbryce",
-          "authorAssociation": "COLLABORATOR",
+          "authorAssociation": "OWNER",
           "body": "The latest draft is now exclusively python + comments.\r\n\r\nThough in the interests of clarity to \"non python programmers\" all even slightly advanced syntax is avoided",
           "createdAt": "2024-07-19T15:25:02Z",
           "updatedAt": "2024-07-19T15:25:02Z"
@@ -78,7 +78,7 @@
       "number": 2,
       "id": "I_kwDOMMUelc6NaOYs",
       "title": "Section 2 - Clarify variable definitions",
-      "url": "https://github.com/datatrails/draft-bryce-cose-merkle-mountain-range-proofs/issues/2",
+      "url": "https://github.com/robinbryce/draft-bryce-cose-merkle-mountain-range-proofs/issues/2",
       "state": "CLOSED",
       "author": "henry739",
       "authorAssociation": "NONE",
@@ -91,7 +91,7 @@
       "comments": [
         {
           "author": "robinbryce",
-          "authorAssociation": "COLLABORATOR",
+          "authorAssociation": "OWNER",
           "body": "I've gone with using almost exclusively `g` or `g+1`. Zero based height indices are what most of the algorithms naturaly want to work with.\r\n\r\nI've also made it so that ALL arguments to ALL algorithms accept node indices. 'pos' or size 's' is often used as an internal detail, but is never part of the index. This includes peaks which previously retuend a list of positions.\r\n\r\nI think this mostly addresses this. Except for D which I'll address seperately",
           "createdAt": "2024-07-19T15:23:29Z",
           "updatedAt": "2024-07-19T15:23:29Z"
@@ -102,10 +102,10 @@
       "number": 3,
       "id": "I_kwDOMMUelc6QMiSy",
       "title": "Definition for `D`",
-      "url": "https://github.com/datatrails/draft-bryce-cose-merkle-mountain-range-proofs/issues/3",
+      "url": "https://github.com/robinbryce/draft-bryce-cose-merkle-mountain-range-proofs/issues/3",
       "state": "CLOSED",
       "author": "robinbryce",
-      "authorAssociation": "COLLABORATOR",
+      "authorAssociation": "OWNER",
       "assignees": [],
       "labels": [],
       "body": "`D` is used as a constant without a defintion",
@@ -120,19 +120,19 @@
       "number": 4,
       "id": "PR_kwDOMMUelc57KK7r",
       "title": "working up an email to call for adoption",
-      "url": "https://github.com/datatrails/draft-bryce-cose-merkle-mountain-range-proofs/pull/4",
+      "url": "https://github.com/robinbryce/draft-bryce-cose-merkle-mountain-range-proofs/pull/4",
       "state": "CLOSED",
       "author": "robinbryce",
-      "authorAssociation": "COLLABORATOR",
+      "authorAssociation": "OWNER",
       "assignees": [],
       "labels": [],
       "body": "I wont ever merge this, but I figure its a great way to get input from people before I send to the cose group.\r\n\r\nIts understood that the email is a personal contribution, but help and advice appreciated!",
       "createdAt": "2024-09-11T12:56:47Z",
       "updatedAt": "2024-10-04T12:26:43Z",
-      "baseRepository": "datatrails/draft-bryce-cose-merkle-mountain-range-proofs",
+      "baseRepository": "robinbryce/draft-bryce-cose-merkle-mountain-range-proofs",
       "baseRefName": "main",
       "baseRefOid": "c845e555e0ac103e4724c923b9c87ef831afbafc",
-      "headRepository": "datatrails/draft-bryce-cose-merkle-mountain-range-proofs",
+      "headRepository": "robinbryce/draft-bryce-cose-merkle-mountain-range-proofs",
       "headRefName": "robin/addoption-call",
       "headRefOid": "4166049edb7fc6f5c34a0216104c65c0c9d9e344",
       "closedAt": "2024-10-04T12:26:43Z",
@@ -147,7 +147,7 @@
             "abbreviatedOid": "cd460f0"
           },
           "author": "robinbryce",
-          "authorAssociation": "COLLABORATOR",
+          "authorAssociation": "OWNER",
           "state": "COMMENTED",
           "body": "",
           "createdAt": "2024-09-11T13:40:27Z",
@@ -182,6 +182,34 @@
           ]
         }
       ]
+    },
+    {
+      "number": 5,
+      "id": "PR_kwDOMMUelc5_JMyI",
+      "title": "Kramdown fixes",
+      "url": "https://github.com/robinbryce/draft-bryce-cose-merkle-mountain-range-proofs/pull/5",
+      "state": "MERGED",
+      "author": "SteveLasker",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2024-10-18T20:40:04Z",
+      "updatedAt": "2024-10-18T20:40:35Z",
+      "baseRepository": "robinbryce/draft-bryce-cose-merkle-mountain-range-proofs",
+      "baseRefName": "main",
+      "baseRefOid": "81a9df78055cec87c1506bd9d9d6beda5f3277af",
+      "headRepository": "robinbryce/draft-bryce-cose-merkle-mountain-range-proofs",
+      "headRefName": "steve/kramdown-fixes",
+      "headRefOid": "4164eaa438a5461e936c52af5bb9790c8479632a",
+      "closedAt": "2024-10-18T20:40:35Z",
+      "mergedAt": "2024-10-18T20:40:35Z",
+      "mergedBy": "SteveLasker",
+      "mergeCommit": {
+        "oid": "c4035df4de1be674405aa72d53c08bf746b0815e"
+      },
+      "comments": [],
+      "reviews": []
     }
   ]
 }
