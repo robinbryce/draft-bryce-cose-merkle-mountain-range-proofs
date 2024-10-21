@@ -88,7 +88,7 @@ inclusion-proof = bstr .cbor [
 ~~~~
 
 Note that the inclusion path for the index leads to a single permanent node in the tree.
-This node will initially be a peak in the accumulator, as the tree grows it will eventually be "buried" by new peak.
+This node will initially be a peak in the accumulator, as the tree grows it will eventually be "buried" by a new peak.
 
 ## inclusion_proof_path
 
