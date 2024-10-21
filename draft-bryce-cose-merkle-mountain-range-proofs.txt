@@ -185,7 +185,7 @@ Table of Contents
    Note that the inclusion path for the index leads to a single
    permanent node in the tree.  This node will initially be a peak in
    the accumulator, as the tree grows it will eventually be "buried" by
-   new peak.
+   a new peak.
 
 4.1.  inclusion_proof_path
 
