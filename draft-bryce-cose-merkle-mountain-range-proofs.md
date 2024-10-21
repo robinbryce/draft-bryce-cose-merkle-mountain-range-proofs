@@ -203,7 +203,6 @@ It is recommended that implementations return a single boolean result for Receip
 
 As the proof must be processed prior to signature verification the implementation SHOULD check the lengths of the proof paths are appropriate for the provided tree sizes.
 
-
 ## included_root
 
 The algorithm `included_root` calculates the accumulator peak for the provided proof and node value.
