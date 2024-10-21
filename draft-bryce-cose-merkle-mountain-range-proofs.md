@@ -82,7 +82,7 @@ inclusion-proof = bstr .cbor [
   ; zero based index of a tree node
   index: uint
 
-  ; path proving the node's inclusion, which produces an accumulator peak.
+  ; path proving the node's inclusion
   inclusion-path: [ + bstr ]
 ]
 ~~~~
