@@ -82,15 +82,13 @@ inclusion-proof = bstr .cbor [
   ; zero based index of a tree node
   index: uint
 
-  ; path from the node to its accumulator peak in tree-size
+  ; path from the node to its accumulator peak
   inclusion-path: [ + bstr ]
 ]
 ~~~~
 
-Note that the inclusion path for the index leads to a single permanent node in
-the tree.
-This node will initially be a member of the accumulator, as the tree grows it will eventually be "buried".
-However the future path of inclusion will continue to include the proven node.
+Note that the inclusion path for the index leads to a single permanent node in the tree.
+This node will initially be a peak in the accumulator, as the tree grows it will eventually be "buried" by new peak.
 
 ## inclusion_proof_path
 
