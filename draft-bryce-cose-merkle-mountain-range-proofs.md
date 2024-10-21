@@ -49,7 +49,7 @@ Example,
     0 1 3 4 7
 
 This illustrates `MMR(8)`, which is comprised of two perfect trees rooted at 6 and 7.
-7 is the root of a tree comprised of a single node.
+7 is the root of a tree comprised of a single element.
 
 The peaks of the perfect trees form the accumulator.
 
@@ -82,7 +82,7 @@ inclusion-proof = bstr .cbor [
   ; zero based index of a tree node
   index: uint
 
-  ; path from the node to its accumulator peak
+  ; path proving the node's inclusion, which produces an accumulator peak.
   inclusion-path: [ + bstr ]
 ]
 ~~~~
@@ -300,8 +300,8 @@ right-peaks are obtained by invoking `peaks(tree-size-2 - 1)`, and discarding le
 
 Given:
 
-- `ifrom` is the last node of tree-size-1`
-- `ito` is the last node of tree-size-2`
+- `ifrom` is the last index of tree-size-1
+- `ito` is the last index of tree-size-2
 
 And the methods:
 
@@ -386,7 +386,7 @@ Implementations MUST require that the number of peaks returned by [peaks](#peaks
 
 Given:
 
-- `ifrom` the last node index in the complete MMR from which consistency was proven.
+- `ifrom` the last index in the complete MMR from which consistency was proven.
 - `accumulatorfrom` the node values corresponding to the peaks of the accumulator for tree-size-1
 - `proofs` the inclusion proofs for each node in `accumulatorfrom` for tree-size-2
 
