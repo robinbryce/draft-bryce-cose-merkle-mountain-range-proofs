@@ -2,22 +2,14 @@
 v: 3
 
 title: "Merkle Mountain Range for Immediately Verifiable and Replicable Commitments"
-abbrev: MMRIVER
-cat: exp
 docname: draft-bryce-cose-merkle-mountain-range-proofs-latest
-submissiontype: IETF
-number:
-date:
-consensus: true
+stand_alone: true
 area: "Security"
-workgroup: "CBOR Object Signing and Encryption"
-keyword:
- - Internet-Draft
-venue:
-   group: cose
-   type: Working Group
-   mail: cose@ietf.org
-   github: robinbryce/draft-bryce-cose-merkle-mountain-range-proofs
+wg: COSE
+abbrev: MMRIVER
+kw: Internet-Draft
+cat: exp
+submissiontype: IETF
 
 author:
  -
