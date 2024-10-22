@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2024-10-20T00:32:36.207518+00:00",
+  "timestamp": "2024-10-22T00:29:52.656621+00:00",
   "repo": "robinbryce/draft-bryce-cose-merkle-mountain-range-proofs",
   "labels": [
     {
@@ -195,7 +195,7 @@
       "labels": [],
       "body": "",
       "createdAt": "2024-10-18T20:40:04Z",
-      "updatedAt": "2024-10-18T20:40:35Z",
+      "updatedAt": "2024-10-21T16:26:42Z",
       "baseRepository": "robinbryce/draft-bryce-cose-merkle-mountain-range-proofs",
       "baseRefName": "main",
       "baseRefOid": "81a9df78055cec87c1506bd9d9d6beda5f3277af",
