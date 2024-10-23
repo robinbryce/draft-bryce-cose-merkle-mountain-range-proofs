@@ -900,8 +900,8 @@ C.1.2.1.  Implementation URL
    A minimal reference implementation of this draft.  Used to generate
    the test vectors in this draft, is available at:
 
-   *  https://github.com/robinbryce/merkle-mountain-range-
-      proofs/blob/main/algorithms.py
+   *  https://github.com/robinbryce/draft-bryce-cose-merkle-mountain-
+      range-proofs/blob/main/algorithms.py
 
 C.1.2.2.  Maturity
 
@@ -945,7 +945,9 @@ C.1.5.1.  Implementation URL
    Production, supports keccak, posiedon & pedersen hash algs
 
    Editors note: test vectors, based on a SHA256 instantiation, are
-   currently provided in a separate document. (./test-vectors.md)
+   currently provided in a separate document.  These should inlined if
+   the draft is accepted. https://github.com/robinbryce/draft-bryce-
+   cose-merkle-mountain-range-proofs/blob/main/test-vectors.md
 
 Acknowledgments
 
