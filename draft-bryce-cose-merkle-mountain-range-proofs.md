@@ -716,7 +716,7 @@ Used in production. SEMVER unstable (no backwards compat declared yet)
 
 A minimal reference implementation of this draft. Used to generate the test vectors in this draft, is available at:
 
-- https://github.com/robinbryce/merkle-mountain-range-proofs/blob/main/algorithms.py
+- https://github.com/robinbryce/draft-bryce-cose-merkle-mountain-range-proofs/blob/main/algorithms.py
 
 #### Maturity
 
@@ -756,7 +756,7 @@ https://github.com/HerodotusDev/rust-accumulators
 Production, supports keccak, posiedon & pedersen hash algs
 
 
-Editors note: test vectors, based on a SHA256 instantiation, are currently provided in a separate document. (./test-vectors.md)
+Editors note: test vectors, based on a SHA256 instantiation, are currently provided in a separate document. These should inlined if the draft is accepted. https://github.com/robinbryce/draft-bryce-cose-merkle-mountain-range-proofs/blob/main/test-vectors.md
 
 # Acknowledgments
 {:numbered="false"}
