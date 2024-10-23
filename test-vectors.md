@@ -8,35 +8,39 @@ Editors note: The MMR table is split in two due to format restrictions.
 
 The node indices for `MMR(39)` (leaves 0-15) are
 
-    g
+~~~~
+g
 
-    4                         30
+4                         30
 
-    3              14                       29
-                  / \
-                  /   \
-                /     \
-                /       \
-              /         \
-    2        6           13            21             28
-            /   \        /   \        /    \
-    1     2     5      9     12     17     20     24       27
-          / \   / \    / \   /  \   /  \   /  \
-    0   0   1 3   4  7   8 10  11 15  16 18  19 22  23   25   26
+3              14                       29
+              / \
+              /   \
+            /     \
+            /       \
+          /         \
+2        6           13            21             28
+        /   \        /   \        /    \
+1     2     5      9     12     17     20     24       27
+      / \   / \    / \   /  \   /  \   /  \
+0   0   1 3   4  7   8 10  11 15  16 18  19 22  23   25   26
 
-    .   0   1 2   3  4   5  6   7  8   9 10  11 12  13   14   15 e
+.   0   1 2   3  4   5  6   7  8   9 10  11 12  13   14   15 e
+~~~~
 
 The node indices for `MMR(39)` (leaves 16 - 20) are
 
-    g
+~~~~
+g
 
-    2           37
+2           37
 
-    1       33      36
+1       33      36
 
-    0     31  32   34  35   38
+0     31  32   34  35   38
 
-    .     16  17   18  19   20 e
+.     16  17   18  19   20 e
+~~~~
 
 The vertical axis is `g`, the zero based height of the MMR.
 
@@ -206,6 +210,7 @@ These tables cover the outputs of `index_height` and `leaf_count`.
 - The accumulator root index identifies the peak in the accumulator which is produced by the path.
 
 | i  | MMR  |inclusion path       |accumulator|accumulator root index|
+|----|------|---------------------|-----------|----------------------|
 |   0|in MMR(1)|[]                  |[0]                 |0   |
 |   0|in MMR(3)|[1]                 |[2]                 |0   |
 |   0|in MMR(4)|[1]                 |[2, 3]              |0   |
