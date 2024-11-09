@@ -185,8 +185,8 @@ this protects against implementation errors where the signature is verified but 
 
 The inclusion proof and signature are verified in order.
 First the verifiers applies the inclusion proof to a possible entry (set member) bytes.
-If this process fails, the inclusion proof may have been tampered with.
-If this process succeeds, the result is a merkle root, which in the attached as the COSE Sign1 payload.
+The result is the merkle root implied by the inclusion proof path for the candidate value.
+The COSE Sign1 payload MUST be set to this value.
 Second the verifier checks the signature of the COSE Sign1.
 If the resulting signature verifies, the Receipt has proved inclusion of the entry in the verifiable data structure.
 If the resulting signature does not verify, the signature may have been tampered with.
