@@ -667,8 +667,6 @@ Count of set bits. For example `ones_count(b101)` is 2
 
 ## trailing_zeros
 
-The count of nodes above and to the left of `pos`
-
 ~~~~ python
   (v & -v).bit_length() - 1
 ~~~~
