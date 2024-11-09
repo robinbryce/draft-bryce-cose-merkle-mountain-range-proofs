@@ -4,8 +4,8 @@
 
 COSE                                                            R. Bryce
 Internet-Draft                                                DataTrails
-Intended status: Experimental                            23 October 2024
-Expires: 26 April 2025
+Intended status: Experimental                            9 November 2024
+Expires: 13 May 2025
 
 
     Merkle Mountain Range for Immediately Verifiable and Replicable
@@ -51,7 +51,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 26 April 2025.
+   This Internet-Draft will expire on 13 May 2025.
 
 Copyright Notice
 
@@ -838,8 +838,6 @@ B.5.  ones_count
    Count of set bits.  For example ones_count(b101) is 2
 
 B.6.  trailing_zeros
-
-   The count of nodes above and to the left of pos
 
      (v & -v).bit_length() - 1
 
