@@ -61,7 +61,7 @@ The storage of a tree maintained in this way is addressed as a linear array, and
 In this specification, all numbers are unsigned 64 bit integers.
 The maximum height of a single tree is 64 (which will have `g=63` for its peak).
 
-# Description of the MMRIVER Ledger Verifiable Data Structure
+# Description of the MMRIVER Verifiable Data Structure
 
 This documents extends the verifiable data structure registry of {{-COMTRE}} with the following value:
 
