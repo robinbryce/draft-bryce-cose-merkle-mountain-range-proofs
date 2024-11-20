@@ -176,8 +176,9 @@ Table of Contents
 
               Table 1: Verifiable Data Structure Algorithms
 
-   This document defines inclusion proofs for Merkle Mountain Range
-   (MMRivr) ledgers.  Verifiers MUST reject all other proof types
+   This document defines inclusion proofs for Merkle Mountain Range,
+   Imediately Verifiable and Efficiently Replicable (MMRIVER) ledgers.
+   Verifiers MUST reject all other proof types
 
 4.  Inclusion Proof
 
