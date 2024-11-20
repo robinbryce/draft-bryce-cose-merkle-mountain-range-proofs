@@ -67,7 +67,7 @@ This documents extends the verifiable data structure registry of {{-COMTRE}} wit
 
 | Name | Value | Description | Reference
 |---
-|MMRivr_LEDGER_SHA256 | TBD_1 (requested assignment 3) | Merkle Mountain Range Ledgers, such as the MMRivr ledger | This document
+|MMRIVER_SHA256 | TBD_1 (requested assignment 3) | Linearly addressed, position committing, MMR implementations, such as the MMRIVER ledger | This document
 {: #verifiable-data-structure-values align="left" title="Verifiable Data Structure Algorithms"}
 
 This document defines inclusion proofs for Merkle Mountain Range, Imediately Verifiable and Efficiently Replicable (MMRIVER) ledgers.
