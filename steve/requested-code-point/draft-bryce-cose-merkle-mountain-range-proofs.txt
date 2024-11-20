@@ -71,7 +71,7 @@ Table of Contents
 
    1.  Introduction
    2.  Conventions and Definitions
-   3.  Description of the MMR Ledger Verifiable Data Structure
+   3.  Description of the MMRIVER Ledger Verifiable Data Structure
    4.  Inclusion Proof
      4.1.  inclusion_proof_path
    5.  Receipt of Inclusion
@@ -160,7 +160,7 @@ Table of Contents
    maximum height of a single tree is 64 (which will have g=63 for its
    peak).
 
-3.  Description of the MMR Ledger Verifiable Data Structure
+3.  Description of the MMRIVER Ledger Verifiable Data Structure
 
    This documents extends the verifiable data structure registry of
    [I-D.IETF-cose-merkle-tree-proofs] with the following value:
