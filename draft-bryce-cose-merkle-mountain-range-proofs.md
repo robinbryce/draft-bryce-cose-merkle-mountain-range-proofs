@@ -19,6 +19,7 @@ author:
 
 normative:
   RFC9053: COSE
+  I-D.IETF-cose-merkle-tree-proofs: COMTRE
 
 informative:
 
@@ -60,9 +61,17 @@ The storage of a tree maintained in this way is addressed as a linear array, and
 In this specification, all numbers are unsigned 64 bit integers.
 The maximum height of a single tree is 64 (which will have `g=63` for its peak).
 
-# Verifiable Data Structure
+# Description of the MMR Ledger Verifiable Data Structure
 
-The integer identifier for this Verifiable Data Structure is 2.
+This documents extends the verifiable data structure registry of {{-COMTRE}} with the following value:
+
+| Name | Value | Description | Reference
+|---
+|MMRivr_LEDGER_SHA256 | TBD_1 (requested assignment 3) | Merkle Mountain Range Ledgers, such as the MMRivr ledger | This document
+{: #verifiable-data-structure-values align="left" title="Verifiable Data Structure Algorithms"}
+
+This document defines inclusion proofs for Merkle Mountain Range (MMRivr) ledgers.
+Verifiers MUST reject all other proof types
 
 # Inclusion Proof
 
