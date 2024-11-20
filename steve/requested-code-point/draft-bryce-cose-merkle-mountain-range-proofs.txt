@@ -165,16 +165,17 @@ Table of Contents
    This documents extends the verifiable data structure registry of
    [I-D.IETF-cose-merkle-tree-proofs] with the following value:
 
-   +======================+============+=================+===========+
-   | Name                 | Value      | Description     | Reference |
-   +======================+============+=================+===========+
-   | MMRivr_LEDGER_SHA256 | TBD_1      | Merkle Mountain | This      |
-   |                      | (requested | Range Ledgers,  | document  |
-   |                      | assignment | such as the     |           |
-   |                      | 3)         | MMRivr ledger   |           |
-   +----------------------+------------+-----------------+-----------+
+   +================+============+======================+===========+
+   | Name           | Value      | Description          | Reference |
+   +================+============+======================+===========+
+   | MMRIVER_SHA256 | TBD_1      | Linearly addressed,  | This      |
+   |                | (requested | position committing, | document  |
+   |                | assignment | MMR implementations, |           |
+   |                | 3)         | such as the MMRIVER  |           |
+   |                |            | ledger               |           |
+   +----------------+------------+----------------------+-----------+
 
-              Table 1: Verifiable Data Structure Algorithms
+             Table 1: Verifiable Data Structure Algorithms
 
    This document defines inclusion proofs for Merkle Mountain Range,
    Imediately Verifiable and Efficiently Replicable (MMRIVER) ledgers.
