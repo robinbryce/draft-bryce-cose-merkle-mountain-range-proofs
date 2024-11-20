@@ -4,8 +4,8 @@
 
 COSE                                                            R. Bryce
 Internet-Draft                                                DataTrails
-Intended status: Experimental                            9 November 2024
-Expires: 13 May 2025
+Intended status: Experimental                           20 November 2024
+Expires: 24 May 2025
 
 
     Merkle Mountain Range for Immediately Verifiable and Replicable
@@ -51,7 +51,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 13 May 2025.
+   This Internet-Draft will expire on 24 May 2025.
 
 Copyright Notice
 
@@ -71,7 +71,7 @@ Table of Contents
 
    1.  Introduction
    2.  Conventions and Definitions
-   3.  Verifiable Data Structure
+   3.  Description of the MMRIVER Verifiable Data Structure
    4.  Inclusion Proof
      4.1.  inclusion_proof_path
    5.  Receipt of Inclusion
@@ -160,9 +160,26 @@ Table of Contents
    maximum height of a single tree is 64 (which will have g=63 for its
    peak).
 
-3.  Verifiable Data Structure
+3.  Description of the MMRIVER Verifiable Data Structure
 
-   The integer identifier for this Verifiable Data Structure is 2.
+   This documents extends the verifiable data structure registry of
+   [I-D.IETF-cose-merkle-tree-proofs] with the following value:
+
+   +================+============+======================+===========+
+   | Name           | Value      | Description          | Reference |
+   +================+============+======================+===========+
+   | MMRIVER_SHA256 | TBD_1      | Linearly addressed,  | This      |
+   |                | (requested | position committing, | document  |
+   |                | assignment | MMR implementations, |           |
+   |                | 3)         | such as the MMRIVER  |           |
+   |                |            | ledger               |           |
+   +----------------+------------+----------------------+-----------+
+
+             Table 1: Verifiable Data Structure Algorithms
+
+   This document defines inclusion proofs for Merkle Mountain Range,
+   Imediately Verifiable and Efficiently Replicable (MMRIVER) ledgers.
+   Verifiers MUST reject all other proof types
 
 4.  Inclusion Proof
 
@@ -758,6 +775,9 @@ Table of Contents
 11.2.  New Registries
 
 12.  Normative References
+
+   [I-D.IETF-cose-merkle-tree-proofs]
+              "*** BROKEN REFERENCE ***".
 
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", BCP 14, RFC 2119,
