@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2024-11-19T00:31:24.091869+00:00",
+  "timestamp": "2024-11-21T00:31:02.368781+00:00",
   "repo": "robinbryce/draft-bryce-cose-merkle-mountain-range-proofs",
   "labels": [
     {
@@ -210,6 +210,267 @@
       },
       "comments": [],
       "reviews": []
+    },
+    {
+      "number": 6,
+      "id": "PR_kwDOMMUelc6CdS3z",
+      "title": "Update the TBD_1 to be a requested value of 3",
+      "url": "https://github.com/robinbryce/draft-bryce-cose-merkle-mountain-range-proofs/pull/6",
+      "state": "MERGED",
+      "author": "SteveLasker",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Per conversation in the IETF Architecture editor's meeting. \r\nCCF will request a codepoint of 2, and MMRivr will request 3 (simply alphabetical)\r\n\r\n@robinbryce, I wasn't sure if you wanted to use MMRivr or some other short-name reference to compare to the CCF Ledger. \r\n\r\ncc @jag-uk\r\n\r\n",
+      "createdAt": "2024-11-20T00:49:37Z",
+      "updatedAt": "2024-11-20T16:26:27Z",
+      "baseRepository": "robinbryce/draft-bryce-cose-merkle-mountain-range-proofs",
+      "baseRefName": "main",
+      "baseRefOid": "9cffb8c3d3dc1a475785915ae6edd3f389b0b500",
+      "headRepository": "robinbryce/draft-bryce-cose-merkle-mountain-range-proofs",
+      "headRefName": "steve/requested-code-point",
+      "headRefOid": "92123e15bf81c09511a78d8f86fde98b3809b239",
+      "closedAt": "2024-11-20T16:26:22Z",
+      "mergedAt": "2024-11-20T16:26:22Z",
+      "mergedBy": "SteveLasker",
+      "mergeCommit": {
+        "oid": "23b94565c1a614d44ad2cbb2e8dc83408fcc4ed5"
+      },
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOMMUelc6R60Vs",
+          "commit": {
+            "abbreviatedOid": "61afe5c"
+          },
+          "author": "robinbryce",
+          "authorAssociation": "OWNER",
+          "state": "APPROVED",
+          "body": "LGTM\r\n\r\nI'm happy to do MMRIVER -> MMR. \r\n\r\nGiven the profile status I'm not sure catchy name is that helpful. If we do keep MMRIVER though, it is all caps  as its an acronym. \r\n\r\nCCF is confidential compute consortia though whereas MMR is just the popular name for a fairly established merkle tree construction. \r\n\r\nIf we go with just MMR we should remove the mentions of imediately verifiable and efficiently replicable (that are alluded to by IVER): those obtain from the MMR/ async accumulator combination used, but really only surface in an appropriate full ledger implementation.\r\n\r\n\r\n\r\n",
+          "createdAt": "2024-11-20T09:55:25Z",
+          "updatedAt": "2024-11-20T10:01:00Z",
+          "comments": []
+        },
+        {
+          "id": "PRR_kwDOMMUelc6R64j1",
+          "commit": {
+            "abbreviatedOid": "61afe5c"
+          },
+          "author": "robinbryce",
+          "authorAssociation": "OWNER",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2024-11-20T10:01:58Z",
+          "updatedAt": "2024-11-20T10:01:59Z",
+          "comments": [
+            {
+              "originalPosition": 23,
+              "body": "MMRIVER or MMR or something else like CCF is confidential compute consortia. MMRivr isn't anything",
+              "createdAt": "2024-11-20T10:01:59Z",
+              "updatedAt": "2024-11-20T10:01:59Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOMMUelc6R647y",
+          "commit": {
+            "abbreviatedOid": "61afe5c"
+          },
+          "author": "robinbryce",
+          "authorAssociation": "OWNER",
+          "state": "CHANGES_REQUESTED",
+          "body": "Let's decide on MMR vs MMRIVER vs something else. Its definitely not MMRiver. I am fine with just MMR if that is less confusing for people",
+          "createdAt": "2024-11-20T10:02:37Z",
+          "updatedAt": "2024-11-20T10:02:37Z",
+          "comments": []
+        },
+        {
+          "id": "PRR_kwDOMMUelc6R7NfQ",
+          "commit": {
+            "abbreviatedOid": "61afe5c"
+          },
+          "author": "JAG-UK",
+          "authorAssociation": "NONE",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2024-11-20T10:37:32Z",
+          "updatedAt": "2024-11-20T10:37:33Z",
+          "comments": [
+            {
+              "originalPosition": 23,
+              "body": "\"MMR\" has the benefit of being shorter in these exploded type_and_alg names.\r\n\"MMRIVER\" has the benefit of being specific to this kind of MMR implementation (as distinct from the many other ways of implementing and exploiting MMRs).\r\n\r\nIt's very important to accept the requested assignment 3 but I suggest we leave the name alone",
+              "createdAt": "2024-11-20T10:37:32Z",
+              "updatedAt": "2024-11-20T10:37:33Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOMMUelc6R7OOH",
+          "commit": {
+            "abbreviatedOid": "61afe5c"
+          },
+          "author": "robinbryce",
+          "authorAssociation": "OWNER",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2024-11-20T10:38:53Z",
+          "updatedAt": "2024-11-20T10:38:53Z",
+          "comments": [
+            {
+              "originalPosition": 13,
+              "body": "```suggestion\r\n# Description of the MMRIVER Ledger Verifiable Data Structure\r\n```",
+              "createdAt": "2024-11-20T10:38:53Z",
+              "updatedAt": "2024-11-20T10:38:53Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOMMUelc6R7Ow5",
+          "commit": {
+            "abbreviatedOid": "61afe5c"
+          },
+          "author": "robinbryce",
+          "authorAssociation": "OWNER",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2024-11-20T10:39:53Z",
+          "updatedAt": "2024-11-20T10:39:53Z",
+          "comments": [
+            {
+              "originalPosition": 23,
+              "body": "```suggestion\r\nThis document defines inclusion proofs for Merkle Mountain Range, Imediately Verifiable and Efficiently Replicable (MMRIVER) ledgers.\r\n```",
+              "createdAt": "2024-11-20T10:39:53Z",
+              "updatedAt": "2024-11-20T10:40:04Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOMMUelc6R7Qan",
+          "commit": {
+            "abbreviatedOid": "61afe5c"
+          },
+          "author": "robinbryce",
+          "authorAssociation": "OWNER",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2024-11-20T10:42:52Z",
+          "updatedAt": "2024-11-20T10:42:53Z",
+          "comments": [
+            {
+              "originalPosition": 20,
+              "body": "```suggestion\r\n|MMRIVER_SHA256 | TBD_1 (requested assignment 3) | Linearly addressed, position committing, MMR implementations, such as the MMRIVER ledger | This document\r\n```",
+              "createdAt": "2024-11-20T10:42:52Z",
+              "updatedAt": "2024-11-20T11:36:39Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOMMUelc6R7Y0R",
+          "commit": {
+            "abbreviatedOid": "61afe5c"
+          },
+          "author": "robinbryce",
+          "authorAssociation": "OWNER",
+          "state": "CHANGES_REQUESTED",
+          "body": "lets stick with MMRIVER in this change. Open to a discussion about names separately though",
+          "createdAt": "2024-11-20T10:54:38Z",
+          "updatedAt": "2024-11-20T10:54:38Z",
+          "comments": []
+        },
+        {
+          "id": "PRR_kwDOMMUelc6R71OE",
+          "commit": {
+            "abbreviatedOid": "61afe5c"
+          },
+          "author": "robinbryce",
+          "authorAssociation": "OWNER",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2024-11-20T11:40:26Z",
+          "updatedAt": "2024-11-20T11:40:26Z",
+          "comments": [
+            {
+              "originalPosition": 24,
+              "body": "I think there was some push back on this MUST. As in, a verifier may reasonably be working with multiple ledgers. So sure, in the context of a single VDS the \"wrong\" proof can't be valid. But in the context of a verifier working with multiple ledgers the just need to require that the proof type be consistent with the declared ledger config.",
+              "createdAt": "2024-11-20T11:40:26Z",
+              "updatedAt": "2024-11-20T11:40:26Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOMMUelc6R-qSg",
+          "commit": {
+            "abbreviatedOid": "f0473c4"
+          },
+          "author": "SteveLasker",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2024-11-20T16:22:19Z",
+          "updatedAt": "2024-11-20T16:22:19Z",
+          "comments": [
+            {
+              "originalPosition": 13,
+              "body": "```suggestion\r\n# Description of the MMRIVER Verifiable Data Structure\r\n```",
+              "createdAt": "2024-11-20T16:22:19Z",
+              "updatedAt": "2024-11-20T16:22:19Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOMMUelc6R-rLb",
+          "commit": {
+            "abbreviatedOid": "92123e1"
+          },
+          "author": "SteveLasker",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2024-11-20T16:23:47Z",
+          "updatedAt": "2024-11-20T16:23:47Z",
+          "comments": [
+            {
+              "originalPosition": 24,
+              "body": "Consistent with the CCF implementation",
+              "createdAt": "2024-11-20T16:23:47Z",
+              "updatedAt": "2024-11-20T16:23:47Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOMMUelc6R-rln",
+          "commit": {
+            "abbreviatedOid": "92123e1"
+          },
+          "author": "robinbryce",
+          "authorAssociation": "OWNER",
+          "state": "APPROVED",
+          "body": "LGTM",
+          "createdAt": "2024-11-20T16:24:29Z",
+          "updatedAt": "2024-11-20T16:24:29Z",
+          "comments": []
+        },
+        {
+          "id": "PRR_kwDOMMUelc6R-rx9",
+          "commit": {
+            "abbreviatedOid": "61afe5c"
+          },
+          "author": "SteveLasker",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2024-11-20T16:24:49Z",
+          "updatedAt": "2024-11-20T16:24:49Z",
+          "comments": [
+            {
+              "originalPosition": 23,
+              "body": "Due to the subtle differences, and advantages, Robin and I went with MMRIVER for the reasons above.",
+              "createdAt": "2024-11-20T16:24:49Z",
+              "updatedAt": "2024-11-20T16:24:49Z"
+            }
+          ]
+        }
+      ]
     }
   ]
 }
