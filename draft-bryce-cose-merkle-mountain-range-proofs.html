@@ -1046,7 +1046,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
 </tr></thead>
 <tfoot><tr>
 <td class="left">Bryce</td>
-<td class="center">Expires 24 May 2025</td>
+<td class="center">Expires 26 May 2025</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1059,12 +1059,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="internet-draft">draft-bryce-cose-merkle-mountain-range-proofs-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2024-11-20" class="published">20 November 2024</time>
+<time datetime="2024-11-22" class="published">22 November 2024</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Experimental</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2025-05-24">24 May 2025</time></dd>
+<dd class="expires"><time datetime="2025-05-26">26 May 2025</time></dd>
 <dt class="label-authors">Author:</dt>
 <dd class="authors">
 <div class="author">
@@ -1111,7 +1111,7 @@ The technical advantages of post-order traversal binary Merkle trees are discuss
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 24 May 2025.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 26 May 2025.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1365,7 +1365,7 @@ The maximum height of a single tree is 64 (which will have <code>g=63</code> for
       <h2 id="name-description-of-the-mmriver-">
 <a href="#section-3" class="section-number selfRef">3. </a><a href="#name-description-of-the-mmriver-" class="section-name selfRef">Description of the MMRIVER Verifiable Data Structure</a>
       </h2>
-<p id="section-3-1">This documents extends the verifiable data structure registry of <span>[<a href="#I-D.IETF-cose-merkle-tree-proofs" class="cite xref">I-D.IETF-cose-merkle-tree-proofs</a>]</span> with the following value:<a href="#section-3-1" class="pilcrow">¶</a></p>
+<p id="section-3-1">This documents extends the verifiable data structure registry of <span>[<a href="#I-D.draft-ietf-cose-merkle-tree-proofs" class="cite xref">I-D.draft-ietf-cose-merkle-tree-proofs</a>]</span> with the following value:<a href="#section-3-1" class="pilcrow">¶</a></p>
 <span id="name-verifiable-data-structure-a"></span><div id="verifiable-data-structure-values">
 <table class="left" id="table-1">
         <caption>
@@ -1390,7 +1390,7 @@ The maximum height of a single tree is 64 (which will have <code>g=63</code> for
         </tbody>
       </table>
 </div>
-<p id="section-3-3">This document defines inclusion proofs for Merkle Mountain Range, Imediately Verifiable and Efficiently Replicable (MMRIVER) ledgers.
+<p id="section-3-3">This document defines inclusion proofs for Merkle Mountain Range, Immediately Verifiable and Efficiently Replicable (MMRIVER) ledgers.
 Verifiers <span class="bcp14">MUST</span> reject all other proof types<a href="#section-3-3" class="pilcrow">¶</a></p>
 </section>
 </div>
@@ -1474,7 +1474,7 @@ This node will initially be a peak in the accumulator, as the tree grows it will
         # its right sibling
         i += siblingoffset
 
-      # When the computed sibling exceedes the range of MMR(C+1),
+      # When the computed sibling exceeds the range of MMR(C+1),
       # we have completed the path
       if isibling &gt; c:
           return path
@@ -1737,7 +1737,8 @@ unprotected-header-map = {
 }
 </pre><a href="#section-7-5" class="pilcrow">¶</a>
 </div>
-<p id="section-7-6">The payload <span class="bcp14">MUST</span> be detached. Detaching the payload forces verifiers to recompute the roots from the consistency proofs.
+<p id="section-7-6">The payload <span class="bcp14">MUST</span> be detached.
+Detaching the payload forces verifiers to recompute the roots from the consistency proofs.
 This protects against implementation errors where the signature is verified but the payload is not genuinely produced by the included proof.<a href="#section-7-6" class="pilcrow">¶</a></p>
 <div id="verifying-the-receipt-of-consistency">
 <section id="section-7.1">
@@ -1909,7 +1910,8 @@ This process <span class="bcp14">MUST</span> proceed until there are no more com
         <h3 id="name-implementation-defined-stor">
 <a href="#section-8.2" class="section-number selfRef">8.2. </a><a href="#name-implementation-defined-stor" class="section-name selfRef">Implementation defined storage methods</a>
         </h3>
-<p id="section-8.2-1">The following methods are assumed to be available to the implementation. Very minimal requirements are specified.<a href="#section-8.2-1" class="pilcrow">¶</a></p>
+<p id="section-8.2-1">The following methods are assumed to be available to the implementation.
+Very minimal requirements are specified.<a href="#section-8.2-1" class="pilcrow">¶</a></p>
 <p id="section-8.2-2">Informally, the storage must be array like and have no gaps.<a href="#section-8.2-2" class="pilcrow">¶</a></p>
 <div id="get">
 <section id="section-8.2.1">
@@ -2075,7 +2077,9 @@ testing the height of i+1<a href="#section-9.2-2" class="pilcrow">¶</a></p>
       <h2 id="name-iana-considerations">
 <a href="#section-11" class="section-number selfRef">11. </a><a href="#name-iana-considerations" class="section-name selfRef">IANA Considerations</a>
       </h2>
-<p id="section-11-1">Editors note: Hash agility is desired. We can start with SHA-256. Two of the referenced implementations use BLAKE2b-256,
+<p id="section-11-1">Editors note: Hash agility is desired.
+We can start with SHA-256.
+Two of the referenced implementations use BLAKE2b-256,
 We would like to add support for SHA3-256, SHA3-512, and possibly Keccak and Pedersen.<a href="#section-11-1" class="pilcrow">¶</a></p>
 <div id="additions-to-existing-registries">
 <section id="section-11.1">
@@ -2100,9 +2104,9 @@ We would like to add support for SHA3-256, SHA3-512, and possibly Keccak and Ped
 <a href="#section-12" class="section-number selfRef">12. </a><a href="#name-normative-references" class="section-name selfRef">Normative References</a>
       </h2>
 <dl class="references">
-<dt id="I-D.IETF-cose-merkle-tree-proofs">[I-D.IETF-cose-merkle-tree-proofs]</dt>
+<dt id="I-D.draft-ietf-cose-merkle-tree-proofs">[I-D.draft-ietf-cose-merkle-tree-proofs]</dt>
       <dd>
-<span class="refTitle">"*** BROKEN REFERENCE ***"</span>. </dd>
+<span class="refAuthor">Steele, O.</span>, <span class="refAuthor">Birkholz, H.</span>, <span class="refAuthor">Delignat-Lavaud, A.</span>, and <span class="refAuthor">C. Fournet</span>, <span class="refTitle">"COSE Receipts"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-cose-merkle-tree-proofs-07</span>, <time datetime="2024-10-17" class="refDate">17 October 2024</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-cose-merkle-tree-proofs-07">https://datatracker.ietf.org/doc/html/draft-ietf-cose-merkle-tree-proofs-07</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="RFC2119">[RFC2119]</dt>
       <dd>
@@ -2225,7 +2229,8 @@ We would like to add support for SHA3-256, SHA3-512, and possibly Keccak and Ped
         <h3 id="name-ones_count">
 <a href="#appendix-B.5" class="section-number selfRef">B.5. </a><a href="#name-ones_count" class="section-name selfRef">ones_count</a>
         </h3>
-<p id="appendix-B.5-1">Count of set bits. For example <code>ones_count(b101)</code> is 2<a href="#appendix-B.5-1" class="pilcrow">¶</a></p>
+<p id="appendix-B.5-1">Count of set bits.
+For example <code>ones_count(b101)</code> is 2<a href="#appendix-B.5-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="trailingzeros">
@@ -2295,7 +2300,8 @@ It is up to the individual working groups to use this information as they see fi
             <h5 id="name-maturity">
 <a href="#appendix-C.1.1.3" class="section-number selfRef">C.1.1.3. </a><a href="#name-maturity" class="section-name selfRef">Maturity</a>
             </h5>
-<p id="appendix-C.1.1.3-1">Used in production. SEMVER unstable (no backwards compat declared yet)<a href="#appendix-C.1.1.3-1" class="pilcrow">¶</a></p>
+<p id="appendix-C.1.1.3-1">Used in production.
+SEMVER unstable (no backwards compat declared yet)<a href="#appendix-C.1.1.3-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
@@ -2310,7 +2316,8 @@ It is up to the individual working groups to use this information as they see fi
             <h5 id="name-implementation-url-2">
 <a href="#appendix-C.1.2.1" class="section-number selfRef">C.1.2.1. </a><a href="#name-implementation-url-2" class="section-name selfRef">Implementation URL</a>
             </h5>
-<p id="appendix-C.1.2.1-1">A minimal reference implementation of this draft. Used to generate the test vectors in this draft, is available at:<a href="#appendix-C.1.2.1-1" class="pilcrow">¶</a></p>
+<p id="appendix-C.1.2.1-1">A minimal reference implementation of this draft.
+Used to generate the test vectors in this draft, is available at:<a href="#appendix-C.1.2.1-1" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="appendix-C.1.2.1-2.1">
                 <p id="appendix-C.1.2.1-2.1.1">https://github.com/robinbryce/draft-bryce-cose-merkle-mountain-range-proofs/blob/main/algorithms.py<a href="#appendix-C.1.2.1-2.1.1" class="pilcrow">¶</a></p>
@@ -2394,7 +2401,8 @@ Accounting for those differences, their commitment trees would be compatible wit
             </h5>
 <p id="appendix-C.1.5.1-1">https://github.com/HerodotusDev/rust-accumulators<a href="#appendix-C.1.5.1-1" class="pilcrow">¶</a></p>
 <p id="appendix-C.1.5.1-2">Production, supports keccak, posiedon &amp; pedersen hash algs<a href="#appendix-C.1.5.1-2" class="pilcrow">¶</a></p>
-<p id="appendix-C.1.5.1-3">Editors note: test vectors, based on a SHA256 instantiation, are currently provided in a separate document. These should inlined if the draft is accepted. https://github.com/robinbryce/draft-bryce-cose-merkle-mountain-range-proofs/blob/main/test-vectors.md<a href="#appendix-C.1.5.1-3" class="pilcrow">¶</a></p>
+<p id="appendix-C.1.5.1-3">Editors note: test vectors, based on a SHA256 instantiation, are currently provided in a separate document.
+These should inlined if the draft is accepted: https://github.com/robinbryce/draft-bryce-cose-merkle-mountain-range-proofs/blob/main/test-vectors.md<a href="#appendix-C.1.5.1-3" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
