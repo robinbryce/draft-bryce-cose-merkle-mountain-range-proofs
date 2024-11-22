@@ -19,7 +19,7 @@ author:
 
 normative:
   RFC9053: COSE
-  I-D.IETF-cose-merkle-tree-proofs: COMTRE
+  I-D.draft-ietf-cose-merkle-tree-proofs: COMTRE
 
 informative:
 
@@ -70,7 +70,7 @@ This documents extends the verifiable data structure registry of {{-COMTRE}} wit
 |MMRIVER_SHA256 | TBD_1 (requested assignment 3) | Linearly addressed, position committing, MMR implementations, such as the MMRIVER ledger | This document
 {: #verifiable-data-structure-values align="left" title="Verifiable Data Structure Algorithms"}
 
-This document defines inclusion proofs for Merkle Mountain Range, Imediately Verifiable and Efficiently Replicable (MMRIVER) ledgers.
+This document defines inclusion proofs for Merkle Mountain Range, Immediately Verifiable and Efficiently Replicable (MMRIVER) ledgers.
 Verifiers MUST reject all other proof types
 
 # Inclusion Proof
@@ -141,7 +141,7 @@ We define `inclusion_proof_path` as
         # its right sibling
         i += siblingoffset
 
-      # When the computed sibling exceedes the range of MMR(C+1),
+      # When the computed sibling exceeds the range of MMR(C+1),
       # we have completed the path
       if isibling > c:
           return path
@@ -355,7 +355,8 @@ unprotected-header-map = {
 }
 ~~~~
 
-The payload MUST be detached. Detaching the payload forces verifiers to recompute the roots from the consistency proofs.
+The payload MUST be detached.
+Detaching the payload forces verifiers to recompute the roots from the consistency proofs.
 This protects against implementation errors where the signature is verified but the payload is not genuinely produced by the included proof.
 
 ## Verifying the Receipt of consistency
@@ -477,7 +478,8 @@ We define `add_leaf_hash` as
 
 ## Implementation defined storage methods
 
-The following methods are assumed to be available to the implementation. Very minimal requirements are specified.
+The following methods are assumed to be available to the implementation.
+Very minimal requirements are specified.
 
 Informally, the storage must be array like and have no gaps.
 
@@ -598,7 +600,9 @@ See the security considerations section of:
 
 # IANA Considerations
 
-Editors note: Hash agility is desired. We can start with SHA-256. Two of the referenced implementations use BLAKE2b-256,
+Editors note: Hash agility is desired.
+We can start with SHA-256.
+Two of the referenced implementations use BLAKE2b-256,
 We would like to add support for SHA3-256, SHA3-512, and possibly Keccak and Pedersen.
 
 ## Additions to Existing Registries
@@ -672,7 +676,8 @@ Tests if all bits, from the most significant that is set, are 1, b0111 would be 
 
 ## ones_count
 
-Count of set bits. For example `ones_count(b101)` is 2
+Count of set bits.
+For example `ones_count(b101)` is 2
 
 ## trailing_zeros
 
@@ -715,13 +720,15 @@ An open-source implementation is available at:
 
 #### Maturity
 
-Used in production. SEMVER unstable (no backwards compat declared yet)
+Used in production.
+SEMVER unstable (no backwards compat declared yet)
 
 ### Robin Bryce (1)
 
 #### Implementation URL
 
-A minimal reference implementation of this draft. Used to generate the test vectors in this draft, is available at:
+A minimal reference implementation of this draft.
+Used to generate the test vectors in this draft, is available at:
 
 - https://github.com/robinbryce/draft-bryce-cose-merkle-mountain-range-proofs/blob/main/algorithms.py
 
@@ -762,8 +769,8 @@ https://github.com/HerodotusDev/rust-accumulators
 
 Production, supports keccak, posiedon & pedersen hash algs
 
-
-Editors note: test vectors, based on a SHA256 instantiation, are currently provided in a separate document. These should inlined if the draft is accepted. https://github.com/robinbryce/draft-bryce-cose-merkle-mountain-range-proofs/blob/main/test-vectors.md
+Editors note: test vectors, based on a SHA256 instantiation, are currently provided in a separate document.
+These should inlined if the draft is accepted: https://github.com/robinbryce/draft-bryce-cose-merkle-mountain-range-proofs/blob/main/test-vectors.md
 
 # Acknowledgments
 {:numbered="false"}
