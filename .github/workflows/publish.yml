@@ -8,7 +8,7 @@ on:
     inputs:
       email:
         description: "Submitter email"
-        default: ""
+        default: "stevenlasker@hotmail.com"
         type: string
 
 jobs:
