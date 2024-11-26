@@ -50,7 +50,8 @@ jobs:
     - name: "Upload to Datatracker"
       uses: martinthomson/i-d-template@v1
       with:
-        make: upload "UPLOAD_EMAIL=${{ inputs.email }}"
+        #make: upload UPLOAD_EMAIL=${{ inputs.email }}
+        make: upload
 
     - name: "Archive Submitted Drafts"
       uses: actions/upload-artifact@v3
