@@ -159,7 +159,7 @@ The cbor representation of an inclusion proof is:
 ~~~~ cddl
 protected-header-map = {
   &(alg: 1) => int
-  &(vds: 395) => 2
+  &(vds: 395) => 3
   * cose-label => cose-value
 }
 ~~~~
@@ -332,7 +332,7 @@ The cbor representation of an inclusion proof for MMRIVER is:
 ~~~~ cddl
 protected-header-map = {
   &(alg: 1) => int
-  &(vds: 395) => 2
+  &(vds: 395) => 3
   * cose-label => cose-value
 }
 ~~~~
