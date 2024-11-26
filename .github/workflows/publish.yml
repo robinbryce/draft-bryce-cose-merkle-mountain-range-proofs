@@ -18,10 +18,13 @@ jobs:
     steps:
     - name: "Checkout"
       uses: actions/checkout@v4
+      with:
+        fetch-tags: true 
 
     # See https://github.com/actions/checkout/issues/290
-    - name: "Get Tag Annotations"
-      run: git fetch -f origin ${{ github.ref }}:${{ github.ref }}
+    #- name: "Get Tag Annotations"
+    #  run: |
+    #    git fetch -f origin ${{ github.ref }}:${{ github.ref }}
 
     - name: "Setup"
       id: setup
