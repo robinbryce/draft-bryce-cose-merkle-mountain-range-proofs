@@ -4,8 +4,8 @@
 
 COSE                                                            R. Bryce
 Internet-Draft                                                DataTrails
-Intended status: Experimental                           22 November 2024
-Expires: 26 May 2025
+Intended status: Experimental                           26 November 2024
+Expires: 30 May 2025
 
 
     Merkle Mountain Range for Immediately Verifiable and Replicable
@@ -51,7 +51,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 26 May 2025.
+   This Internet-Draft will expire on 30 May 2025.
 
 Copyright Notice
 
@@ -267,7 +267,7 @@ Table of Contents
 
    protected-header-map = {
      &(alg: 1) => int
-     &(vds: 395) => 2
+     &(vds: 395) => 3
      * cose-label => cose-value
    }
 
@@ -454,7 +454,7 @@ Table of Contents
 
    protected-header-map = {
      &(alg: 1) => int
-     &(vds: 395) => 2
+     &(vds: 395) => 3
      * cose-label => cose-value
    }
 
