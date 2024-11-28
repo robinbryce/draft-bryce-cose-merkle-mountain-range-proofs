@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2024-11-26T00:31:32.146622+00:00",
+  "timestamp": "2024-11-28T00:31:47.146475+00:00",
   "repo": "robinbryce/draft-bryce-cose-merkle-mountain-range-proofs",
   "labels": [
     {
@@ -636,6 +636,34 @@
       "mergedBy": "SteveLasker",
       "mergeCommit": {
         "oid": "faa32ecdd1d7176db86a13917c54e17c66876a0e"
+      },
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 13,
+      "id": "PR_kwDOMMUelc6DNssY",
+      "title": "set the vds in the protected header to the requested asignment",
+      "url": "https://github.com/robinbryce/draft-bryce-cose-merkle-mountain-range-proofs/pull/13",
+      "state": "MERGED",
+      "author": "robinbryce",
+      "authorAssociation": "OWNER",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2024-11-26T16:21:54Z",
+      "updatedAt": "2024-11-26T16:22:39Z",
+      "baseRepository": "robinbryce/draft-bryce-cose-merkle-mountain-range-proofs",
+      "baseRefName": "main",
+      "baseRefOid": "faa32ecdd1d7176db86a13917c54e17c66876a0e",
+      "headRepository": "robinbryce/draft-bryce-cose-merkle-mountain-range-proofs",
+      "headRefName": "robin/set-vds-to-requested-assignment-3",
+      "headRefOid": "5911d7945d82f366c58810d0bdbdee6a1669291b",
+      "closedAt": "2024-11-26T16:22:38Z",
+      "mergedAt": "2024-11-26T16:22:38Z",
+      "mergedBy": "robinbryce",
+      "mergeCommit": {
+        "oid": "6c8ed79cfccd0d5d17f3ce93829f31d753be1fb5"
       },
       "comments": [],
       "reviews": []
