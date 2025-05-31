@@ -27,9 +27,6 @@ informative:
 
 This document defines a new verifiable data structure profile for the COSE Receipts document {{-cose-receipts}} specifically for use with ledgers based on post-order traversal binary Merkle trees and which are designed for high throughput, ease of replication and compatibility with commodity cloud storage.
 
-Proving and verifying are defined in terms of the cryptographic asynchronous accumulator described by [ReyzinYakoubov].
-The technical advantages of post-order traversal binary Merkle trees are discussed in [CrosbyWallachStorage] and [PostOrderTlog].
-
 Post-order traversal binary Merkle trees, also known as history trees, are more commonly known as Merkle Mountain Ranges.
 
 --- middle
@@ -50,6 +47,9 @@ This illustrates `MMR(8)`, which is comprised of two perfect trees rooted at 6 a
 The peaks of the perfect trees form the accumulator.
 
 The storage of a tree maintained in this way is addressed as a linear array, and additions to the tree are always appends.
+
+Proving and verifying are defined in terms of the cryptographic asynchronous accumulator described by [ReyzinYakoubov].
+The technical advantages of post-order traversal binary Merkle trees are discussed in [CrosbyWallachStorage] and [PostOrderTlog].
 
 # Conventions and Definitions
 
