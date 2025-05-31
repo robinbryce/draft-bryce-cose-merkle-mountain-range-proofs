@@ -8,8 +8,6 @@
 <meta content="Robin Bryce" name="author">
 <meta content="
        This document defines a new verifiable data structure profile for the COSE Receipts document   specifically for use with ledgers based on post-order traversal binary Merkle trees and which are designed for high throughput, ease of replication and compatibility with commodity cloud storage. 
-       Proving and verifying are defined in terms of the cryptographic asynchronous accumulator described by  ReyzinYakoubov .
-The technical advantages of post-order traversal binary Merkle trees are discussed in  CrosbyWallachStorage  and  PostOrderTlog . 
        Post-order traversal binary Merkle trees, also known as history trees, are more commonly known as Merkle Mountain Ranges. 
     " name="description">
 <meta content="xml2rfc 3.28.1" name="generator">
@@ -1083,9 +1081,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <section id="section-abstract">
       <h2 id="abstract"><a href="#abstract" class="selfRef">Abstract</a></h2>
 <p id="section-abstract-1">This document defines a new verifiable data structure profile for the COSE Receipts document <span>[<a href="#I-D.ietf-cose-merkle-tree-proofs" class="cite xref">I-D.ietf-cose-merkle-tree-proofs</a>]</span> specifically for use with ledgers based on post-order traversal binary Merkle trees and which are designed for high throughput, ease of replication and compatibility with commodity cloud storage.<a href="#section-abstract-1" class="pilcrow">¶</a></p>
-<p id="section-abstract-2">Proving and verifying are defined in terms of the cryptographic asynchronous accumulator described by <a href="https://eprint.iacr.org/2015/718.pdf">ReyzinYakoubov</a>.
-The technical advantages of post-order traversal binary Merkle trees are discussed in <a href="https://static.usenix.org/event/sec09/tech/full_papers/crosby.pdf">CrosbyWallachStorage</a> and <a href="https://research.swtch.com/tlog#appendix_a">PostOrderTlog</a>.<a href="#section-abstract-2" class="pilcrow">¶</a></p>
-<p id="section-abstract-3">Post-order traversal binary Merkle trees, also known as history trees, are more commonly known as Merkle Mountain Ranges.<a href="#section-abstract-3" class="pilcrow">¶</a></p>
+<p id="section-abstract-2">Post-order traversal binary Merkle trees, also known as history trees, are more commonly known as Merkle Mountain Ranges.<a href="#section-abstract-2" class="pilcrow">¶</a></p>
 </section>
 <section class="note rfcEditorRemove" id="section-note.1">
       <h2 id="name-discussion-venues">
@@ -1334,6 +1330,8 @@ The technical advantages of post-order traversal binary Merkle trees are discuss
 7 is the root of a tree comprised of a single element.<a href="#section-1-4" class="pilcrow">¶</a></p>
 <p id="section-1-5">The peaks of the perfect trees form the accumulator.<a href="#section-1-5" class="pilcrow">¶</a></p>
 <p id="section-1-6">The storage of a tree maintained in this way is addressed as a linear array, and additions to the tree are always appends.<a href="#section-1-6" class="pilcrow">¶</a></p>
+<p id="section-1-7">Proving and verifying are defined in terms of the cryptographic asynchronous accumulator described by <a href="https://eprint.iacr.org/2015/718.pdf">ReyzinYakoubov</a>.
+The technical advantages of post-order traversal binary Merkle trees are discussed in <a href="https://static.usenix.org/event/sec09/tech/full_papers/crosby.pdf">CrosbyWallachStorage</a> and <a href="https://research.swtch.com/tlog#appendix_a">PostOrderTlog</a>.<a href="#section-1-7" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="conventions-and-definitions">

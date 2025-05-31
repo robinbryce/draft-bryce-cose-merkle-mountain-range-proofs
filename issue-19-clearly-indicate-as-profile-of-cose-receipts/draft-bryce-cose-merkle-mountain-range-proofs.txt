@@ -20,14 +20,6 @@ Abstract
    binary Merkle trees and which are designed for high throughput, ease
    of replication and compatibility with commodity cloud storage.
 
-   Proving and verifying are defined in terms of the cryptographic
-   asynchronous accumulator described by ReyzinYakoubov
-   (https://eprint.iacr.org/2015/718.pdf).  The technical advantages of
-   post-order traversal binary Merkle trees are discussed in
-   CrosbyWallachStorage
-   (https://static.usenix.org/event/sec09/tech/full_papers/crosby.pdf)
-   and PostOrderTlog (https://research.swtch.com/tlog#appendix_a).
-
    Post-order traversal binary Merkle trees, also known as history
    trees, are more commonly known as Merkle Mountain Ranges.
 
@@ -142,6 +134,14 @@ Table of Contents
 
    The storage of a tree maintained in this way is addressed as a linear
    array, and additions to the tree are always appends.
+
+   Proving and verifying are defined in terms of the cryptographic
+   asynchronous accumulator described by ReyzinYakoubov
+   (https://eprint.iacr.org/2015/718.pdf).  The technical advantages of
+   post-order traversal binary Merkle trees are discussed in
+   CrosbyWallachStorage
+   (https://static.usenix.org/event/sec09/tech/full_papers/crosby.pdf)
+   and PostOrderTlog (https://research.swtch.com/tlog#appendix_a).
 
 2.  Conventions and Definitions
 
