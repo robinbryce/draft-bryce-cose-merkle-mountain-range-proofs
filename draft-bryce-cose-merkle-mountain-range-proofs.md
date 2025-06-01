@@ -12,22 +12,22 @@ cat: exp
 submissiontype: IETF
 
 author:
- -
-  fullname: Robin Bryce
+
+- name: Robin Bryce
   organization: DataTrails
-  email: robinbryce@gmail.com
+  email: <robinbryce@gmail.com>
 
 normative:
   RFC9053: COSE
-  I-D.draft-ietf-cose-merkle-tree-proofs: COMTRE
+  I-D.ietf-cose-merkle-tree-proofs: cose-receipts
 
 informative:
 
 --- abstract
 
-This specification describes the COSE encoding of proofs for post-order traversal binary Merkle trees, also known as history trees and Merkle mountain ranges.
-Proving and verifying are defined in terms of the cryptographic asynchronous accumulator described by [ReyzinYakoubov].
-The technical advantages of post-order traversal binary Merkle trees are discussed in [CrosbyWallachStorage] and [PostOrderTlog].
+This document defines a new verifiable data structure profile for the COSE Receipts document {{-cose-receipts}} specifically for use with ledgers based on post-order traversal binary Merkle trees and which are designed for high throughput, ease of replication and compatibility with commodity cloud storage.
+
+Post-order traversal binary Merkle trees, also known as history trees, are more commonly known as Merkle Mountain Ranges.
 
 --- middle
 
@@ -48,6 +48,9 @@ The peaks of the perfect trees form the accumulator.
 
 The storage of a tree maintained in this way is addressed as a linear array, and additions to the tree are always appends.
 
+Proving and verifying are defined in terms of the cryptographic asynchronous accumulator described by [ReyzinYakoubov].
+The technical advantages of post-order traversal binary Merkle trees are discussed in [CrosbyWallachStorage] and [PostOrderTlog].
+
 # Conventions and Definitions
 
 {::boilerplate bcp14-tagged}
@@ -63,7 +66,7 @@ The maximum height of a single tree is 64 (which will have `g=63` for its peak).
 
 # Description of the MMRIVER Verifiable Data Structure
 
-This documents extends the verifiable data structure registry of {{-COMTRE}} with the following value:
+This documents extends the verifiable data structure registry of {{-cose-receipts}} with the following value:
 
 | Name | Value | Description | Reference
 |---
@@ -73,7 +76,7 @@ This documents extends the verifiable data structure registry of {{-COMTRE}} wit
 This document defines inclusion proofs for Merkle Mountain Range, Immediately Verifiable and Efficiently Replicable (MMRIVER) ledgers.
 Verifiers MUST reject all other proof types
 
-# Inclusion Proof
+# Inclusion Proofs
 
 The CBOR representation of an inclusion proof is
 
@@ -152,7 +155,7 @@ We define `inclusion_proof_path` as
       g += 1
 ~~~~
 
-# Receipt of Inclusion
+# COSE Receipt of Inclusion
 
 The cbor representation of an inclusion proof is:
 
@@ -325,7 +328,7 @@ We define `consistency_proof_paths` as
     return proof
 ~~~~
 
-# Receipt of Consistency
+# COSE Receipt of Consistency
 
 The cbor representation of an inclusion proof for MMRIVER is:
 
@@ -716,7 +719,7 @@ An application demonstrating the concepts is available at [https://app.datatrail
 
 An open-source implementation is available at:
 
-- https://github.com/datatrails/go-datatrails-merklelog
+- <https://github.com/datatrails/go-datatrails-merklelog>
 
 #### Maturity
 
@@ -730,7 +733,7 @@ SEMVER unstable (no backwards compat declared yet)
 A minimal reference implementation of this draft.
 Used to generate the test vectors in this draft, is available at:
 
-- https://github.com/robinbryce/draft-bryce-cose-merkle-mountain-range-proofs/blob/main/algorithms.py
+- <https://github.com/robinbryce/draft-bryce-cose-merkle-mountain-range-proofs/blob/main/algorithms.py>
 
 #### Maturity
 
@@ -742,7 +745,7 @@ Reference only
 
 A minimal tiled log implementation
 
-- https://github.com/robinbryce/mmriver-tiles-ts
+- <https://github.com/robinbryce/mmriver-tiles-ts>
 
 #### Maturity
 
@@ -758,19 +761,20 @@ Accounting for those differences, their commitment trees would be compatible wit
 
 An implementation is available here:
 
-- https://github.com/mimblewimble/grin/blob/master/doc/mmr.md (Grin is a rust implementation of the mimblewimble protocol)
-- https://github.com/BeamMW/beam/blob/master/core/merkle.cpp (Beam is a C++ implementation of the mimblewimble protocol)
+- <https://github.com/mimblewimble/grin/blob/master/doc/mmr.md> (Grin is a rust implementation of the mimblewimble protocol)
+- <https://github.com/BeamMW/beam/blob/master/core/merkle.cpp> (Beam is a C++ implementation of the mimblewimble protocol)
 
-### Herodotus
+###  Herodotus
 
 #### Implementation URL
 
-https://github.com/HerodotusDev/rust-accumulators
+<https://github.com/HerodotusDev/rust-accumulators>
 
 Production, supports keccak, posiedon & pedersen hash algs
 
 Editors note: test vectors, based on a SHA256 instantiation, are currently provided in a separate document.
-These should inlined if the draft is accepted: https://github.com/robinbryce/draft-bryce-cose-merkle-mountain-range-proofs/blob/main/test-vectors.md
+These should inlined if the draft is accepted: <https://github.com/robinbryce/draft-bryce-cose-merkle-mountain-range-proofs/blob/main/test-vectors.md>
 
 # Acknowledgments
+
 {:numbered="false"}
