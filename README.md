@@ -1,4 +1,6 @@
-# Merkle Mountain Range for Immediately Verifiable and Efficiently Replicable Commitments
+# EXPIRED Merkle Mountain Range for Immediately Verifiable and Efficiently Replicable Commitments
+
+This draft has expired. Please see its replacement at https://github.com/robinbryce/draft-bryce-cose-receipts-mmr-profile
 
 This is the working area for the individual Internet-Draft, "Merkle Mountain Range for Immediately Verifiable and Efficiently Replicable Commitments".
 
